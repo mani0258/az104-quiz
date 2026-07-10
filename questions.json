@@ -4,10 +4,10 @@
     "category": "仮想ネットワーク",
     "question": "Azure VM から Storage Account へ、プライベート IP アドレスを使用して接続したい。何を構成しますか？",
     "choices": [
-      "Service Endpoint",
-      "Private Endpoint",
-      "VPN Gateway",
-      "NAT Gateway"
+      "サービス エンドポイント（Service Endpoint）",
+      "プライベート エンドポイント（Private Endpoint）",
+      "VPN ゲートウェイ（VPN Gateway）",
+      "NAT ゲートウェイ（NAT Gateway）"
     ],
     "answer": 1,
     "explanation": "Private Endpoint は、対象の Azure PaaS リソースを VNet 内のプライベート IP アドレスで公開します。",
@@ -23,10 +23,10 @@
     "category": "ロード バランサー",
     "question": "同じクライアント IP アドレスかつ同じプロトコルの要求を、同じバックエンド VM に送り続けたい。どのセッション永続化を選びますか？",
     "choices": [
-      "None",
-      "Client IP",
-      "Client IP and protocol",
-      "Floating IP"
+      "なし（None）",
+      "クライアント IP（Client IP）",
+      "クライアント IP とプロトコル（Client IP and protocol）",
+      "フローティング IP（Floating IP）"
     ],
     "answer": 2,
     "explanation": "Client IP and protocol は、送信元 IP アドレスとプロトコルの組み合わせに基づいて同じバックエンドへ振り分けます。",
@@ -42,10 +42,10 @@
     "category": "ネットワーク セキュリティ",
     "question": "同じ役割を持つ複数の VM の NIC をまとめ、NSG ルールの宛先として指定したい。何を使用しますか？",
     "choices": [
-      "Application Security Group",
-      "Availability Set",
-      "Route Table",
-      "Azure Firewall Manager"
+      "アプリケーション セキュリティ グループ（Application Security Group）",
+      "可用性セット（Availability Set）",
+      "ルート テーブル（Route Table）",
+      "Azure Firewall Manager（Azure Firewall Manager）"
     ],
     "answer": 0,
     "explanation": "Application Security Group を使うと、NIC を論理グループ化して NSG ルールに指定できます。",
@@ -61,10 +61,10 @@
     "category": "ストレージ",
     "question": "Storage Account へのアクセスを、特定のパブリック IP アドレスからのみに制限したい。どこで設定しますか？",
     "choices": [
-      "Access keys",
-      "Networking の Firewall rules",
-      "Lifecycle management",
-      "Data protection"
+      "アクセス キー（Access keys）",
+      "ネットワークのファイアウォール規則（Networking firewall rules）",
+      "ライフサイクル管理（Lifecycle management）",
+      "データ保護（Data protection）"
     ],
     "answer": 1,
     "explanation": "Storage Account の Networking で IP ネットワーク ルールを構成します。",
@@ -80,10 +80,10 @@
     "category": "ID とガバナンス",
     "question": "ユーザーに Azure リソースの閲覧だけを許可したい。最も適切な組み込みロールはどれですか？",
     "choices": [
-      "Owner",
-      "Contributor",
-      "Reader",
-      "User Access Administrator"
+      "所有者（Owner）",
+      "共同作成者（Contributor）",
+      "閲覧者（Reader）",
+      "ユーザー アクセス管理者（User Access Administrator）"
     ],
     "answer": 2,
     "explanation": "Reader はリソースの表示を許可しますが、変更は許可しません。",
@@ -99,10 +99,10 @@
     "category": "仮想マシン",
     "question": "Azure VM の OS ディスクとデータ ディスクを暗号化し、キーを Key Vault で管理したい。何を使用しますか？",
     "choices": [
-      "Azure Disk Encryption",
-      "Azure Backup",
-      "Managed Identity",
-      "Storage Service Encryption のみ"
+      "Azure Disk Encryption（Azure Disk Encryption）",
+      "Azure Backup（Azure Backup）",
+      "マネージド ID（Managed Identity）",
+      "Storage Service Encryption のみ（Storage Service Encryption only）"
     ],
     "answer": 0,
     "explanation": "Azure Disk Encryption は BitLocker または DM-Crypt を使用し、キーを Key Vault と連携して管理できます。",
@@ -118,10 +118,10 @@
     "category": "監視",
     "question": "Azure リソースのメトリックがしきい値を超えたとき、メール通知したい。何を構成しますか？",
     "choices": [
-      "Activity Log only",
-      "Alert rule と Action group",
-      "Resource lock",
-      "Diagnostic setting のみ"
+      "アクティビティ ログのみ（Activity Log only）",
+      "アラート ルールとアクション グループ（Alert rule and Action group）",
+      "リソース ロック（Resource lock）",
+      "診断設定のみ（Diagnostic setting only）"
     ],
     "answer": 1,
     "explanation": "Alert rule で条件を定義し、Action group でメールなどの通知先を設定します。",
@@ -137,10 +137,10 @@
     "category": "バックアップ",
     "question": "Azure VM をバックアップするために、最初に作成する代表的なリソースはどれですか？",
     "choices": [
-      "Recovery Services vault",
-      "Log Analytics workspace",
-      "Managed disk snapshot only",
-      "Automation account"
+      "Recovery Services コンテナー（Recovery Services vault）",
+      "Log Analytics ワークスペース（Log Analytics workspace）",
+      "マネージド ディスクのスナップショットのみ（Managed disk snapshot only）",
+      "Automation アカウント（Automation account）"
     ],
     "answer": 0,
     "explanation": "Azure VM Backup では一般に Recovery Services vault を作成し、バックアップ ポリシーを設定します。",
@@ -156,10 +156,10 @@
     "category": "仮想ネットワーク",
     "question": "サブネット内の VM からインターネットへの送信元 IP アドレスを固定したい。何を使用しますか？",
     "choices": [
-      "NAT Gateway",
-      "Private DNS zone",
-      "Azure Bastion",
-      "Application Gateway"
+      "NAT ゲートウェイ（NAT Gateway）",
+      "プライベート DNS ゾーン（Private DNS zone）",
+      "Azure Bastion（Azure Bastion）",
+      "Application Gateway（Application Gateway）"
     ],
     "answer": 0,
     "explanation": "NAT Gateway をサブネットに関連付けると、アウトバウンド通信の送信元パブリック IP を固定できます。",
@@ -175,10 +175,10 @@
     "category": "ID とガバナンス",
     "question": "サブスクリプション内のリソースが誤って削除されるのを防ぎたい。何を設定しますか？",
     "choices": [
-      "ReadOnly lock",
-      "CanNotDelete lock",
-      "Azure Policy の audit",
-      "NSG"
+      "読み取り専用ロック（ReadOnly lock）",
+      "削除不可ロック（CanNotDelete lock）",
+      "Azure Policy の監査（Azure Policy audit）",
+      "ネットワーク セキュリティ グループ（NSG）"
     ],
     "answer": 1,
     "explanation": "CanNotDelete ロックは変更を許可しつつ、削除を防止します。",
@@ -194,10 +194,10 @@
     "category": "ストレージ",
     "question": "Blob データを一定期間変更・削除できないようにしたい。どの機能を使用しますか？",
     "choices": [
-      "Immutable storage",
-      "Soft delete",
-      "Geo-redundant storage",
-      "Lifecycle management"
+      "不変ストレージ（Immutable storage）",
+      "論理的な削除（Soft delete）",
+      "geo 冗長ストレージ（Geo-redundant storage）",
+      "ライフサイクル管理（Lifecycle management）"
     ],
     "answer": 0,
     "explanation": "Immutable storage の時間ベース保持ポリシーなどを使うと、指定期間の変更・削除を防げます。",
@@ -213,10 +213,10 @@
     "category": "仮想マシン",
     "question": "複数の VM を障害ドメインと更新ドメインに分散配置したい。何を使用しますか？",
     "choices": [
-      "Availability Set",
-      "Proximity Placement Group",
-      "Dedicated Host",
-      "Virtual Machine Scale Set の自動スケールのみ"
+      "可用性セット（Availability Set）",
+      "近接配置グループ（Proximity Placement Group）",
+      "専用ホスト（Dedicated Host）",
+      "仮想マシン スケール セットの自動スケールのみ（Virtual Machine Scale Set autoscale only）"
     ],
     "answer": 0,
     "explanation": "Availability Set は VM を障害ドメインと更新ドメインに分散します。",
