@@ -1,0 +1,9 @@
+{
+  "name": "AZ-104 暗記ツール",
+  "short_name": "AZ-104 暗記",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0f6cbd",
+  "icons": []
+}

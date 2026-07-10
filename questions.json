@@ -1,0 +1,230 @@
+[
+  {
+    "id": 1,
+    "category": "仮想ネットワーク",
+    "question": "Azure VM から Storage Account へ、プライベート IP アドレスを使用して接続したい。何を構成しますか？",
+    "choices": [
+      "Service Endpoint",
+      "Private Endpoint",
+      "VPN Gateway",
+      "NAT Gateway"
+    ],
+    "answer": 1,
+    "explanation": "Private Endpoint は、対象の Azure PaaS リソースを VNet 内のプライベート IP アドレスで公開します。",
+    "why_not": [
+      "Service Endpoint は Azure バックボーンを利用しますが、接続先はパブリック エンドポイントです。",
+      "",
+      "VPN Gateway は主にオンプレミスや別 VNet との VPN 接続に使用します。",
+      "NAT Gateway はサブネットからのアウトバウンド通信に使用します。"
+    ]
+  },
+  {
+    "id": 2,
+    "category": "ロード バランサー",
+    "question": "同じクライアント IP アドレスかつ同じプロトコルの要求を、同じバックエンド VM に送り続けたい。どのセッション永続化を選びますか？",
+    "choices": [
+      "None",
+      "Client IP",
+      "Client IP and protocol",
+      "Floating IP"
+    ],
+    "answer": 2,
+    "explanation": "Client IP and protocol は、送信元 IP アドレスとプロトコルの組み合わせに基づいて同じバックエンドへ振り分けます。",
+    "why_not": [
+      "None は既定の 5 タプル ハッシュで分散します。",
+      "Client IP はプロトコルを区別しません。",
+      "",
+      "Floating IP は Direct Server Return に関する設定です。"
+    ]
+  },
+  {
+    "id": 3,
+    "category": "ネットワーク セキュリティ",
+    "question": "同じ役割を持つ複数の VM の NIC をまとめ、NSG ルールの宛先として指定したい。何を使用しますか？",
+    "choices": [
+      "Application Security Group",
+      "Availability Set",
+      "Route Table",
+      "Azure Firewall Manager"
+    ],
+    "answer": 0,
+    "explanation": "Application Security Group を使うと、NIC を論理グループ化して NSG ルールに指定できます。",
+    "why_not": [
+      "",
+      "Availability Set は VM の可用性を高めるための構成です。",
+      "Route Table はルーティング制御に使用します。",
+      "Azure Firewall Manager は複数のファイアウォールやセキュリティ ポリシーの集中管理に使用します。"
+    ]
+  },
+  {
+    "id": 4,
+    "category": "ストレージ",
+    "question": "Storage Account へのアクセスを、特定のパブリック IP アドレスからのみに制限したい。どこで設定しますか？",
+    "choices": [
+      "Access keys",
+      "Networking の Firewall rules",
+      "Lifecycle management",
+      "Data protection"
+    ],
+    "answer": 1,
+    "explanation": "Storage Account の Networking で IP ネットワーク ルールを構成します。",
+    "why_not": [
+      "Access keys は認証情報であり、接続元 IP の制御ではありません。",
+      "",
+      "Lifecycle management はデータの階層化や削除を自動化します。",
+      "Data protection は論理削除やバージョン管理などを設定します。"
+    ]
+  },
+  {
+    "id": 5,
+    "category": "ID とガバナンス",
+    "question": "ユーザーに Azure リソースの閲覧だけを許可したい。最も適切な組み込みロールはどれですか？",
+    "choices": [
+      "Owner",
+      "Contributor",
+      "Reader",
+      "User Access Administrator"
+    ],
+    "answer": 2,
+    "explanation": "Reader はリソースの表示を許可しますが、変更は許可しません。",
+    "why_not": [
+      "Owner はリソース管理とアクセス権管理の両方が可能です。",
+      "Contributor はリソースを作成・変更できます。",
+      "",
+      "User Access Administrator はユーザー アクセスの管理に使用します。"
+    ]
+  },
+  {
+    "id": 6,
+    "category": "仮想マシン",
+    "question": "Azure VM の OS ディスクとデータ ディスクを暗号化し、キーを Key Vault で管理したい。何を使用しますか？",
+    "choices": [
+      "Azure Disk Encryption",
+      "Azure Backup",
+      "Managed Identity",
+      "Storage Service Encryption のみ"
+    ],
+    "answer": 0,
+    "explanation": "Azure Disk Encryption は BitLocker または DM-Crypt を使用し、キーを Key Vault と連携して管理できます。",
+    "why_not": [
+      "",
+      "Azure Backup はバックアップ取得のサービスです。",
+      "Managed Identity は Azure リソースの認証に使用します。",
+      "Storage Service Encryption は保存時暗号化ですが、この要件の Key Vault 連携とは異なります。"
+    ]
+  },
+  {
+    "id": 7,
+    "category": "監視",
+    "question": "Azure リソースのメトリックがしきい値を超えたとき、メール通知したい。何を構成しますか？",
+    "choices": [
+      "Activity Log only",
+      "Alert rule と Action group",
+      "Resource lock",
+      "Diagnostic setting のみ"
+    ],
+    "answer": 1,
+    "explanation": "Alert rule で条件を定義し、Action group でメールなどの通知先を設定します。",
+    "why_not": [
+      "Activity Log だけでは通知先を定義できません。",
+      "",
+      "Resource lock は誤削除や変更を防ぐものです。",
+      "Diagnostic setting はログやメトリックの転送先を設定します。"
+    ]
+  },
+  {
+    "id": 8,
+    "category": "バックアップ",
+    "question": "Azure VM をバックアップするために、最初に作成する代表的なリソースはどれですか？",
+    "choices": [
+      "Recovery Services vault",
+      "Log Analytics workspace",
+      "Managed disk snapshot only",
+      "Automation account"
+    ],
+    "answer": 0,
+    "explanation": "Azure VM Backup では一般に Recovery Services vault を作成し、バックアップ ポリシーを設定します。",
+    "why_not": [
+      "",
+      "Log Analytics workspace はログ分析に使用します。",
+      "スナップショットだけでは Azure Backup の一元管理や保持ポリシーを代替できません。",
+      "Automation account は自動化に使用します。"
+    ]
+  },
+  {
+    "id": 9,
+    "category": "仮想ネットワーク",
+    "question": "サブネット内の VM からインターネットへの送信元 IP アドレスを固定したい。何を使用しますか？",
+    "choices": [
+      "NAT Gateway",
+      "Private DNS zone",
+      "Azure Bastion",
+      "Application Gateway"
+    ],
+    "answer": 0,
+    "explanation": "NAT Gateway をサブネットに関連付けると、アウトバウンド通信の送信元パブリック IP を固定できます。",
+    "why_not": [
+      "",
+      "Private DNS zone はプライベート名前解決に使用します。",
+      "Azure Bastion はブラウザー経由の RDP/SSH 接続に使用します。",
+      "Application Gateway は Web トラフィックのレイヤー 7 負荷分散に使用します。"
+    ]
+  },
+  {
+    "id": 10,
+    "category": "ID とガバナンス",
+    "question": "サブスクリプション内のリソースが誤って削除されるのを防ぎたい。何を設定しますか？",
+    "choices": [
+      "ReadOnly lock",
+      "CanNotDelete lock",
+      "Azure Policy の audit",
+      "NSG"
+    ],
+    "answer": 1,
+    "explanation": "CanNotDelete ロックは変更を許可しつつ、削除を防止します。",
+    "why_not": [
+      "ReadOnly は削除だけでなく変更も制限します。",
+      "",
+      "audit は非準拠を記録しますが、削除を直接防止しません。",
+      "NSG はネットワーク通信を制御します。"
+    ]
+  },
+  {
+    "id": 11,
+    "category": "ストレージ",
+    "question": "Blob データを一定期間変更・削除できないようにしたい。どの機能を使用しますか？",
+    "choices": [
+      "Immutable storage",
+      "Soft delete",
+      "Geo-redundant storage",
+      "Lifecycle management"
+    ],
+    "answer": 0,
+    "explanation": "Immutable storage の時間ベース保持ポリシーなどを使うと、指定期間の変更・削除を防げます。",
+    "why_not": [
+      "",
+      "Soft delete は削除後の復元を可能にしますが、削除自体を禁止しません。",
+      "Geo-redundant storage は別リージョンへ複製します。",
+      "Lifecycle management は階層移動や削除を自動化します。"
+    ]
+  },
+  {
+    "id": 12,
+    "category": "仮想マシン",
+    "question": "複数の VM を障害ドメインと更新ドメインに分散配置したい。何を使用しますか？",
+    "choices": [
+      "Availability Set",
+      "Proximity Placement Group",
+      "Dedicated Host",
+      "Virtual Machine Scale Set の自動スケールのみ"
+    ],
+    "answer": 0,
+    "explanation": "Availability Set は VM を障害ドメインと更新ドメインに分散します。",
+    "why_not": [
+      "",
+      "Proximity Placement Group は物理的に近接配置して遅延を抑える目的です。",
+      "Dedicated Host は専用物理ホストを提供します。",
+      "自動スケールは台数調整の機能であり、設問の中心ではありません。"
+    ]
+  }
+]

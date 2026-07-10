@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f6cbd">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>AZ-104 暗記ツール</title>
+  <style>
+    :root {
+      --bg:#f5f7fb; --card:#fff; --text:#1f2937; --muted:#64748b;
+      --primary:#0f6cbd; --primary2:#e8f2fb; --border:#dbe3ec;
+      --ok:#15803d; --okbg:#ecfdf3; --ng:#b42318; --ngbg:#fff1f0;
+      --warn:#b7791f; --shadow:0 10px 30px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}
+    button{font:inherit}
+    .app{max-width:680px;margin:0 auto;min-height:100dvh;padding:env(safe-area-inset-top) 14px calc(92px + env(safe-area-inset-bottom))}
+    header{padding:18px 4px 10px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    h1{font-size:22px;margin:0}
+    .small{font-size:13px;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+    .progress{height:8px;background:#e8edf3;border-radius:999px;overflow:hidden;margin:12px 0 18px}
+    .progress>div{height:100%;background:var(--primary);transition:.25s}
+    .meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .badge{display:inline-flex;padding:6px 10px;border-radius:999px;background:var(--primary2);color:var(--primary);font-weight:700;font-size:12px}
+    .question{font-size:20px;line-height:1.65;font-weight:750;margin:18px 0}
+    .choices{display:grid;gap:12px}
+    .choice{width:100%;text-align:left;border:2px solid var(--border);background:#fff;border-radius:16px;padding:15px 16px;min-height:58px;display:flex;gap:12px;align-items:flex-start}
+    .choice:active{transform:scale(.99)}
+    .letter{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#edf2f7;font-weight:800;flex:none}
+    .choice.selected{border-color:var(--primary);background:var(--primary2)}
+    .choice.correct{border-color:var(--ok);background:var(--okbg)}
+    .choice.wrong{border-color:var(--ng);background:var(--ngbg)}
+    .result{margin-top:18px;padding:15px;border-radius:16px}
+    .result.ok{background:var(--okbg);color:var(--ok)}
+    .result.ng{background:var(--ngbg);color:var(--ng)}
+    .explain{margin-top:14px;line-height:1.7}
+    details{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+    summary{font-weight:700;cursor:pointer}
+    .confidence{display:grid;gap:10px;margin-top:18px}
+    .confidence button,.mainbtn,.subbtn{border:0;border-radius:14px;padding:14px 16px;font-weight:800}
+    .confidence button{background:#eef2f7}
+    .mainbtn{background:var(--primary);color:#fff;width:100%;margin-top:14px}
+    .subbtn{background:#e9eef5;color:var(--text);width:100%;margin-top:10px}
+    .home-grid{display:grid;gap:12px;margin-top:14px}
+    .statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+    .stat{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center}
+    .stat b{display:block;font-size:20px}
+    .menu{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(680px,100%);background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .menu button{border:0;background:transparent;padding:9px 4px;border-radius:12px;font-weight:700;color:var(--muted)}
+    .menu button.active{background:var(--primary2);color:var(--primary)}
+    .hidden{display:none!important}
+    .list{display:grid;gap:10px;margin-top:14px}
+    .row{padding:13px;border:1px solid var(--border);border-radius:14px;background:#fff}
+    .rowtop{display:flex;justify-content:space-between;gap:8px}
+    @media (min-width:520px){.confidence{grid-template-columns:repeat(3,1fr)}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div><h1>AZ-104 暗記ツール</h1><div class="small">4択＋自信度で弱点を復習</div></div>
+    <span class="badge" id="modeBadge">ホーム</span>
+  </header>
+
+  <main id="homeView">
+    <section class="card">
+      <div class="small">学習状況</div>
+      <div class="statgrid">
+        <div class="stat"><b id="answeredStat">0</b><span class="small">回答</span></div>
+        <div class="stat"><b id="accuracyStat">-</b><span class="small">正答率</span></div>
+        <div class="stat"><b id="weakStat">0</b><span class="small">復習候補</span></div>
+      </div>
+      <div class="home-grid">
+        <button class="mainbtn" onclick="startQuiz('all',5)">今日の5問</button>
+        <button class="subbtn" onclick="startQuiz('weak',10)">苦手問題を復習</button>
+        <button class="subbtn" onclick="startQuiz('all',999)">全問題に挑戦</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="quizView" class="hidden">
+    <section class="card">
+      <div class="meta">
+        <span class="badge" id="categoryBadge"></span>
+        <span class="small" id="counter"></span>
+      </div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="question" id="questionText"></div>
+      <div class="choices" id="choices"></div>
+      <div id="answerArea" class="hidden">
+        <div id="resultBox" class="result"></div>
+        <div class="explain" id="explanation"></div>
+        <details><summary>他の選択肢が違う理由</summary><div id="whyNot"></div></details>
+        <div class="confidence">
+          <button onclick="saveConfidence('high')">🟢 自信あり</button>
+          <button onclick="saveConfidence('medium')">🟡 迷った</button>
+          <button onclick="saveConfidence('low')">🔴 勘だった</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <main id="historyView" class="hidden">
+    <section class="card">
+      <div class="meta"><b>分野別の記録</b><button class="subbtn" style="width:auto;margin:0;padding:9px 12px" onclick="resetData()">記録を消去</button></div>
+      <div id="historyList" class="list"></div>
+    </section>
+  </main>
+</div>
+
+<nav class="menu">
+  <button id="homeTab" class="active" onclick="showView('home')">🏠<br>ホーム</button>
+  <button id="quizTab" onclick="startQuiz('all',5)">📝<br>問題</button>
+  <button id="historyTab" onclick="showView('history')">📊<br>履歴</button>
+</nav>
+
+<script>
+let questions=[], quiz=[], index=0, selected=null;
+const STORE='az104-study-v1';
+let records=JSON.parse(localStorage.getItem(STORE)||'{}');
+
+fetch('questions.json').then(r=>r.json()).then(data=>{
+  questions=data; updateHome();
+}).catch(()=>{
+  document.getElementById('homeView').innerHTML='<section class="card">問題データを読み込めませんでした。ZIPを展開して、簡易Webサーバー上で開いてください。</section>';
+});
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function showView(name){
+  ['home','quiz','history'].forEach(v=>{
+    document.getElementById(v+'View').classList.toggle('hidden',v!==name);
+    document.getElementById(v+'Tab').classList.toggle('active',v===name);
+  });
+  document.getElementById('modeBadge').textContent=name==='home'?'ホーム':name==='quiz'?'問題':'履歴';
+  if(name==='home') updateHome();
+  if(name==='history') renderHistory();
+}
+function weakIds(){
+  return Object.entries(records).filter(([id,r])=>!r.correct || r.confidence!=='high').map(([id])=>Number(id));
+}
+function startQuiz(mode,count){
+  if(!questions.length)return;
+  let pool=mode==='weak'?questions.filter(q=>weakIds().includes(q.id)):questions;
+  if(!pool.length){alert('復習候補はまだありません。まず問題に答えてみましょう。');return;}
+  quiz=shuffle(pool).slice(0,Math.min(count,pool.length)); index=0; selected=null;
+  showView('quiz'); renderQuestion();
+}
+function renderQuestion(){
+  const q=quiz[index];
+  selected=null;
+  document.getElementById('categoryBadge').textContent=q.category;
+  document.getElementById('counter').textContent=`${index+1} / ${quiz.length}`;
+  document.getElementById('progressBar').style.width=`${(index/quiz.length)*100}%`;
+  document.getElementById('questionText').textContent=q.question;
+  document.getElementById('answerArea').classList.add('hidden');
+  const box=document.getElementById('choices'); box.innerHTML='';
+  q.choices.forEach((c,i)=>{
+    const b=document.createElement('button'); b.className='choice';
+    b.innerHTML=`<span class="letter">${'ABCD'[i]}</span><span>${c}</span>`;
+    b.onclick=()=>answer(i,b); box.appendChild(b);
+  });
+}
+function answer(i,button){
+  if(selected!==null)return;
+  selected=i; const q=quiz[index];
+  [...document.querySelectorAll('.choice')].forEach((b,n)=>{
+    if(n===q.answer)b.classList.add('correct');
+    if(n===i && i!==q.answer)b.classList.add('wrong');
+    b.disabled=true;
+  });
+  const ok=i===q.answer;
+  const rb=document.getElementById('resultBox');
+  rb.className='result '+(ok?'ok':'ng');
+  rb.textContent=ok?'正解！':'不正解';
+  document.getElementById('explanation').textContent=q.explanation;
+  document.getElementById('whyNot').innerHTML=q.choices.map((c,n)=>n===q.answer?'':`<p><b>${'ABCD'[n]}. ${c}</b><br>${q.why_not[n]}</p>`).join('');
+  document.getElementById('answerArea').classList.remove('hidden');
+}
+function saveConfidence(level){
+  const q=quiz[index], correct=selected===q.answer;
+  const prev=records[q.id]||{attempts:0,correctCount:0};
+  records[q.id]={...prev,attempts:prev.attempts+1,correctCount:prev.correctCount+(correct?1:0),correct,confidence:level,category:q.category,last:new Date().toISOString()};
+  localStorage.setItem(STORE,JSON.stringify(records));
+  index++;
+  if(index>=quiz.length){
+    document.getElementById('quizView').innerHTML=`<section class="card"><h2>おつかれさま！</h2><p>今回の問題は終了です。</p><button class="mainbtn" onclick="location.reload()">ホームに戻る</button></section>`;
+    document.getElementById('progressBar')?.style && (document.getElementById('progressBar').style.width='100%');
+  }else renderQuestion();
+}
+function updateHome(){
+  const arr=Object.values(records), attempts=arr.reduce((s,r)=>s+r.attempts,0), correct=arr.reduce((s,r)=>s+r.correctCount,0);
+  document.getElementById('answeredStat').textContent=attempts;
+  document.getElementById('accuracyStat').textContent=attempts?Math.round(correct/attempts*100)+'%':'-';
+  document.getElementById('weakStat').textContent=weakIds().length;
+}
+function renderHistory(){
+  const cats={};
+  questions.forEach(q=>cats[q.category]=cats[q.category]||{attempts:0,correct:0,weak:0});
+  Object.values(records).forEach(r=>{
+    cats[r.category]=cats[r.category]||{attempts:0,correct:0,weak:0};
+    cats[r.category].attempts+=r.attempts; cats[r.category].correct+=r.correctCount;
+    if(!r.correct||r.confidence!=='high')cats[r.category].weak++;
+  });
+  document.getElementById('historyList').innerHTML=Object.entries(cats).map(([name,s])=>{
+    const rate=s.attempts?Math.round(s.correct/s.attempts*100)+'%':'未回答';
+    return `<div class="row"><div class="rowtop"><b>${name}</b><span>${rate}</span></div><div class="small">回答 ${s.attempts}回 ・ 復習候補 ${s.weak}問</div></div>`;
+  }).join('');
+}
+function resetData(){
+  if(confirm('学習記録をすべて消去しますか？')){localStorage.removeItem(STORE);records={};updateHome();renderHistory();}
+}
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
