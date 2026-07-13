@@ -1,5 +1,2855 @@
 [
   {
+    "id": 1,
+    "category": "ネットワーク",
+    "question": "Azure VM から Storage Account へ、プライベート IP アドレスを使用して接続したい。何を構成しますか？",
+    "choices": [
+      "VPN ゲートウェイ（VPN Gateway）",
+      "サービス エンドポイント（Service Endpoint）",
+      "プライベート エンドポイント（Private Endpoint）",
+      "NAT ゲートウェイ（NAT Gateway）"
+    ],
+    "answer": 2,
+    "explanation": "Private Endpoint は、対象の Azure PaaS リソースを VNet 内のプライベート IP アドレスで公開します。",
+    "why_not": [
+      "VPN Gateway は主にオンプレミスや別 VNet との VPN 接続に使用します。",
+      "Service Endpoint は Azure バックボーンを利用しますが、接続先はパブリック エンドポイントです。",
+      "",
+      "NAT Gateway はサブネットからのアウトバウンド通信に使用します。"
+    ]
+  },
+  {
+    "id": 2,
+    "category": "ネットワーク",
+    "question": "同じクライアント IP アドレスかつ同じプロトコルの要求を、同じバックエンド VM に送り続けたい。どのセッション永続化を選びますか？",
+    "choices": [
+      "なし（None）",
+      "クライアント IP とプロトコル（Client IP and protocol）",
+      "フローティング IP（Floating IP）",
+      "クライアント IP（Client IP）"
+    ],
+    "answer": 1,
+    "explanation": "Client IP and protocol は、送信元 IP アドレスとプロトコルの組み合わせに基づいて同じバックエンドへ振り分けます。",
+    "why_not": [
+      "None は既定の 5 タプル ハッシュで分散します。",
+      "",
+      "Floating IP は Direct Server Return に関する設定です。",
+      "Client IP はプロトコルを区別しません。"
+    ]
+  },
+  {
+    "id": 3,
+    "category": "ネットワーク",
+    "question": "同じ役割を持つ複数の VM の NIC をまとめ、NSG ルールの宛先として指定したい。何を使用しますか？",
+    "choices": [
+      "アプリケーション セキュリティ グループ（Application Security Group）",
+      "ルート テーブル（Route Table）",
+      "Azure Firewall Manager（Azure Firewall Manager）",
+      "可用性セット（Availability Set）"
+    ],
+    "answer": 0,
+    "explanation": "Application Security Group を使うと、NIC を論理グループ化して NSG ルールに指定できます。",
+    "why_not": [
+      "",
+      "Route Table はルーティング制御に使用します。",
+      "Azure Firewall Manager は複数のファイアウォールやセキュリティ ポリシーの集中管理に使用します。",
+      "Availability Set は VM の可用性を高めるための構成です。"
+    ]
+  },
+  {
+    "id": 4,
+    "category": "ストレージ",
+    "question": "Storage Account へのアクセスを、特定のパブリック IP アドレスからのみに制限したい。どこで設定しますか？",
+    "choices": [
+      "アクセス キー（Access keys）",
+      "ライフサイクル管理（Lifecycle management）",
+      "データ保護（Data protection）",
+      "ネットワークのファイアウォール規則（Networking firewall rules）"
+    ],
+    "answer": 3,
+    "explanation": "Storage Account の Networking で IP ネットワーク ルールを構成します。",
+    "why_not": [
+      "Access keys は認証情報であり、接続元 IP の制御ではありません。",
+      "Lifecycle management はデータの階層化や削除を自動化します。",
+      "Data protection は論理削除やバージョン管理などを設定します。",
+      ""
+    ]
+  },
+  {
+    "id": 5,
+    "category": "ID とガバナンス",
+    "question": "ユーザーに Azure リソースの閲覧だけを許可したい。最も適切な組み込みロールはどれですか？",
+    "choices": [
+      "共同作成者（Contributor）",
+      "ユーザー アクセス管理者（User Access Administrator）",
+      "所有者（Owner）",
+      "閲覧者（Reader）"
+    ],
+    "answer": 3,
+    "explanation": "Reader はリソースの表示を許可しますが、変更は許可しません。",
+    "why_not": [
+      "Contributor はリソースを作成・変更できます。",
+      "User Access Administrator はユーザー アクセスの管理に使用します。",
+      "Owner はリソース管理とアクセス権管理の両方が可能です。",
+      ""
+    ]
+  },
+  {
+    "id": 6,
+    "category": "コンピューティング",
+    "question": "Azure VM の OS ディスクとデータ ディスクを暗号化し、キーを Key Vault で管理したい。何を使用しますか？",
+    "choices": [
+      "Storage Service Encryption のみ（Storage Service Encryption only）",
+      "Azure Disk Encryption（Azure Disk Encryption）",
+      "Azure Backup（Azure Backup）",
+      "マネージド ID（Managed Identity）"
+    ],
+    "answer": 1,
+    "explanation": "Azure Disk Encryption は BitLocker または DM-Crypt を使用し、キーを Key Vault と連携して管理できます。",
+    "why_not": [
+      "Storage Service Encryption は保存時暗号化ですが、この要件の Key Vault 連携とは異なります。",
+      "",
+      "Azure Backup はバックアップ取得のサービスです。",
+      "Managed Identity は Azure リソースの認証に使用します。"
+    ]
+  },
+  {
+    "id": 7,
+    "category": "監視と保守",
+    "question": "Azure リソースのメトリックがしきい値を超えたとき、メール通知したい。何を構成しますか？",
+    "choices": [
+      "アクティビティ ログのみ（Activity Log only）",
+      "診断設定のみ（Diagnostic setting only）",
+      "アラート ルールとアクション グループ（Alert rule and Action group）",
+      "リソース ロック（Resource lock）"
+    ],
+    "answer": 2,
+    "explanation": "Alert rule で条件を定義し、Action group でメールなどの通知先を設定します。",
+    "why_not": [
+      "Activity Log だけでは通知先を定義できません。",
+      "Diagnostic setting はログやメトリックの転送先を設定します。",
+      "",
+      "Resource lock は誤削除や変更を防ぐものです。"
+    ]
+  },
+  {
+    "id": 8,
+    "category": "監視と保守",
+    "question": "Azure VM をバックアップするために、最初に作成する代表的なリソースはどれですか？",
+    "choices": [
+      "Backup コンテナー（Backup vault）",
+      "Recovery Services コンテナー（Recovery Services vault）",
+      "Azure Site Recovery（Azure Site Recovery）",
+      "Log Analytics ワークスペース（Log Analytics workspace）"
+    ],
+    "answer": 1,
+    "explanation": "Azure VM Backup では一般に Recovery Services vault を作成し、バックアップ ポリシーを設定します。",
+    "why_not": [
+      "Automation account は自動化に使用します。",
+      "",
+      "スナップショットだけでは Azure Backup の一元管理や保持ポリシーを代替できません。",
+      "Log Analytics workspace はログ分析に使用します。"
+    ]
+  },
+  {
+    "id": 9,
+    "category": "ネットワーク",
+    "question": "サブネット内の VM からインターネットへの送信元 IP アドレスを固定したい。何を使用しますか？",
+    "choices": [
+      "Application Gateway（Application Gateway）",
+      "Azure Bastion（Azure Bastion）",
+      "プライベート DNS ゾーン（Private DNS zone）",
+      "NAT ゲートウェイ（NAT Gateway）"
+    ],
+    "answer": 3,
+    "explanation": "NAT Gateway をサブネットに関連付けると、アウトバウンド通信の送信元パブリック IP を固定できます。",
+    "why_not": [
+      "Application Gateway は Web トラフィックのレイヤー 7 負荷分散に使用します。",
+      "Azure Bastion はブラウザー経由の RDP/SSH 接続に使用します。",
+      "Private DNS zone はプライベート名前解決に使用します。",
+      ""
+    ]
+  },
+  {
+    "id": 10,
+    "category": "ID とガバナンス",
+    "question": "サブスクリプション内のリソースが誤って削除されるのを防ぎたい。何を設定しますか？",
+    "choices": [
+      "削除不可ロック（CanNotDelete lock）",
+      "Azure Policy の監査（Azure Policy audit）",
+      "読み取り専用ロック（ReadOnly lock）",
+      "ネットワーク セキュリティ グループ（NSG）"
+    ],
+    "answer": 0,
+    "explanation": "CanNotDelete ロックは変更を許可しつつ、削除を防止します。",
+    "why_not": [
+      "",
+      "audit は非準拠を記録しますが、削除を直接防止しません。",
+      "ReadOnly は削除だけでなく変更も制限します。",
+      "NSG はネットワーク通信を制御します。"
+    ]
+  },
+  {
+    "id": 11,
+    "category": "ストレージ",
+    "question": "Blob データを一定期間変更・削除できないようにしたい。どの機能を使用しますか？",
+    "choices": [
+      "geo 冗長ストレージ（Geo-redundant storage）",
+      "ライフサイクル管理（Lifecycle management）",
+      "論理的な削除（Soft delete）",
+      "不変ストレージ（Immutable storage）"
+    ],
+    "answer": 3,
+    "explanation": "Immutable storage の時間ベース保持ポリシーなどを使うと、指定期間の変更・削除を防げます。",
+    "why_not": [
+      "Geo-redundant storage は別リージョンへ複製します。",
+      "Lifecycle management は階層移動や削除を自動化します。",
+      "Soft delete は削除後の復元を可能にしますが、削除自体を禁止しません。",
+      ""
+    ]
+  },
+  {
+    "id": 12,
+    "category": "コンピューティング",
+    "question": "複数の VM を障害ドメインと更新ドメインに分散配置したい。何を使用しますか？",
+    "choices": [
+      "近接配置グループ（Proximity Placement Group）",
+      "仮想マシン スケール セットの自動スケールのみ（Virtual Machine Scale Set autoscale only）",
+      "専用ホスト（Dedicated Host）",
+      "可用性セット（Availability Set）"
+    ],
+    "answer": 3,
+    "explanation": "Availability Set は VM を障害ドメインと更新ドメインに分散します。",
+    "why_not": [
+      "Proximity Placement Group は物理的に近接配置して遅延を抑える目的です。",
+      "自動スケールは台数調整の機能であり、設問の中心ではありません。",
+      "Dedicated Host は専用物理ホストを提供します。",
+      ""
+    ]
+  },
+  {
+    "id": 13,
+    "category": "ID とガバナンス",
+    "question": "複数のユーザーへ同じAzure RBACロールをまとめて割り当てたい。最も管理しやすい方法はどれですか？",
+    "choices": [
+      "Microsoft Entra グループへ割り当てる（Assign to a Microsoft Entra group）",
+      "各ユーザーへ個別に割り当てる（Individual assignment）",
+      "管理グループを削除する（Delete the management group）",
+      "リソース ロックを設定する（Configure a resource lock）"
+    ],
+    "answer": 0,
+    "explanation": "ユーザーをMicrosoft Entraグループにまとめ、そのグループへRBACロールを割り当てると管理を簡素化できます。",
+    "why_not": [
+      "",
+      "個別割り当ては人数が増えるほど管理負荷が高くなります。",
+      "管理グループはサブスクリプションを階層管理するためのものです。",
+      "リソース ロックは削除や変更を防ぐ機能です。"
+    ]
+  },
+  {
+    "id": 14,
+    "category": "ID とガバナンス",
+    "question": "複数のサブスクリプションへ共通のAzure Policyを一括適用したい。最適なスコープはどれですか？",
+    "choices": [
+      "リソース グループ（Resource group）",
+      "リソース（Resource）",
+      "管理グループ（Management group）",
+      "ネットワーク インターフェイス（Network interface）"
+    ],
+    "answer": 2,
+    "explanation": "管理グループへポリシーを割り当てると、配下の複数サブスクリプションへ継承できます。",
+    "why_not": [
+      "単一リソース グループ配下だけが対象です。",
+      "単一リソースだけが対象になります。",
+      "",
+      "NICはネットワーク接続用リソースです。"
+    ]
+  },
+  {
+    "id": 15,
+    "category": "ID とガバナンス",
+    "question": "新しく作成されるリソースに必ずCostCenterタグを付けさせたい。何を使用しますか？",
+    "choices": [
+      "可用性セット（Availability Set）",
+      "Azure Monitor（Azure Monitor）",
+      "ネットワーク セキュリティ グループ（NSG）",
+      "Azure Policy（Azure Policy）"
+    ],
+    "answer": 3,
+    "explanation": "Azure Policyを使用すると、必須タグの追加や未設定リソースの拒否を行えます。",
+    "why_not": [
+      "可用性セットはVMの可用性を高めます。",
+      "Azure Monitorは監視とアラートに使用します。",
+      "NSGはネットワーク通信を制御します。",
+      ""
+    ]
+  },
+  {
+    "id": 16,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyで既存リソースが非準拠と判定された。deployIfNotExistsポリシーによって自動修正するには何を作成しますか？",
+    "choices": [
+      "アクション グループ（Action group）",
+      "バックアップ ポリシー（Backup policy）",
+      "修復タスク（Remediation task）",
+      "サービス正常性アラート（Service Health alert）"
+    ],
+    "answer": 2,
+    "explanation": "修復タスクは、deployIfNotExistsやmodify効果を既存リソースへ適用するために使用します。",
+    "why_not": [
+      "アクション グループは通知や自動処理の送信先です。",
+      "バックアップ ポリシーはバックアップ頻度と保持期間を定義します。",
+      "",
+      "Service HealthアラートはAzureサービス障害などを通知します。"
+    ]
+  },
+  {
+    "id": 17,
+    "category": "ID とガバナンス",
+    "question": "ユーザーに仮想マシンの起動・停止は許可するが、RBACの割り当て変更は許可したくない。適切な組み込みロールはどれですか？",
+    "choices": [
+      "仮想マシン共同作成者（Virtual Machine Contributor）",
+      "閲覧者（Reader）",
+      "ユーザー アクセス管理者（User Access Administrator）",
+      "所有者（Owner）"
+    ],
+    "answer": 0,
+    "explanation": "Virtual Machine ContributorはVMを管理できますが、Azure RBACの割り当て管理権限は持ちません。",
+    "why_not": [
+      "",
+      "Readerは表示のみでVMを起動・停止できません。",
+      "User Access Administratorはアクセス権管理用です。",
+      "Ownerはアクセス権管理も可能です。"
+    ]
+  },
+  {
+    "id": 18,
+    "category": "ID とガバナンス",
+    "question": "ユーザーを削除せず、一時的にMicrosoft Entra IDへのサインインを止めたい。何を設定しますか？",
+    "choices": [
+      "リソース ロックを設定する（Configure resource lock）",
+      "ユーザーをゲストへ変換する（Convert to guest）",
+      "サブスクリプションを移動する（Move subscription）",
+      "アカウントを無効化する（Disable account）"
+    ],
+    "answer": 3,
+    "explanation": "ユーザーのアカウントを無効化すると、オブジェクトを保持したままサインインをブロックできます。",
+    "why_not": [
+      "リソース ロックはAzureリソースの保護です。",
+      "ゲスト化は外部ユーザーとのコラボレーション用途です。",
+      "サブスクリプション移動とは無関係です。",
+      ""
+    ]
+  },
+  {
+    "id": 19,
+    "category": "ID とガバナンス",
+    "question": "外部企業のユーザーを自社テナントのアプリへ招待したい。どの種類のユーザーとして追加しますか？",
+    "choices": [
+      "ゲスト ユーザー（Guest user）",
+      "サービス プリンシパルのみ（Service principal only）",
+      "メンバー ユーザー（Member user）",
+      "マネージド ID（Managed identity）"
+    ],
+    "answer": 0,
+    "explanation": "Microsoft Entra B2Bでは外部ユーザーを通常ゲスト ユーザーとして招待します。",
+    "why_not": [
+      "",
+      "サービス プリンシパルはアプリケーションIDとして使用します。",
+      "メンバーは主に自組織の内部ユーザーです。",
+      "マネージド IDはAzureリソース用のIDです。"
+    ]
+  },
+  {
+    "id": 20,
+    "category": "ID とガバナンス",
+    "question": "Azureリソースが他のAzureサービスへ安全に認証し、資格情報をコードへ保存しないようにしたい。何を使用しますか？",
+    "choices": [
+      "パブリック IP（Public IP）",
+      "マネージド ID（Managed identity）",
+      "共有アクセス署名（SAS）",
+      "ストレージ アカウント キー（Storage account key）"
+    ],
+    "answer": 1,
+    "explanation": "マネージド IDを使用すると、Azureが資格情報の管理を行い、コードに秘密情報を保存せず認証できます。",
+    "why_not": [
+      "パブリックIPはネットワークアドレスです。",
+      "",
+      "SASはストレージへの委任アクセスに使用します。",
+      "アカウント キーは強力な共有秘密情報です。"
+    ]
+  },
+  {
+    "id": 21,
+    "category": "ID とガバナンス",
+    "question": "あるユーザーにリソース グループ内のリソース管理だけを許可したい。RBACロールはどのスコープで割り当てるべきですか？",
+    "choices": [
+      "すべてのサブスクリプション（All subscriptions）",
+      "対象のリソース グループ（Target resource group）",
+      "管理グループ（Management group）",
+      "テナント全体（Tenant）"
+    ],
+    "answer": 1,
+    "explanation": "最小権限の原則に従い、必要な対象リソース グループへロールを割り当てます。",
+    "why_not": [
+      "必要以上に広い権限になります。",
+      "",
+      "配下のサブスクリプションへ影響する広いスコープです。",
+      "広すぎるスコープです。"
+    ]
+  },
+  {
+    "id": 22,
+    "category": "ID とガバナンス",
+    "question": "リソース グループへ付けたタグについて正しい説明はどれですか？",
+    "choices": [
+      "タグはNSGルールになる（Becomes an NSG rule）",
+      "配下のリソースへ自動継承されない（Not automatically inherited）",
+      "配下のリソースへ自動継承される（Automatically inherited）",
+      "タグはサブスクリプションにしか付けられない（Subscriptions only）"
+    ],
+    "answer": 1,
+    "explanation": "リソース グループのタグは、標準動作では配下リソースへ自動継承されません。必要ならAzure Policyなどで付与します。",
+    "why_not": [
+      "タグはメタデータでありNSGルールではありません。",
+      "",
+      "標準では自動継承されません。",
+      "タグは多くのAzureリソースへ設定できます。"
+    ]
+  },
+  {
+    "id": 23,
+    "category": "ID とガバナンス",
+    "question": "予算額を超えそうなときに通知したい。何を構成しますか？",
+    "choices": [
+      "可用性ゾーン（Availability Zone）",
+      "Azure Bastion（Azure Bastion）",
+      "Cost Managementの予算（Budget）",
+      "ルート テーブル（Route Table）"
+    ],
+    "answer": 2,
+    "explanation": "Cost ManagementのBudgetでは、実績または予測コストに基づくしきい値通知を設定できます。",
+    "why_not": [
+      "可用性ゾーンは物理的に分離されたデータセンターです。",
+      "Bastionは安全なRDP/SSH接続用です。",
+      "",
+      "ルート テーブルは通信経路を制御します。"
+    ]
+  },
+  {
+    "id": 24,
+    "category": "ID とガバナンス",
+    "question": "リソースの作成・変更・削除など、サブスクリプション レベルの操作履歴を確認したい。どのログを使用しますか？",
+    "choices": [
+      "アクティビティ ログ（Activity log）",
+      "ブート診断ログ（Boot diagnostics log）",
+      "NSGフロー ログのみ（NSG flow logs only）",
+      "ゲストOSのイベント ログのみ（Guest OS event log only）"
+    ],
+    "answer": 0,
+    "explanation": "Azure Activity Logには、Azure Resource Managerのコントロール プレーン操作が記録されます。",
+    "why_not": [
+      "",
+      "ブート診断はVMの起動トラブル調査用です。",
+      "NSGフロー ログはネットワークフローを記録します。",
+      "ゲストOSログはOS内部のイベントです。"
+    ]
+  },
+  {
+    "id": 25,
+    "category": "ストレージ",
+    "question": "Azure Blob Storageで、頻繁にアクセスしないが直ちに読み取り可能なデータのコストを下げたい。適切なアクセス層はどれですか？",
+    "choices": [
+      "Premiumファイル共有（Premium file share）",
+      "ホット層（Hot tier）",
+      "クール層（Cool tier）",
+      "アーカイブ層（Archive tier）"
+    ],
+    "answer": 2,
+    "explanation": "クール層はアクセス頻度が低いものの、オンラインで即時アクセスが必要なデータに適しています。",
+    "why_not": [
+      "Premiumファイル共有はAzure Filesの高性能層です。",
+      "ホット層は頻繁にアクセスするデータ向けです。",
+      "",
+      "アーカイブ層はオフラインで、読み取り前にリハイドレートが必要です。"
+    ]
+  },
+  {
+    "id": 26,
+    "category": "ストレージ",
+    "question": "長期間ほとんどアクセスせず、取り出しに時間がかかってもよいBlobデータに最適な層はどれですか？",
+    "choices": [
+      "トランザクション最適化（Transaction optimized）",
+      "ホット層（Hot tier）",
+      "クール層（Cool tier）",
+      "アーカイブ層（Archive tier）"
+    ],
+    "answer": 3,
+    "explanation": "アーカイブ層は保存コストが最も低く、長期保管データ向けですが、利用前にリハイドレートが必要です。",
+    "why_not": [
+      "Transaction optimizedはAzure Filesの層です。",
+      "頻繁なアクセス向けです。",
+      "オンラインの低頻度アクセス向けです。",
+      ""
+    ]
+  },
+  {
+    "id": 27,
+    "category": "ストレージ",
+    "question": "Blobが誤って削除された後、一定期間内なら復元できるようにしたい。何を有効にしますか？",
+    "choices": [
+      "Blobの論理的な削除（Soft delete for blobs）",
+      "不変ストレージのみ（Immutable storage only）",
+      "NAT Gateway（NAT Gateway）",
+      "読み取り専用ロックのみ（ReadOnly lock only）"
+    ],
+    "answer": 0,
+    "explanation": "Blobの論理的な削除を有効にすると、保持期間中に削除済みBlobを復元できます。",
+    "why_not": [
+      "",
+      "不変ストレージは変更や削除自体を防ぐ用途です。",
+      "NAT Gatewayはアウトバウンド通信を制御します。",
+      "ReadOnlyロックはリソース管理操作を制限しますが、データ保護機能とは異なります。"
+    ]
+  },
+  {
+    "id": 28,
+    "category": "ストレージ",
+    "question": "Blobが上書きされたときに以前の内容へ戻せるようにしたい。何を有効にしますか？",
+    "choices": [
+      "共有アクセス署名のみ（SAS only）",
+      "Blobのバージョン管理（Blob versioning）",
+      "オブジェクト レプリケーションのみ（Object replication only）",
+      "静的Webサイト（Static website）"
+    ],
+    "answer": 1,
+    "explanation": "Blob versioningを有効にすると、変更時に以前のバージョンを保持できます。",
+    "why_not": [
+      "SASはアクセス権を委任する仕組みです。",
+      "",
+      "オブジェクト レプリケーションはストレージ アカウント間の非同期複製です。",
+      "静的WebサイトはHTMLなどの配信機能です。"
+    ]
+  },
+  {
+    "id": 29,
+    "category": "ストレージ",
+    "question": "Storage Accountのデータを別のAzureリージョンにも非同期複製し、読み取り用のセカンダリ エンドポイントも使用したい。どの冗長性を選びますか？",
+    "choices": [
+      "ゾーン冗長ストレージ（ZRS）",
+      "Premium SSD（Premium SSD）",
+      "ローカル冗長ストレージ（LRS）",
+      "読み取りアクセスgeo冗長ストレージ（RA-GRS）"
+    ],
+    "answer": 3,
+    "explanation": "RA-GRSはプライマリ リージョンのデータをセカンダリへ非同期複製し、セカンダリからの読み取りも提供します。",
+    "why_not": [
+      "ZRSは同一リージョン内の複数可用性ゾーンへ複製します。",
+      "Premium SSDはマネージド ディスクの種類です。",
+      "LRSは単一リージョン内で複製します。",
+      ""
+    ]
+  },
+  {
+    "id": 30,
+    "category": "ストレージ",
+    "question": "同一リージョン内の複数可用性ゾーンへデータを同期複製したい。どの冗長性を選びますか？",
+    "choices": [
+      "geo冗長ストレージ（GRS）",
+      "アーカイブ層（Archive tier）",
+      "ゾーン冗長ストレージ（ZRS）",
+      "ローカル冗長ストレージ（LRS）"
+    ],
+    "answer": 2,
+    "explanation": "ZRSは同一リージョン内の複数可用性ゾーンへデータを同期複製します。",
+    "why_not": [
+      "GRSは別リージョンにも複製します。",
+      "アーカイブはアクセス層です。",
+      "",
+      "LRSは単一データセンター内の冗長化です。"
+    ]
+  },
+  {
+    "id": 31,
+    "category": "ストレージ",
+    "question": "ユーザーにBlobコンテナーへの期限付き読み取りアクセスを与えたいが、アカウント キーは渡したくない。何を発行しますか？",
+    "choices": [
+      "可用性セット（Availability Set）",
+      "共有アクセス署名（SAS）",
+      "リソース ロック（Resource lock）",
+      "NSGルール（NSG rule）"
+    ],
+    "answer": 1,
+    "explanation": "SASは対象、権限、有効期限などを制限したストレージアクセスを委任できます。",
+    "why_not": [
+      "可用性セットはVM向けです。",
+      "",
+      "リソース ロックは管理プレーンの変更や削除を制限します。",
+      "NSGはネットワーク通信を制御します。"
+    ]
+  },
+  {
+    "id": 32,
+    "category": "ストレージ",
+    "question": "Microsoft Entra ID資格情報を使ってBlobへアクセスし、可能な限りアカウント キーへの依存を減らしたい。推奨される認可方式はどれですか？",
+    "choices": [
+      "パブリックIPのみ（Public IP only）",
+      "匿名アクセスのみ（Anonymous access only）",
+      "リソース ロックのみ（Resource lock only）",
+      "Azure RBACによる認可（Authorization with Azure RBAC）"
+    ],
+    "answer": 3,
+    "explanation": "BlobデータへのMicrosoft Entra認証では、適切なストレージ データ ロールをAzure RBACで割り当てます。",
+    "why_not": [
+      "IPアドレスだけではデータ操作の認可になりません。",
+      "匿名アクセスは公開データ向けで安全なユーザー認証ではありません。",
+      "リソース ロックはデータアクセス権を付与しません。",
+      ""
+    ]
+  },
+  {
+    "id": 33,
+    "category": "ストレージ",
+    "question": "Azure Files共有をWindowsクライアントへ接続するときに使用する代表的なプロトコルはどれですか？",
+    "choices": [
+      "SMB（Server Message Block）",
+      "BGP（Border Gateway Protocol）",
+      "ICMP（Internet Control Message Protocol）",
+      "RDP（Remote Desktop Protocol）"
+    ],
+    "answer": 0,
+    "explanation": "Azure FilesはSMB共有を提供し、Windowsからネットワーク ドライブとしてマウントできます。",
+    "why_not": [
+      "",
+      "BGPは動的ルーティング用です。",
+      "ICMPは疎通確認などに使われます。",
+      "RDPはリモート デスクトップ接続用です。"
+    ]
+  },
+  {
+    "id": 34,
+    "category": "コンピューティング",
+    "question": "同一構成のVMを需要に応じて自動的に増減させたい。何を使用しますか？",
+    "choices": [
+      "可用性セット（Availability Set）",
+      "Recovery Services コンテナー（Recovery Services vault）",
+      "プライベート DNS ゾーン（Private DNS zone）",
+      "仮想マシン スケール セット（Virtual Machine Scale Sets）"
+    ],
+    "answer": 3,
+    "explanation": "Virtual Machine Scale Setsは同一構成のVM群を作成し、自動スケールできます。",
+    "why_not": [
+      "Availability Setは障害ドメインと更新ドメインへ分散しますが、自動スケール機能そのものではありません。",
+      "Recovery Services vaultはバックアップなどに使用します。",
+      "Private DNS zoneは名前解決用です。",
+      ""
+    ]
+  },
+  {
+    "id": 35,
+    "category": "コンピューティング",
+    "question": "VMを別々の物理データセンターへ配置してデータセンター障害へ備えたい。何を使用しますか？",
+    "choices": [
+      "可用性ゾーン（Availability Zones）",
+      "近接配置グループ（Proximity Placement Group）",
+      "リソース タグ（Resource tag）",
+      "可用性セットのみ（Availability Set only）"
+    ],
+    "answer": 0,
+    "explanation": "可用性ゾーンはリージョン内で物理的に分離されたデータセンター群です。",
+    "why_not": [
+      "",
+      "近接配置グループは低遅延のため近くへ配置します。",
+      "タグはメタデータです。",
+      "Availability Setは同一データセンター内の障害分散が中心です。"
+    ]
+  },
+  {
+    "id": 36,
+    "category": "コンピューティング",
+    "question": "VMへブラウザーからRDP/SSH接続したいが、VMにパブリックIPを付与したくない。何を使用しますか？",
+    "choices": [
+      "Traffic Manager（Traffic Manager）",
+      "Azure DNS（Azure DNS）",
+      "Azure Bastion（Azure Bastion）",
+      "NAT Gateway（NAT Gateway）"
+    ],
+    "answer": 2,
+    "explanation": "Azure BastionはVMへパブリックIPを付けず、Azure portal経由でRDP/SSH接続できます。",
+    "why_not": [
+      "Traffic ManagerはDNSベースのグローバル負荷分散です。",
+      "Azure DNSはDNSゾーンをホストします。",
+      "",
+      "NAT Gatewayはアウトバウンド接続用です。"
+    ]
+  },
+  {
+    "id": 37,
+    "category": "コンピューティング",
+    "question": "VM作成時にOS設定やアプリのインストールを自動化するため、起動時にスクリプトを渡したい。何を使用できますか？",
+    "choices": [
+      "NSGフロー ログ（NSG flow logs）",
+      "Azure Policyの監査のみ（Azure Policy audit only）",
+      "cloud-init（cloud-init）",
+      "リソース ロック（Resource lock）"
+    ],
+    "answer": 2,
+    "explanation": "Linux VMではcloud-initを使用して初回起動時の構成を自動化できます。",
+    "why_not": [
+      "NSGフロー ログは通信記録です。",
+      "監査ポリシーは構成の自動実行手段ではありません。",
+      "",
+      "リソース ロックは変更や削除を防ぎます。"
+    ]
+  },
+  {
+    "id": 38,
+    "category": "コンピューティング",
+    "question": "既存VMへ拡張機能を使ってスクリプトを実行したい。代表的な機能はどれですか？",
+    "choices": [
+      "読み取り専用ロック（ReadOnly lock）",
+      "サービス エンドポイント（Service Endpoint）",
+      "カスタム スクリプト拡張機能（Custom Script Extension）",
+      "Azure DNSエイリアス（Azure DNS alias）"
+    ],
+    "answer": 2,
+    "explanation": "Custom Script ExtensionはVM上でスクリプトをダウンロードして実行するために使用できます。",
+    "why_not": [
+      "ReadOnlyロックは管理操作を制限します。",
+      "Service EndpointはPaaSへのネットワーク接続機能です。",
+      "",
+      "DNSエイリアスは名前解決に関する機能です。"
+    ]
+  },
+  {
+    "id": 39,
+    "category": "コンピューティング",
+    "question": "コンテナー イメージをAzure内のプライベート レジストリへ保存したい。何を使用しますか？",
+    "choices": [
+      "Docker Hub",
+      "Azure Container Registry（Azure Container Registry）",
+      "Azure Container Apps",
+      "Azure Kubernetes Service（AKS）"
+    ],
+    "answer": 1,
+    "explanation": "Azure Container RegistryはDocker/OCIコンテナー イメージを保存・管理するプライベート レジストリです。",
+    "why_not": [
+      "Azure Filesはファイル共有サービスです。",
+      "",
+      "BastionはRDP/SSH接続用です。",
+      "Azure Policyはガバナンス機能です。"
+    ]
+  },
+  {
+    "id": 40,
+    "category": "コンピューティング",
+    "question": "単一または少数のコンテナーを、オーケストレーターを管理せず短時間で実行したい。何を使用しますか？",
+    "choices": [
+      "Azure Kubernetes Serviceのみ（AKS only）",
+      "可用性セット（Availability Set）",
+      "Azure Container Instances（Azure Container Instances）",
+      "Azure DNS Private Resolver（Azure DNS Private Resolver）"
+    ],
+    "answer": 2,
+    "explanation": "Azure Container InstancesはVMやオーケストレーターを管理せずにコンテナーを実行できます。",
+    "why_not": [
+      "AKSはKubernetesクラスターが必要な構成向けです。",
+      "可用性セットはVM向けです。",
+      "",
+      "DNS Private ResolverはDNS問い合わせの転送に使用します。"
+    ]
+  },
+  {
+    "id": 41,
+    "category": "コンピューティング",
+    "question": "WebアプリをPaaSとしてデプロイし、OS管理を減らしたい。どのサービスが適切ですか？",
+    "choices": [
+      "Azure Route Server（Azure Route Server）",
+      "Azure App Service（Azure App Service）",
+      "Recovery Services コンテナー（Recovery Services vault）",
+      "Azure Virtual Networkのみ（Azure Virtual Network only）"
+    ],
+    "answer": 1,
+    "explanation": "Azure App ServiceはWebアプリやAPIをホストするマネージドPaaSです。",
+    "why_not": [
+      "Route ServerはNVAとのBGP経路交換に使用します。",
+      "",
+      "Recovery Services vaultはバックアップなどに使用します。",
+      "VNetはネットワーク境界を提供します。"
+    ]
+  },
+  {
+    "id": 42,
+    "category": "コンピューティング",
+    "question": "App Serviceの新バージョンを本番へ切り替える前に別URLでテストし、短時間で入れ替えたい。何を使用しますか？",
+    "choices": [
+      "障害ドメイン（Fault domain）",
+      "アーカイブ層（Archive tier）",
+      "NSG（Network Security Group）",
+      "デプロイ スロット（Deployment slots）"
+    ],
+    "answer": 3,
+    "explanation": "Deployment slotsを使うと、ステージング環境で検証後に本番スロットとスワップできます。",
+    "why_not": [
+      "障害ドメインは物理障害の分離単位です。",
+      "アーカイブ層はBlobのアクセス層です。",
+      "NSGは通信制御です。",
+      ""
+    ]
+  },
+  {
+    "id": 43,
+    "category": "コンピューティング",
+    "question": "VMのOSディスクとして利用し、Azureがストレージ アカウント管理を代行するディスクはどれですか？",
+    "choices": [
+      "マネージド ディスク（Managed disk）",
+      "Blobコンテナー（Blob container）",
+      "共有アクセス署名（SAS）",
+      "ファイル共有（File share）"
+    ],
+    "answer": 0,
+    "explanation": "Managed Diskでは基盤となるストレージ アカウントをAzureが管理します。",
+    "why_not": [
+      "",
+      "Blob containerはオブジェクト ストレージです。",
+      "SASはアクセス委任トークンです。",
+      "File shareは共有ファイル ストレージです。"
+    ]
+  },
+  {
+    "id": 44,
+    "category": "コンピューティング",
+    "question": "VMの一時ディスクについて正しい説明はどれですか？",
+    "choices": [
+      "永続データの保存に最適（Best for persistent data）",
+      "ホスト移動などで内容が失われる可能性がある（Data can be lost during host events）",
+      "OSディスクと同じく必ず保持される（Always retained like OS disk）",
+      "自動的に別リージョンへ複製される（Automatically geo-replicated）"
+    ],
+    "answer": 1,
+    "explanation": "一時ディスクは物理ホスト上にあり、再デプロイやホスト移動などでデータが失われる可能性があります。",
+    "why_not": [
+      "永続化が必要なデータには使用しません。",
+      "",
+      "OSディスクとは異なり永続性が保証されません。",
+      "自動geo複製されません。"
+    ]
+  },
+  {
+    "id": 45,
+    "category": "コンピューティング",
+    "question": "Azure Resource Managerテンプレートを使う主な利点はどれですか？",
+    "choices": [
+      "VMのCPU性能を自動で倍増する（Automatically doubles CPU）",
+      "インフラストラクチャを宣言的に繰り返しデプロイできる（Declarative repeatable deployment）",
+      "すべての課金をなくす（Eliminates all charges）",
+      "ネットワーク遅延をゼロにする（Eliminates latency）"
+    ],
+    "answer": 1,
+    "explanation": "ARMテンプレートやBicepは、Azureリソースをコードとして宣言的かつ再現可能にデプロイできます。",
+    "why_not": [
+      "性能向上を自動保証するものではありません。",
+      "",
+      "課金はデプロイしたリソースに応じて発生します。",
+      "ネットワーク遅延をゼロにはできません。"
+    ]
+  },
+  {
+    "id": 46,
+    "category": "ネットワーク",
+    "question": "2つのAzure VNetをAzureバックボーン経由で接続したい。最も直接的な方法はどれですか？",
+    "choices": [
+      "Azure Bastion（Azure Bastion）",
+      "Blobのバージョン管理（Blob versioning）",
+      "NAT Gateway（NAT Gateway）",
+      "仮想ネットワーク ピアリング（Virtual network peering）"
+    ],
+    "answer": 3,
+    "explanation": "VNet peeringはAzureバックボーンを使用してVNet同士を低遅延で接続します。",
+    "why_not": [
+      "BastionはRDP/SSH接続用です。",
+      "Blob versioningはストレージ機能です。",
+      "NAT Gatewayはアウトバウンド接続用です。",
+      ""
+    ]
+  },
+  {
+    "id": 47,
+    "category": "ネットワーク",
+    "question": "VNetピアリングについて正しい説明はどれですか？",
+    "choices": [
+      "必ずインターネットを経由する（Always uses the internet）",
+      "既定では推移的ではない（Not transitive by default）",
+      "同じVNet内でしか使えない（Only within one VNet）",
+      "既定で推移的である（Transitive by default）"
+    ],
+    "answer": 1,
+    "explanation": "VNet peeringは既定では推移的ではありません。A-BとB-CをピアリングしてもA-Cが自動接続されるわけではありません。",
+    "why_not": [
+      "Azureバックボーンを使用します。",
+      "",
+      "異なるVNet間を接続する機能です。",
+      "既定では推移的ではありません。"
+    ]
+  },
+  {
+    "id": 48,
+    "category": "ネットワーク",
+    "question": "オンプレミスとAzure VNetをインターネット経由の暗号化トンネルで接続したい。何を構成しますか？",
+    "choices": [
+      "VPN Gateway（VPN Gateway）",
+      "NAT Gateway（NAT Gateway）",
+      "Application Gateway（Application Gateway）",
+      "Azure Front Doorのみ（Azure Front Door only）"
+    ],
+    "answer": 0,
+    "explanation": "VPN Gatewayのサイト間VPNを使用すると、オンプレミスとAzureをIPsec/IKEトンネルで接続できます。",
+    "why_not": [
+      "",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "Application GatewayはWebトラフィックのL7負荷分散です。",
+      "Front DoorはグローバルなWeb配信・負荷分散サービスです。"
+    ]
+  },
+  {
+    "id": 49,
+    "category": "ネットワーク",
+    "question": "オンプレミスとAzure間でインターネットを経由しない専用接続を使用したい。何を選びますか？",
+    "choices": [
+      "Service Endpointのみ（Service Endpoint only）",
+      "ExpressRoute（ExpressRoute）",
+      "Point-to-Site VPNのみ（Point-to-Site VPN only）",
+      "Azure Bastion（Azure Bastion）"
+    ],
+    "answer": 1,
+    "explanation": "ExpressRouteは接続プロバイダーを通じてAzureへのプライベート接続を提供します。",
+    "why_not": [
+      "Service EndpointはVNetからPaaSへの接続機能です。",
+      "",
+      "P2S VPNは個々のクライアント端末からのVPN接続です。",
+      "BastionはVM管理接続用です。"
+    ]
+  },
+  {
+    "id": 50,
+    "category": "ネットワーク",
+    "question": "NSGルールの処理順序を決める値はどれですか？",
+    "choices": [
+      "優先度（Priority）",
+      "VMサイズ（VM size）",
+      "タグ数（Number of tags）",
+      "リソース名の長さ（Resource name length）"
+    ],
+    "answer": 0,
+    "explanation": "NSGルールは小さい優先度番号から評価され、最初に一致したルールが適用されます。",
+    "why_not": [
+      "",
+      "VMサイズは無関係です。",
+      "タグ数は無関係です。",
+      "名前の長さは無関係です。"
+    ]
+  },
+  {
+    "id": 51,
+    "category": "ネットワーク",
+    "question": "同じサブネット内の複数NICへ同じ通信制御を適用したい。NSGをどこへ関連付けられますか？",
+    "choices": [
+      "管理グループのみ（Management group only）",
+      "サブネット（Subnet）",
+      "Recovery Services コンテナーのみ（Recovery Services vault only）",
+      "請求書（Invoice）"
+    ],
+    "answer": 1,
+    "explanation": "NSGはサブネットまたはNICへ関連付けられます。サブネットへ関連付けると配下NICの通信へ適用されます。",
+    "why_not": [
+      "管理グループへNSGは関連付けません。",
+      "",
+      "Recovery Services vaultへNSGは関連付けません。",
+      "請求書は通信制御対象ではありません。"
+    ]
+  },
+  {
+    "id": 52,
+    "category": "ネットワーク",
+    "question": "独自のルーティングで通信を仮想アプライアンスへ送信したい。ユーザー定義ルートのネクスト ホップ種類はどれですか？",
+    "choices": [
+      "なし（None）",
+      "VNetローカルのみ（Virtual network only）",
+      "インターネットのみ（Internet only）",
+      "仮想アプライアンス（Virtual appliance）"
+    ],
+    "answer": 3,
+    "explanation": "ネットワーク仮想アプライアンスへ転送するUDRでは、Virtual applianceを選び、そのプライベートIPを指定します。",
+    "why_not": [
+      "Noneはトラフィックを破棄します。",
+      "Virtual networkはVNet内のシステム ルートを表します。",
+      "Internetはインターネットへ送る経路です。",
+      ""
+    ]
+  },
+  {
+    "id": 53,
+    "category": "ネットワーク",
+    "question": "HTTP/HTTPSのURLパスに基づいてバックエンドを振り分けたい。何を使用しますか？",
+    "choices": [
+      "NAT Gateway（NAT Gateway）",
+      "Application Gateway（Application Gateway）",
+      "Azure Load Balancer（Azure Load Balancer）",
+      "VPN Gateway（VPN Gateway）"
+    ],
+    "answer": 1,
+    "explanation": "Application Gatewayはレイヤー7で動作し、URLパスベース ルーティングを提供します。",
+    "why_not": [
+      "NAT Gatewayはアウトバウンド接続用です。",
+      "",
+      "Azure Load Balancerはレイヤー4の負荷分散です。",
+      "VPN GatewayはVPN接続用です。"
+    ]
+  },
+  {
+    "id": 54,
+    "category": "ネットワーク",
+    "question": "TCP/UDPトラフィックを複数VMへレイヤー4で分散したい。何を使用しますか？",
+    "choices": [
+      "Application Gatewayのみ（Application Gateway only）",
+      "Azure Load Balancer（Azure Load Balancer）",
+      "Microsoft Entra ID（Microsoft Entra ID）",
+      "Azure Policy（Azure Policy）"
+    ],
+    "answer": 1,
+    "explanation": "Azure Load BalancerはTCP/UDPのレイヤー4負荷分散を提供します。",
+    "why_not": [
+      "Application Gatewayは主にHTTP/HTTPSのレイヤー7です。",
+      "",
+      "Microsoft Entra IDはID管理サービスです。",
+      "Azure Policyはガバナンス用です。"
+    ]
+  },
+  {
+    "id": 55,
+    "category": "ネットワーク",
+    "question": "プライベートIPアドレスに対応する名前をVNet内で独自管理したい。何を使用しますか？",
+    "choices": [
+      "NAT Gateway（NAT Gateway）",
+      "プライベート DNS ゾーン（Private DNS zone）",
+      "Azure Policy（Azure Policy）",
+      "パブリック DNS ゾーンのみ（Public DNS zone only）"
+    ],
+    "answer": 1,
+    "explanation": "Azure Private DNS zoneをVNetへリンクすると、プライベート名前解決を提供できます。",
+    "why_not": [
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "",
+      "Azure Policyはガバナンス用です。",
+      "Public DNSはインターネット向け名前解決です。"
+    ]
+  },
+  {
+    "id": 56,
+    "category": "ネットワーク",
+    "question": "あるVNetのVPN Gatewayを、ピアリングされた別VNetから利用したい。ピアリングで何を構成しますか？",
+    "choices": [
+      "VMのブート診断（VM boot diagnostics）",
+      "サービス エンドポイントのみ（Service Endpoint only）",
+      "ゲートウェイ転送（Gateway transit）",
+      "Blobの論理的な削除（Blob soft delete）"
+    ],
+    "answer": 2,
+    "explanation": "ハブ側でAllow gateway transit、スポーク側でUse remote gatewaysを構成するとゲートウェイ転送を利用できます。",
+    "why_not": [
+      "Boot diagnosticsはVM起動診断です。",
+      "Service EndpointはPaaSへの接続です。",
+      "",
+      "Blob soft deleteはデータ保護です。"
+    ]
+  },
+  {
+    "id": 57,
+    "category": "ネットワーク",
+    "question": "複数のVNetやオンプレミスからの通信を中央で検査・制御したい。Azureのマネージド ファイアウォールはどれですか？",
+    "choices": [
+      "Azure Container Instances（Azure Container Instances）",
+      "Azure Firewall（Azure Firewall）",
+      "Azure Files（Azure Files）",
+      "Azure Backup（Azure Backup）"
+    ],
+    "answer": 1,
+    "explanation": "Azure Firewallはステートフルなマネージド ネットワーク セキュリティ サービスです。",
+    "why_not": [
+      "ACIはコンテナー実行サービスです。",
+      "",
+      "Azure Filesはファイル共有です。",
+      "Azure Backupはバックアップです。"
+    ]
+  },
+  {
+    "id": 58,
+    "category": "監視と保守",
+    "question": "VMのゲストOSからパフォーマンス データやログを収集したい。推奨されるエージェントはどれですか？",
+    "choices": [
+      "Log Analytics エージェント（Log Analytics agent）",
+      "Azure Connected Machine エージェント（Azure Connected Machine agent）",
+      "診断設定（Diagnostic settings）",
+      "Azure Monitor Agent（Azure Monitor Agent）"
+    ],
+    "answer": 3,
+    "explanation": "Azure Monitor Agentはデータ収集ルールと組み合わせて、ゲストOSの監視データを収集します。",
+    "why_not": [
+      "BastionはRDP/SSH接続用です。",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "Application GatewayはWeb負荷分散用です。",
+      ""
+    ]
+  },
+  {
+    "id": 59,
+    "category": "監視と保守",
+    "question": "Azure Monitor Logsでログを検索・分析するときに使用するクエリ言語はどれですか？",
+    "choices": [
+      "Kusto Query Language（KQL）",
+      "Bicepのみ（Bicep only）",
+      "HTML（HTML）",
+      "Transact-SQLのみ（T-SQL only）"
+    ],
+    "answer": 0,
+    "explanation": "Azure Monitor LogsとLog AnalyticsではKusto Query Languageを使用します。",
+    "why_not": [
+      "",
+      "BicepはAzureリソースの宣言言語です。",
+      "HTMLはマークアップ言語です。",
+      "T-SQLは主にSQL Server系で使用します。"
+    ]
+  },
+  {
+    "id": 60,
+    "category": "監視と保守",
+    "question": "複数のAzureリソースのログを一元的に保存し、KQLで分析したい。何を使用しますか？",
+    "choices": [
+      "Log Analytics ワークスペース（Log Analytics workspace）",
+      "NAT Gateway（NAT Gateway）",
+      "可用性セット（Availability Set）",
+      "Azure Container Registry（Azure Container Registry）"
+    ],
+    "answer": 0,
+    "explanation": "Log Analytics workspaceはAzure Monitor Logsのデータを格納し、KQLで分析する場所です。",
+    "why_not": [
+      "",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "可用性セットはVMの可用性向上用です。",
+      "ACRはコンテナー イメージのレジストリです。"
+    ]
+  },
+  {
+    "id": 61,
+    "category": "監視と保守",
+    "question": "リソース ログをLog Analyticsワークスペースへ送信したい。各リソースで何を構成しますか？",
+    "choices": [
+      "可用性ゾーン（Availability Zone）",
+      "診断設定（Diagnostic settings）",
+      "共有アクセス署名（SAS）",
+      "リソース ロック（Resource lock）"
+    ],
+    "answer": 1,
+    "explanation": "Diagnostic settingsを使用して、リソース ログやメトリックをLog Analytics、Storage、Event Hubsなどへ送信します。",
+    "why_not": [
+      "可用性ゾーンは物理分離されたデータセンターです。",
+      "",
+      "SASはストレージアクセス委任です。",
+      "リソース ロックは削除や変更を制限します。"
+    ]
+  },
+  {
+    "id": 62,
+    "category": "監視と保守",
+    "question": "Azure側のサービス障害、計画メンテナンス、正常性勧告を確認したい。どのサービスを使用しますか？",
+    "choices": [
+      "Service Health（Service Health）",
+      "Network Watcherの接続トラブルシューティングのみ（Connection troubleshoot only）",
+      "Azure Policy（Azure Policy）",
+      "Cost Management（Cost Management）"
+    ],
+    "answer": 0,
+    "explanation": "Azure Service Healthは利用中サービスに影響する障害、計画メンテナンス、正常性勧告を提供します。",
+    "why_not": [
+      "",
+      "Connection troubleshootはネットワーク接続診断です。",
+      "Azure Policyはガバナンス用です。",
+      "Cost Managementはコスト管理用です。"
+    ]
+  },
+  {
+    "id": 63,
+    "category": "監視と保守",
+    "question": "個々のAzureリソースの現在および過去の正常性状態を確認したい。何を使用しますか？",
+    "choices": [
+      "Azure DNS（Azure DNS）",
+      "Resource Health（Resource Health）",
+      "Azure Container Registry（Azure Container Registry）",
+      "Service Healthだけ（Service Health only）"
+    ],
+    "answer": 1,
+    "explanation": "Resource Healthは特定リソースの利用可能、利用不可、低下などの状態を表示します。",
+    "why_not": [
+      "Azure DNSは名前解決です。",
+      "",
+      "ACRはコンテナー レジストリです。",
+      "Service HealthはAzureサービスやリージョン側の問題を中心に表示します。"
+    ]
+  },
+  {
+    "id": 64,
+    "category": "監視と保守",
+    "question": "Azure VM Backupの復旧ポイント保持期間や取得頻度を定義するものはどれですか？",
+    "choices": [
+      "ルート テーブル（Route Table）",
+      "バックアップ ポリシー（Backup policy）",
+      "デプロイ スロット（Deployment slot）",
+      "NSGルール（NSG rule）"
+    ],
+    "answer": 1,
+    "explanation": "Backup policyでバックアップのスケジュールと復旧ポイントの保持期間を定義します。",
+    "why_not": [
+      "Route Tableは経路制御です。",
+      "",
+      "Deployment slotはApp Serviceのデプロイ機能です。",
+      "NSGは通信制御です。"
+    ]
+  },
+  {
+    "id": 65,
+    "category": "監視と保守",
+    "question": "Azure VM全体を別リージョンへレプリケートし、災害時にフェールオーバーしたい。何を使用しますか？",
+    "choices": [
+      "Blobのバージョン管理（Blob versioning）",
+      "Azure DNSのみ（Azure DNS only）",
+      "Azure Site Recovery（Azure Site Recovery）",
+      "可用性セットのみ（Availability Set only）"
+    ],
+    "answer": 2,
+    "explanation": "Azure Site RecoveryはVMなどのワークロードを別サイトや別リージョンへレプリケートし、フェールオーバーを支援します。",
+    "why_not": [
+      "Blob versioningはBlobデータの過去版保持です。",
+      "Azure DNSだけではVMをレプリケートできません。",
+      "",
+      "Availability Setは同一リージョン内の可用性向上が中心です。"
+    ]
+  },
+  {
+    "id": 66,
+    "category": "監視と保守",
+    "question": "VM同士のTCP接続が成功するかをNetwork Watcherで診断したい。何を使用しますか？",
+    "choices": [
+      "Blob inventory（Blob inventory）",
+      "Cost analysis（Cost analysis）",
+      "接続のトラブルシューティング（Connection troubleshoot）",
+      "Azure Policyの修復（Policy remediation）"
+    ],
+    "answer": 2,
+    "explanation": "Network WatcherのConnection troubleshootは、送信元から宛先への接続性と問題箇所を診断します。",
+    "why_not": [
+      "Blob inventoryはBlob一覧のレポート作成機能です。",
+      "Cost analysisはコスト分析です。",
+      "",
+      "Policy remediationは非準拠リソースの修復です。"
+    ]
+  },
+  {
+    "id": 67,
+    "category": "監視と保守",
+    "question": "VMが起動しないとき、シリアル出力や画面のスクリーンショットを確認したい。何を有効にしますか？",
+    "choices": [
+      "オブジェクト レプリケーション（Object replication）",
+      "Traffic Manager（Traffic Manager）",
+      "Azure Policy（Azure Policy）",
+      "ブート診断（Boot diagnostics）"
+    ],
+    "answer": 3,
+    "explanation": "Boot diagnosticsではVM起動時のシリアル ログとスクリーンショットを確認できます。",
+    "why_not": [
+      "Object replicationはBlob複製機能です。",
+      "Traffic ManagerはDNSベースの負荷分散です。",
+      "Azure Policyはガバナンス用です。",
+      ""
+    ]
+  },
+  {
+    "id": 68,
+    "category": "監視と保守",
+    "question": "アラート発生時にメール、SMS、Webhook、Azure Functionなどを呼び出す送信先をまとめるものはどれですか？",
+    "choices": [
+      "プライベート エンドポイント（Private Endpoint）",
+      "管理グループ（Management group）",
+      "アクション グループ（Action group）",
+      "可用性セット（Availability Set）"
+    ],
+    "answer": 2,
+    "explanation": "Action groupはAzure Monitorアラートが通知または自動処理を実行するためのアクション集合です。",
+    "why_not": [
+      "Private EndpointはPaaSへのプライベート接続です。",
+      "Management groupはサブスクリプション階層管理です。",
+      "",
+      "Availability SetはVM配置機能です。"
+    ]
+  },
+  {
+    "id": 69,
+    "category": "ID とガバナンス",
+    "question": "ある部署の管理者に、その部署のユーザーとグループだけを管理させたい。テナント全体への権限付与を避けるには何を使用しますか？",
+    "choices": [
+      "可用性セット（Availability set）",
+      "リソース グループ（Resource group）",
+      "管理単位（Administrative unit）",
+      "管理グループ（Management group）"
+    ],
+    "answer": 2,
+    "explanation": "管理単位を使うと、Microsoft Entra IDの管理範囲を特定のユーザーやグループへ限定できます。",
+    "why_not": [
+      "可用性セットはVMの可用性向上用です。",
+      "リソース グループはAzureリソースの管理単位です。",
+      "",
+      "管理グループはAzureサブスクリプションの階層管理用です。"
+    ]
+  },
+  {
+    "id": 70,
+    "category": "ID とガバナンス",
+    "question": "Azure RBACのカスタム ロールを作成するとき、許可する操作を指定するプロパティはどれですか？",
+    "choices": [
+      "Description",
+      "AssignableScopes",
+      "NotDataActions",
+      "Actions"
+    ],
+    "answer": 3,
+    "explanation": "Actionsには、カスタム ロールで許可する管理プレーン操作を指定します。",
+    "why_not": [
+      "Descriptionは説明文です。",
+      "AssignableScopesはロールを割り当て可能な範囲です。",
+      "NotDataActionsはDataActionsから除外するデータ操作です。",
+      ""
+    ]
+  },
+  {
+    "id": 71,
+    "category": "ID とガバナンス",
+    "question": "特定の操作だけを除外し、それ以外は広く許可するカスタム ロールを定義したい。除外操作を指定する項目はどれですか？",
+    "choices": [
+      "NotActions",
+      "Actions",
+      "AssignableScopes",
+      "DataActions"
+    ],
+    "answer": 0,
+    "explanation": "NotActionsはActionsで許可された管理操作から除外する操作を指定します。",
+    "why_not": [
+      "",
+      "Actionsは許可する操作です。",
+      "AssignableScopesは割り当て可能範囲です。",
+      "DataActionsはデータ プレーン操作です。"
+    ]
+  },
+  {
+    "id": 72,
+    "category": "ID とガバナンス",
+    "question": "ストレージ内のBlobデータを読み取る権限をカスタム ロールで定義したい。主に使用するプロパティはどれですか？",
+    "choices": [
+      "ConditionVersion",
+      "DataActions",
+      "NotActions",
+      "Actions"
+    ],
+    "answer": 1,
+    "explanation": "Blobデータの読み取りなど、データ プレーン権限はDataActionsで定義します。",
+    "why_not": [
+      "ConditionVersionは条件付きロール割り当てに関連します。",
+      "",
+      "NotActionsは管理操作の除外です。",
+      "Actionsは主に管理プレーン操作です。"
+    ]
+  },
+  {
+    "id": 73,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyで許可されたリージョン以外へのリソース作成を禁止したい。最も適切な効果はどれですか？",
+    "choices": [
+      "Deny（拒否）",
+      "Append（追加）",
+      "Disabled（無効）",
+      "Audit（監査）"
+    ],
+    "answer": 0,
+    "explanation": "Deny効果は、ポリシー条件に違反するリソースの作成や更新を拒否します。",
+    "why_not": [
+      "",
+      "Appendは指定値を追加します。",
+      "Disabledはポリシー評価を無効化します。",
+      "Auditは記録するだけで拒否しません。"
+    ]
+  },
+  {
+    "id": 74,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyへの違反を記録したいが、リソース作成は止めたくない。どの効果を使用しますか？",
+    "choices": [
+      "Deny（拒否）",
+      "DeployIfNotExists",
+      "Modify",
+      "Audit（監査）"
+    ],
+    "answer": 3,
+    "explanation": "Auditは非準拠として記録しますが、作成や更新をブロックしません。",
+    "why_not": [
+      "Denyは操作を拒否します。",
+      "DeployIfNotExistsは不足リソースを展開します。",
+      "Modifyはプロパティを追加・変更します。",
+      ""
+    ]
+  },
+  {
+    "id": 75,
+    "category": "ID とガバナンス",
+    "question": "リソースに不足しているタグをAzure Policyで追加または修正したい。適切な効果はどれですか？",
+    "choices": [
+      "Modify（変更）",
+      "Disabled（無効）",
+      "Audit（監査）",
+      "Deny（拒否）"
+    ],
+    "answer": 0,
+    "explanation": "Modify効果は、対応するプロパティやタグを追加・更新できます。",
+    "why_not": [
+      "",
+      "Disabledは評価しません。",
+      "Auditは記録のみです。",
+      "Denyは拒否します。"
+    ]
+  },
+  {
+    "id": 76,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyで関連する監視リソースが存在しない場合に自動展開したい。どの効果を使用しますか？",
+    "choices": [
+      "DeployIfNotExists",
+      "AuditIfNotExists",
+      "Deny",
+      "Manual"
+    ],
+    "answer": 0,
+    "explanation": "DeployIfNotExistsは条件を満たす関連リソースがない場合に展開を実行できます。",
+    "why_not": [
+      "",
+      "AuditIfNotExistsは不足を監査しますが展開しません。",
+      "Denyは操作を拒否します。",
+      "ManualというPolicy効果はありません。"
+    ]
+  },
+  {
+    "id": 77,
+    "category": "ID とガバナンス",
+    "question": "複数のAzure Policy定義を1つの単位として割り当てたい。何を作成しますか？",
+    "choices": [
+      "可用性セット（Availability set）",
+      "アクション グループ（Action group）",
+      "管理単位（Administrative unit）",
+      "イニシアチブ定義（Initiative definition）"
+    ],
+    "answer": 3,
+    "explanation": "イニシアチブは複数のPolicy定義をまとめて割り当てる仕組みです。",
+    "why_not": [
+      "可用性セットはVM向けです。",
+      "アクション グループは通知先です。",
+      "管理単位はEntraオブジェクトの管理範囲です。",
+      ""
+    ]
+  },
+  {
+    "id": 78,
+    "category": "ID とガバナンス",
+    "question": "リソース グループを別のサブスクリプションへ移動する前に、最初に確認すべきことはどれですか？",
+    "choices": [
+      "全ユーザーがOwnerであること",
+      "移動対象リソースが移動をサポートしていること",
+      "すべてのタグが同一であること",
+      "すべてのリソースにパブリックIPがあること"
+    ],
+    "answer": 1,
+    "explanation": "リソースの種類や構成によって、サブスクリプション間移動がサポートされない場合があります。",
+    "why_not": [
+      "全員へOwnerを付与する必要はありません。",
+      "",
+      "タグの一致は移動条件ではありません。",
+      "パブリックIPは必須ではありません。"
+    ]
+  },
+  {
+    "id": 79,
+    "category": "ID とガバナンス",
+    "question": "サブスクリプションAのリソースをサブスクリプションBへ移動する。両サブスクリプションについて必要な条件はどれですか？",
+    "choices": [
+      "同じリージョンのリソースしかないこと",
+      "同じリソース グループ名であること",
+      "同じMicrosoft Entraテナントに属していること",
+      "同じ課金通貨であることだけ"
+    ],
+    "answer": 2,
+    "explanation": "通常、サブスクリプション間でリソースを移動するには、両方が同じMicrosoft Entraテナントに属している必要があります。",
+    "why_not": [
+      "異なるリージョンのリソースが存在しても一律に不可ではありません。",
+      "リソース グループ名の一致は不要です。",
+      "",
+      "課金通貨だけでは条件を満たしません。"
+    ]
+  },
+  {
+    "id": 80,
+    "category": "ID とガバナンス",
+    "question": "Azureリソースへ期限付きで特権ロールを有効化させ、承認やMFAを要求したい。何を使用しますか？",
+    "choices": [
+      "Azure Policy",
+      "Network Watcher",
+      "Azure Files",
+      "Microsoft Entra Privileged Identity Management（PIM）"
+    ],
+    "answer": 3,
+    "explanation": "PIMを使うと、対象ロールの適格割り当て、期限、承認、MFAなどを管理できます。",
+    "why_not": [
+      "Azure Policyはリソース準拠性を管理します。",
+      "Network Watcherはネットワーク診断用です。",
+      "Azure Filesはファイル共有です。",
+      ""
+    ]
+  },
+  {
+    "id": 81,
+    "category": "ID とガバナンス",
+    "question": "ユーザーが自分でパスワードをリセットできるようにしたい。何を構成しますか？",
+    "choices": [
+      "リソース ロック",
+      "Service Health",
+      "セルフサービス パスワード リセット（SSPR）",
+      "Azure Bastion"
+    ],
+    "answer": 2,
+    "explanation": "SSPRを有効化すると、ユーザーが本人確認後に自分のパスワードをリセットできます。",
+    "why_not": [
+      "リソース ロックはAzureリソース保護用です。",
+      "Service HealthはAzureサービス正常性情報です。",
+      "",
+      "BastionはVM接続用です。"
+    ]
+  },
+  {
+    "id": 82,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDのグループ メンバーシップをユーザー属性に基づいて自動更新したい。どのグループ機能を使用しますか？",
+    "choices": [
+      "動的メンバーシップ（Dynamic membership）",
+      "可用性ゾーン",
+      "入れ子の管理グループ",
+      "Azure PolicyのDeny"
+    ],
+    "answer": 0,
+    "explanation": "動的グループではルールに基づきユーザーやデバイスのメンバーシップを自動更新できます。",
+    "why_not": [
+      "",
+      "可用性ゾーンはデータセンター分離です。",
+      "管理グループはサブスクリプション階層です。",
+      "PolicyのDenyはリソース操作を拒否します。"
+    ]
+  },
+  {
+    "id": 83,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDで削除したユーザーを復元できる期間内に戻したい。どこから操作しますか？",
+    "choices": [
+      "削除済みユーザー（Deleted users）",
+      "Network Watcher",
+      "Azure Resource Graph",
+      "Cost Management"
+    ],
+    "answer": 0,
+    "explanation": "削除されたEntraユーザーは、保持期間中であればDeleted usersから復元できます。",
+    "why_not": [
+      "",
+      "Network Watcherはネットワーク診断です。",
+      "Resource GraphはAzureリソース検索用です。",
+      "Cost Managementは費用管理です。"
+    ]
+  },
+  {
+    "id": 84,
+    "category": "ID とガバナンス",
+    "question": "Azure RBACのロール割り当てが下位スコープへ及ぼす影響として正しいものはどれですか？",
+    "choices": [
+      "リソース単位の割り当てはテナント全体へ及ぶ",
+      "ロール割り当てに継承はない",
+      "親スコープの割り当ては子スコープへ継承される",
+      "子スコープの割り当ては必ず親へ継承される"
+    ],
+    "answer": 2,
+    "explanation": "管理グループ、サブスクリプション、リソース グループなどの親スコープの割り当ては、その配下へ継承されます。",
+    "why_not": [
+      "リソース単位はそのリソースに限定されます。",
+      "RBACにはスコープ継承があります。",
+      "",
+      "子から親へは継承されません。"
+    ]
+  },
+  {
+    "id": 85,
+    "category": "ID とガバナンス",
+    "question": "Azure RBACでユーザーに複数ロールが割り当てられている。実効権限の基本的な考え方はどれですか？",
+    "choices": [
+      "最も権限の弱いロールだけになる",
+      "許可された権限の和集合になる",
+      "最後に割り当てたロールだけになる",
+      "ロールが複数あるとすべて無効になる"
+    ],
+    "answer": 1,
+    "explanation": "Azure RBACでは、複数のロール割り当てから得られる許可が通常は累積します。",
+    "why_not": [
+      "最弱ロールだけにはなりません。",
+      "",
+      "最後のロールだけではありません。",
+      "複数割り当ては有効です。"
+    ]
+  },
+  {
+    "id": 86,
+    "category": "ID とガバナンス",
+    "question": "削除不可ロックが設定されたリソース グループ内のリソースについて正しい説明はどれですか？",
+    "choices": [
+      "配下リソースにも削除防止が継承される",
+      "配下リソースには影響しない",
+      "読み取りもできなくなる",
+      "ネットワーク通信が遮断される"
+    ],
+    "answer": 0,
+    "explanation": "リソース グループに設定したロックは配下のリソースへ継承されます。",
+    "why_not": [
+      "",
+      "配下にも影響します。",
+      "読み取りは可能です。",
+      "ロックはデータ通信を遮断しません。"
+    ]
+  },
+  {
+    "id": 87,
+    "category": "ID とガバナンス",
+    "question": "Azure Resource Graphを使用する主な目的はどれですか？",
+    "choices": [
+      "VMへRDP接続する",
+      "VPNトンネルを作成する",
+      "複数サブスクリプションのリソースを高速に検索・照会する",
+      "Blobを自動階層化する"
+    ],
+    "answer": 2,
+    "explanation": "Azure Resource Graphは、広い範囲のAzureリソース構成をクエリして調査するために使用します。",
+    "why_not": [
+      "RDP接続にはBastionなどを使います。",
+      "VPN接続にはVPN Gatewayを使います。",
+      "",
+      "階層化にはLifecycle Managementを使います。"
+    ]
+  },
+  {
+    "id": 88,
+    "category": "ID とガバナンス",
+    "question": "Azure Cost Managementでリソース別の費用を分類しやすくするために最も役立つものはどれですか？",
+    "choices": [
+      "NSGの優先度",
+      "VMのコンピューター名",
+      "Private DNSゾーン",
+      "一貫したタグ付け"
+    ],
+    "answer": 3,
+    "explanation": "CostCenterやEnvironmentなどのタグを統一して付けると、コストの集計や分類に利用できます。",
+    "why_not": [
+      "NSG優先度は通信制御用です。",
+      "コンピューター名だけではAzure課金分類に向きません。",
+      "Private DNSは名前解決用です。",
+      ""
+    ]
+  },
+  {
+    "id": 89,
+    "category": "ストレージ",
+    "question": "オンプレミスのファイル サーバーとAzure Filesを同期し、複数拠点で同じ共有を利用したい。何を使用しますか？",
+    "choices": [
+      "AzCopy",
+      "Azure Data Box",
+      "Azure File Sync",
+      "Blob Inventory"
+    ],
+    "answer": 2,
+    "explanation": "Azure File SyncはWindows ServerとAzureファイル共有を同期し、複数拠点のキャッシュとして利用できます。",
+    "why_not": [
+      "AzCopyはデータ転送ツールで継続同期の仕組みではありません。",
+      "Data Boxは大容量オフライン転送用です。",
+      "",
+      "Blob InventoryはBlob一覧レポートです。"
+    ]
+  },
+  {
+    "id": 90,
+    "category": "ストレージ",
+    "question": "Azure File Syncで、頻繁に使わないファイルをAzure側だけに保持し、サーバーの空き容量を増やしたい。何を有効にしますか？",
+    "choices": [
+      "Blob versioning",
+      "Immutable storage",
+      "クラウド階層化（Cloud tiering）",
+      "RA-GRS"
+    ],
+    "answer": 2,
+    "explanation": "Cloud tieringは低頻度ファイルの内容をAzure Filesへ置き、ローカルにはポインターを残します。",
+    "why_not": [
+      "Blob versioningはBlobの過去版管理です。",
+      "Immutable storageはWORM保護です。",
+      "",
+      "RA-GRSは冗長性です。"
+    ]
+  },
+  {
+    "id": 91,
+    "category": "ストレージ",
+    "question": "多数の小さなファイルをAzure Storageへコマンドラインで高速にコピーしたい。推奨ツールはどれですか？",
+    "choices": [
+      "Bicepのみ",
+      "Azure Bastion",
+      "KQL",
+      "AzCopy"
+    ],
+    "answer": 3,
+    "explanation": "AzCopyはBlobやAzure Filesとのデータ転送に最適化されたコマンドライン ツールです。",
+    "why_not": [
+      "Bicepはリソース展開用です。",
+      "BastionはVM接続用です。",
+      "KQLはログ照会用です。",
+      ""
+    ]
+  },
+  {
+    "id": 92,
+    "category": "ストレージ",
+    "question": "数十TBのデータをネットワーク帯域を使わずAzureへ移行したい。物理デバイスを利用するサービスはどれですか？",
+    "choices": [
+      "Storage Explorer",
+      "Azure File Sync",
+      "Azure Data Box",
+      "Private Endpoint"
+    ],
+    "answer": 2,
+    "explanation": "Azure Data BoxはMicrosoftから提供される物理デバイスへデータをコピーし、Azureへ取り込めます。",
+    "why_not": [
+      "Storage Explorerは管理ツールです。",
+      "File Syncはオンライン同期です。",
+      "",
+      "Private Endpointは閉域接続です。"
+    ]
+  },
+  {
+    "id": 93,
+    "category": "ストレージ",
+    "question": "Azure Storage Explorerの主な用途はどれですか？",
+    "choices": [
+      "Azure Policyを評価する",
+      "VPNルートを交換する",
+      "VMの自動スケールを設定する",
+      "複数のストレージ アカウントのデータをGUIで管理する"
+    ],
+    "answer": 3,
+    "explanation": "Storage ExplorerはBlob、Files、Queues、TablesなどをGUIで操作するデスクトップ ツールです。",
+    "why_not": [
+      "Policy評価ツールではありません。",
+      "VPNルート交換にはBGPなどを使います。",
+      "VMスケールはVMSSなどで設定します。",
+      ""
+    ]
+  },
+  {
+    "id": 94,
+    "category": "ストレージ",
+    "question": "ストレージ アカウントへのHTTP通信を禁止し、HTTPSだけを許可したい。何を有効にしますか？",
+    "choices": [
+      "パブリックBlobアクセス",
+      "階層型名前空間",
+      "共有キー アクセス",
+      "安全な転送が必須（Secure transfer required）"
+    ],
+    "answer": 3,
+    "explanation": "Secure transfer requiredを有効にすると、HTTPSなどの安全な接続が要求されます。",
+    "why_not": [
+      "パブリックBlobアクセスは匿名公開設定です。",
+      "階層型名前空間はData Lake Storage Gen2機能です。",
+      "共有キーは認証方式です。",
+      ""
+    ]
+  },
+  {
+    "id": 95,
+    "category": "ストレージ",
+    "question": "ストレージ アカウントへの匿名Blobアクセスを組織全体で防ぎたい。アカウントで無効化する設定はどれですか？",
+    "choices": [
+      "Minimum TLS version",
+      "Infrastructure encryption",
+      "Blobのパブリック アクセスを許可する（Allow Blob anonymous access）",
+      "Secure transfer required"
+    ],
+    "answer": 2,
+    "explanation": "Allow Blob anonymous accessを無効にすると、コンテナー単位の匿名公開を禁止できます。",
+    "why_not": [
+      "Minimum TLSはTLSバージョン制御です。",
+      "Infrastructure encryptionは追加暗号化です。",
+      "",
+      "Secure transferはHTTPS強制です。"
+    ]
+  },
+  {
+    "id": 96,
+    "category": "ストレージ",
+    "question": "Azure Data Lake Storage Gen2のディレクトリ階層とファイル単位ACLを利用したい。何を有効にしますか？",
+    "choices": [
+      "階層型名前空間（Hierarchical namespace）",
+      "静的Webサイト",
+      "RA-GRSだけ",
+      "NFS 3.0だけ"
+    ],
+    "answer": 0,
+    "explanation": "Hierarchical namespaceを有効にすると、Data Lake Storage Gen2のディレクトリ操作とACLを利用できます。",
+    "why_not": [
+      "",
+      "静的WebサイトはWebコンテンツ配信用です。",
+      "冗長性設定とは別です。",
+      "NFSだけではADLS Gen2機能の条件を満たしません。"
+    ]
+  },
+  {
+    "id": 97,
+    "category": "ストレージ",
+    "question": "ストレージ アカウントでMicrosoft管理キーではなく、自社管理の暗号化キーを使用したい。キーを保存する代表的なサービスはどれですか？",
+    "choices": [
+      "Azure DNS",
+      "Traffic Manager",
+      "Azure Key Vault",
+      "Azure Bastion"
+    ],
+    "answer": 2,
+    "explanation": "顧客管理キーはAzure Key VaultまたはManaged HSMに保存してStorage暗号化へ利用できます。",
+    "why_not": [
+      "DNSは名前解決です。",
+      "Traffic ManagerはDNS負荷分散です。",
+      "",
+      "BastionはVM接続です。"
+    ]
+  },
+  {
+    "id": 98,
+    "category": "ストレージ",
+    "question": "Azure Files共有の容量、IOPS、スループットを高性能ワークロード向けに確保したい。適切な共有層はどれですか？",
+    "choices": [
+      "Cool",
+      "Blob Hot",
+      "Archive",
+      "Premium"
+    ],
+    "answer": 3,
+    "explanation": "Premium Azure FilesはSSDベースで、低遅延・高IOPSが必要なファイル共有向けです。",
+    "why_not": [
+      "Coolは低頻度アクセス向けの標準ファイル層です。",
+      "Blob HotはBlobのアクセス層です。",
+      "Azure FilesにArchive共有層はありません。",
+      ""
+    ]
+  },
+  {
+    "id": 99,
+    "category": "ストレージ",
+    "question": "Azure Filesの共有を誤って削除した場合に保持期間内で復元したい。何を有効にしますか？",
+    "choices": [
+      "ファイル共有の論理的な削除（Soft delete for file shares）",
+      "Blob versioning",
+      "Object replication",
+      "Lifecycle management"
+    ],
+    "answer": 0,
+    "explanation": "Azure Filesのsoft deleteは、削除されたファイル共有を保持期間中に復元できます。",
+    "why_not": [
+      "",
+      "Blob versioningはBlob用です。",
+      "Object replicationもBlob用です。",
+      "Lifecycle managementは主にBlobの階層化や削除です。"
+    ]
+  },
+  {
+    "id": 100,
+    "category": "ストレージ",
+    "question": "Blobコンテナー全体を誤って削除した場合に復元したい。どの機能を有効にしますか？",
+    "choices": [
+      "Change feedのみ",
+      "Static website",
+      "Blob index tags",
+      "コンテナーの論理的な削除（Container soft delete）"
+    ],
+    "answer": 3,
+    "explanation": "Container soft deleteは削除されたコンテナーと内容を保持期間中に復元できます。",
+    "why_not": [
+      "Change feedは変更履歴ログです。",
+      "Static websiteはWeb配信用です。",
+      "Blob index tagsは検索用メタデータです。",
+      ""
+    ]
+  },
+  {
+    "id": 101,
+    "category": "ストレージ",
+    "question": "Blobへの変更を順序付きで記録し、後続処理で読み取りたい。何を有効にしますか？",
+    "choices": [
+      "Blob変更フィード（Blob change feed）",
+      "Azure Files snapshots",
+      "Soft deleteのみ",
+      "Archive tier"
+    ],
+    "answer": 0,
+    "explanation": "Blob change feedはBlobの作成、変更、削除などの変更記録を順序付きで提供します。",
+    "why_not": [
+      "",
+      "File snapshotsはAzure Files用です。",
+      "Soft deleteは復元機能です。",
+      "Archiveはアクセス層です。"
+    ]
+  },
+  {
+    "id": 102,
+    "category": "ストレージ",
+    "question": "別のストレージ アカウントへブロックBlobを非同期で複製したい。何を構成しますか？",
+    "choices": [
+      "Azure File Sync",
+      "オブジェクト レプリケーション（Object replication）",
+      "SMB Multichannel",
+      "Import/Export job"
+    ],
+    "answer": 1,
+    "explanation": "Object replicationはソースと宛先のストレージ アカウント間でブロックBlobを非同期複製します。",
+    "why_not": [
+      "File SyncはWindows ServerとAzure Filesの同期です。",
+      "",
+      "SMB MultichannelはAzure Filesの性能機能です。",
+      "Import/Exportはディスクによる転送です。"
+    ]
+  },
+  {
+    "id": 103,
+    "category": "ストレージ",
+    "question": "Blobのメタデータとは別にキーと値を付け、条件に合うBlobを検索したい。何を使用しますか？",
+    "choices": [
+      "Resource tags",
+      "Azure Policy parameters",
+      "NSG service tags",
+      "Blobインデックス タグ（Blob index tags）"
+    ],
+    "answer": 3,
+    "explanation": "Blob index tagsはBlobデータへキーと値を付け、フィルター検索に利用できます。",
+    "why_not": [
+      "Resource tagsはAzureリソース管理用です。",
+      "Policy parameterはポリシー入力値です。",
+      "NSG service tagsはIP範囲の抽象化です。",
+      ""
+    ]
+  },
+  {
+    "id": 104,
+    "category": "ストレージ",
+    "question": "ストレージ アカウントのアクセス キーが漏えいした可能性がある。サービス停止を抑えながら交換する基本手順はどれですか？",
+    "choices": [
+      "両方のキーを同時に削除する",
+      "ストレージ アカウントを削除する",
+      "SASを無期限にする",
+      "未使用側のキーを再生成し、アプリを切り替えてからもう一方を再生成する"
+    ],
+    "answer": 3,
+    "explanation": "2つのアクセス キーを交互にローテーションすることで、アプリの停止を抑えられます。",
+    "why_not": [
+      "同時変更は接続断の原因になります。",
+      "アカウント削除は不要です。",
+      "無期限SASはリスクを高めます。",
+      ""
+    ]
+  },
+  {
+    "id": 105,
+    "category": "コンピューティング",
+    "question": "Azure VMのサイズを変更する際、場合によって必要になる操作はどれですか？",
+    "choices": [
+      "ストレージ アカウント削除",
+      "VMの割り当て解除（Deallocate）",
+      "Entraユーザー削除",
+      "VNet削除"
+    ],
+    "answer": 1,
+    "explanation": "要求するサイズが現在のクラスターで利用できない場合、VMを割り当て解除してサイズ変更する必要があります。",
+    "why_not": [
+      "ストレージ削除は不要です。",
+      "",
+      "ユーザー削除は無関係です。",
+      "VNet削除は不要です。"
+    ]
+  },
+  {
+    "id": 106,
+    "category": "コンピューティング",
+    "question": "Azure VMを停止しただけでコンピューティング料金を確実に止めたい。必要な状態はどれですか？",
+    "choices": [
+      "再起動中（Restarting）",
+      "停止済み（割り当て解除）（Stopped deallocated）",
+      "実行中（Running）",
+      "停止済み（割り当て済み）（Stopped allocated）"
+    ],
+    "answer": 1,
+    "explanation": "VMをdeallocateするとホスト割り当てが解除され、コンピューティング料金が停止します。",
+    "why_not": [
+      "再起動中も割り当ては維持されます。",
+      "",
+      "実行中は課金されます。",
+      "割り当て済み停止ではコンピューティング料金が継続する場合があります。"
+    ]
+  },
+  {
+    "id": 107,
+    "category": "コンピューティング",
+    "question": "VM作成時に複数のデータ ディスクをまとめて高スループット化したい。ゲストOSで使用する一般的な方法はどれですか？",
+    "choices": [
+      "ディスク ストライピング（Disk striping）",
+      "PIM有効化",
+      "Blob soft delete",
+      "NSG優先度変更"
+    ],
+    "answer": 0,
+    "explanation": "複数のデータ ディスクをストライピングすると、合計IOPSやスループットを高められます。",
+    "why_not": [
+      "",
+      "PIMは特権管理です。",
+      "Blob soft deleteはBlob保護です。",
+      "NSGは通信制御です。"
+    ]
+  },
+  {
+    "id": 108,
+    "category": "コンピューティング",
+    "question": "マネージド ディスクのポイントインタイム コピーを作成したい。何を作成しますか？",
+    "choices": [
+      "SASポリシー",
+      "管理単位",
+      "スナップショット（Snapshot）",
+      "NSG"
+    ],
+    "answer": 2,
+    "explanation": "マネージド ディスクのスナップショットは読み取り専用のポイントインタイム コピーです。",
+    "why_not": [
+      "SASはアクセス委任です。",
+      "管理単位はEntra管理範囲です。",
+      "",
+      "NSGは通信制御です。"
+    ]
+  },
+  {
+    "id": 109,
+    "category": "コンピューティング",
+    "question": "Azure VMのOSディスクを一時的に別VMへ接続して修復作業をしたい。代表的な方法はどれですか？",
+    "choices": [
+      "OSディスクをデタッチまたはコピーして修復VMへ接続する",
+      "Azure Policyを無効化する",
+      "サブスクリプションを移動する",
+      "VNetを削除する"
+    ],
+    "answer": 0,
+    "explanation": "起動不能VMのOSディスクを修復用VMへ接続し、ファイルや構成を修正する方法があります。",
+    "why_not": [
+      "",
+      "Policy無効化はディスク修復手順ではありません。",
+      "サブスクリプション移動は不要です。",
+      "VNet削除は不要です。"
+    ]
+  },
+  {
+    "id": 110,
+    "category": "コンピューティング",
+    "question": "VM Scale SetsでCPU使用率に応じてインスタンス数を増減したい。何を構成しますか？",
+    "choices": [
+      "Blob lifecycle policy",
+      "Resource lock",
+      "自動スケール設定（Autoscale setting）",
+      "Private DNS"
+    ],
+    "answer": 2,
+    "explanation": "Autoscale設定にメトリック条件と増減アクションを定義します。",
+    "why_not": [
+      "Lifecycle policyはBlob管理です。",
+      "Resource lockは保護機能です。",
+      "",
+      "Private DNSは名前解決です。"
+    ]
+  },
+  {
+    "id": 111,
+    "category": "コンピューティング",
+    "question": "VM Scale Setsのインスタンスへ同一の構成変更を反映するために管理するものはどれですか？",
+    "choices": [
+      "Azure DNSゾーン",
+      "SAS",
+      "管理単位",
+      "スケール セット モデル（Scale set model）"
+    ],
+    "answer": 3,
+    "explanation": "VMSSのモデルにイメージやサイズなどの構成を定義し、インスタンスへ適用します。",
+    "why_not": [
+      "DNSゾーンは名前解決です。",
+      "SASはStorageアクセスです。",
+      "管理単位はEntraオブジェクト管理です。",
+      ""
+    ]
+  },
+  {
+    "id": 112,
+    "category": "コンピューティング",
+    "question": "VMの初回起動後にエージェントを追加し、監視や構成管理を行いたい。何を利用しますか？",
+    "choices": [
+      "Availability Zoneのみ",
+      "Azure PolicyのAuditのみ",
+      "Storage lifecycle management",
+      "VM拡張機能（VM extensions）"
+    ],
+    "answer": 3,
+    "explanation": "VM extensionsはデプロイ後の構成、監視、セキュリティ エージェント導入などに使用します。",
+    "why_not": [
+      "Availability Zoneは配置機能です。",
+      "Auditは記録のみです。",
+      "Lifecycle managementはBlob用です。",
+      ""
+    ]
+  },
+  {
+    "id": 113,
+    "category": "コンピューティング",
+    "question": "App Serviceプランが定義するものとして最も適切なのはどれですか？",
+    "choices": [
+      "アプリが使用するコンピューティング リソースと価格レベル",
+      "アプリのEntraユーザー一覧",
+      "Storageの冗長性",
+      "VNetのアドレス空間"
+    ],
+    "answer": 0,
+    "explanation": "App Service planはリージョン、OS、インスタンス サイズ、スケールなどのコンピューティング基盤を定義します。",
+    "why_not": [
+      "",
+      "ユーザー一覧はEntra IDで管理します。",
+      "Storage冗長性はStorage設定です。",
+      "VNetアドレスはVNet設定です。"
+    ]
+  },
+  {
+    "id": 114,
+    "category": "コンピューティング",
+    "question": "App ServiceアプリからVNet内のプライベート リソースへ送信接続したい。何を構成しますか？",
+    "choices": [
+      "VNet統合（VNet integration）",
+      "Traffic Manager",
+      "Azure Front Door",
+      "Private Endpointだけをアプリの受信用に設定"
+    ],
+    "answer": 0,
+    "explanation": "App ServiceのVNet integrationはアプリからVNet内へのアウトバウンド接続を可能にします。",
+    "why_not": [
+      "",
+      "Traffic ManagerはDNS負荷分散です。",
+      "Front DoorはグローバルWeb配信です。",
+      "Private Endpointは主にアプリへのプライベート受信接続です。"
+    ]
+  },
+  {
+    "id": 115,
+    "category": "コンピューティング",
+    "question": "App Serviceアプリへの受信アクセスをVNet内のプライベートIPだけにしたい。何を使用しますか？",
+    "choices": [
+      "NAT Gatewayだけ",
+      "Azure File Sync",
+      "プライベート エンドポイント（Private Endpoint）",
+      "VNet統合だけ"
+    ],
+    "answer": 2,
+    "explanation": "Private Endpointを作成すると、App Serviceへの受信接続にプライベートIPを使用できます。",
+    "why_not": [
+      "NAT Gatewayは送信元IP制御です。",
+      "File Syncはファイル同期です。",
+      "",
+      "VNet integrationは主に送信接続用です。"
+    ]
+  },
+  {
+    "id": 116,
+    "category": "コンピューティング",
+    "question": "App Serviceのアプリ設定にパスワードを直接保存せず、Key Vaultのシークレットを参照したい。何を利用しますか？",
+    "choices": [
+      "Azure Policy initiative",
+      "Key Vault参照（Key Vault references）",
+      "NSG flow logs",
+      "Data Box"
+    ],
+    "answer": 1,
+    "explanation": "App ServiceのKey Vault referencesを使うと、マネージドIDでシークレットを取得できます。",
+    "why_not": [
+      "InitiativeはPolicy集合です。",
+      "",
+      "NSG flow logsは通信ログです。",
+      "Data Boxはデータ移行用です。"
+    ]
+  },
+  {
+    "id": 117,
+    "category": "コンピューティング",
+    "question": "App Serviceで独自ドメインをHTTPS化するために必要なものはどれですか？",
+    "choices": [
+      "TLS/SSL証明書のバインド",
+      "NSGの作成だけ",
+      "Azure Files snapshot",
+      "Route tableのみ"
+    ],
+    "answer": 0,
+    "explanation": "カスタム ドメインへ証明書をアップロードまたは管理証明書を利用し、TLSバインドを設定します。",
+    "why_not": [
+      "",
+      "NSGだけではHTTPS証明書を構成できません。",
+      "File snapshotは無関係です。",
+      "Route tableだけでは暗号化されません。"
+    ]
+  },
+  {
+    "id": 118,
+    "category": "コンピューティング",
+    "question": "Azure Container Registryからイメージをプルする権限を最小限で付与したい。組み込みロールはどれですか？",
+    "choices": [
+      "AcrPull",
+      "AcrPush",
+      "User Access Administrator",
+      "Owner"
+    ],
+    "answer": 0,
+    "explanation": "AcrPullはコンテナー イメージのプルに必要な権限を提供します。",
+    "why_not": [
+      "",
+      "AcrPushはプッシュ権限も含みます。",
+      "User Access AdministratorはRBAC管理用です。",
+      "Ownerは過剰です。"
+    ]
+  },
+  {
+    "id": 119,
+    "category": "コンピューティング",
+    "question": "Azure Container Registryへイメージのプッシュとプルを許可したい。適切な組み込みロールはどれですか？",
+    "choices": [
+      "Network Contributor",
+      "Reader",
+      "AcrPush",
+      "AcrPull"
+    ],
+    "answer": 2,
+    "explanation": "AcrPushはイメージのプッシュとプルを許可します。",
+    "why_not": [
+      "Network Contributorはネットワーク管理用です。",
+      "Readerは管理情報の閲覧で、データ操作権限とは異なります。",
+      "",
+      "AcrPullはプルのみです。"
+    ]
+  },
+  {
+    "id": 120,
+    "category": "コンピューティング",
+    "question": "Azure Container Instancesのコンテナー間で同じライフサイクルとネットワークを共有させたい。何を作成しますか？",
+    "choices": [
+      "アクション グループ",
+      "可用性セット",
+      "管理グループ",
+      "コンテナー グループ（Container group）"
+    ],
+    "answer": 3,
+    "explanation": "ACIのcontainer group内のコンテナーは同一ホストで実行され、ネットワークやストレージを共有できます。",
+    "why_not": [
+      "アクション グループは通知用です。",
+      "可用性セットはVM用です。",
+      "管理グループはサブスクリプション階層です。",
+      ""
+    ]
+  },
+  {
+    "id": 121,
+    "category": "コンピューティング",
+    "question": "ARMテンプレートより簡潔な構文でAzureリソースを宣言したい。Microsoft推奨の言語はどれですか？",
+    "choices": [
+      "Bicep",
+      "T-SQL",
+      "KQL",
+      "Power Query"
+    ],
+    "answer": 0,
+    "explanation": "BicepはARMテンプレートへ変換される、Azureリソース用の宣言型言語です。",
+    "why_not": [
+      "",
+      "T-SQLはSQL用です。",
+      "KQLはログ分析用です。",
+      "Power Queryはデータ変換用です。"
+    ]
+  },
+  {
+    "id": 122,
+    "category": "コンピューティング",
+    "question": "Bicepファイルで繰り返し使う値を外部から渡したい。何を定義しますか？",
+    "choices": [
+      "NSG rule",
+      "SAS token",
+      "Health probe",
+      "パラメーター（Parameter）"
+    ],
+    "answer": 3,
+    "explanation": "Bicepのparameterを使うと、環境ごとに異なる値をデプロイ時に渡せます。",
+    "why_not": [
+      "NSG ruleは通信制御です。",
+      "SASはStorageアクセス用です。",
+      "Health probeは正常性確認です。",
+      ""
+    ]
+  },
+  {
+    "id": 123,
+    "category": "コンピューティング",
+    "question": "ARM/Bicepデプロイで、テンプレートにない既存リソースを削除したくない。使用するデプロイ モードはどれですか？",
+    "choices": [
+      "監査モード（Audit mode）",
+      "完全モード（Complete mode）",
+      "増分モード（Incremental mode）",
+      "削除モード（Delete mode）"
+    ],
+    "answer": 2,
+    "explanation": "Incremental modeはテンプレートに記述したリソースを追加・更新し、未記載の既存リソースを保持します。",
+    "why_not": [
+      "Audit modeもARMデプロイ モードではありません。",
+      "Complete modeは未記載リソースを削除する可能性があります。",
+      "",
+      "Delete modeという標準モードはありません。"
+    ]
+  },
+  {
+    "id": 124,
+    "category": "コンピューティング",
+    "question": "ARMテンプレートのwhat-if操作の目的はどれですか？",
+    "choices": [
+      "Blobを復元する",
+      "デプロイ前に作成・変更・削除予定を確認する",
+      "VMのCPUを監視する",
+      "ユーザーのMFAを設定する"
+    ],
+    "answer": 1,
+    "explanation": "What-ifは実際のデプロイ前に、リソースへ加わる変更を予測表示します。",
+    "why_not": [
+      "Blob復元はStorage機能です。",
+      "",
+      "CPU監視はAzure Monitorです。",
+      "MFAはEntra IDです。"
+    ]
+  },
+  {
+    "id": 125,
+    "category": "コンピューティング",
+    "question": "Azure VMイメージを複数リージョンへ複製し、バージョン管理して共有したい。何を使用しますか？",
+    "choices": [
+      "Recovery Services vault",
+      "Azure Compute Gallery",
+      "Azure File Sync",
+      "Private DNS zone"
+    ],
+    "answer": 1,
+    "explanation": "Azure Compute GalleryはVMイメージやアプリをバージョン管理し、リージョン複製や共有ができます。",
+    "why_not": [
+      "Recovery Services vaultはバックアップ用です。",
+      "",
+      "File Syncはファイル共有同期です。",
+      "Private DNSは名前解決です。"
+    ]
+  },
+  {
+    "id": 126,
+    "category": "ネットワーク",
+    "question": "VNet内のサブネットへ割り当てられるIPアドレス範囲について正しいものはどれですか？",
+    "choices": [
+      "必ず/32である",
+      "VNetのアドレス空間に含まれ、他サブネットと重複しない必要がある",
+      "任意のパブリック範囲を重複して使える",
+      "サブネットはアドレス範囲を持たない"
+    ],
+    "answer": 1,
+    "explanation": "各サブネットの範囲はVNetアドレス空間内で、同じVNet内の他サブネットと重複できません。",
+    "why_not": [
+      "/32固定ではありません。",
+      "",
+      "重複はできません。",
+      "サブネットにはCIDR範囲があります。"
+    ]
+  },
+  {
+    "id": 127,
+    "category": "ネットワーク",
+    "question": "Azureがサブネットごとに予約するIPアドレス数は何個ですか？",
+    "choices": [
+      "10個",
+      "1個",
+      "5個",
+      "2個"
+    ],
+    "answer": 2,
+    "explanation": "Azureは各サブネットで最初の4個と最後の1個、合計5個のIPアドレスを予約します。",
+    "why_not": [
+      "10個ではありません。",
+      "1個ではありません。",
+      "",
+      "2個ではありません。"
+    ]
+  },
+  {
+    "id": 128,
+    "category": "ネットワーク",
+    "question": "NICに割り当てた動的プライベートIPを変更されないようにしたい。何へ変更しますか？",
+    "choices": [
+      "一時（Ephemeral）割り当て",
+      "パブリック（Public）割り当て",
+      "DNS alias",
+      "静的（Static）割り当て"
+    ],
+    "answer": 3,
+    "explanation": "Private IP allocationをStaticにすると、指定したプライベートIPを維持できます。",
+    "why_not": [
+      "Ephemeralは該当設定ではありません。",
+      "PublicはプライベートIPの割り当て方式ではありません。",
+      "DNS aliasはIP割り当て方式ではありません。",
+      ""
+    ]
+  },
+  {
+    "id": 129,
+    "category": "ネットワーク",
+    "question": "複数NICを持つVMをIP転送するネットワーク仮想アプライアンスとして使用したい。NICで何を有効にしますか？",
+    "choices": [
+      "IP転送（IP forwarding）",
+      "Accelerated networkingだけ",
+      "DNS registration",
+      "Public IP idle timeout"
+    ],
+    "answer": 0,
+    "explanation": "NVAとしてパケットを転送するNICではIP forwardingを有効にします。",
+    "why_not": [
+      "",
+      "Accelerated networkingだけでは転送許可になりません。",
+      "DNS登録は名前解決です。",
+      "Idle timeoutは接続タイムアウトです。"
+    ]
+  },
+  {
+    "id": 130,
+    "category": "ネットワーク",
+    "question": "ユーザー定義ルートでネクストホップをNoneに設定した場合、トラフィックはどうなりますか？",
+    "choices": [
+      "VPN Gatewayへ送られる",
+      "破棄される",
+      "インターネットへ送られる",
+      "送信元へ戻される"
+    ],
+    "answer": 1,
+    "explanation": "Next hop type Noneは、該当ルートのトラフィックをドロップします。",
+    "why_not": [
+      "VPN Gatewayへは送りません。",
+      "",
+      "Internetを指定した場合とは異なります。",
+      "送信元へ戻す動作ではありません。"
+    ]
+  },
+  {
+    "id": 131,
+    "category": "ネットワーク",
+    "question": "VNetピアリングされたVNet間で、相手側VNetの転送トラフィックを受け入れたい。何を有効にしますか？",
+    "choices": [
+      "Gateway transitのみ",
+      "転送されたトラフィックを許可する（Allow forwarded traffic）",
+      "Service endpoint policy",
+      "DDoS IP Protection"
+    ],
+    "answer": 1,
+    "explanation": "Allow forwarded trafficは、NVAなどが転送したトラフィックをピアリング経由で受け入れる設定です。",
+    "why_not": [
+      "Gateway transitはゲートウェイ共有用です。",
+      "",
+      "Service endpoint policyはPaaSアクセス制限です。",
+      "DDoS IP ProtectionはDDoS保護です。"
+    ]
+  },
+  {
+    "id": 132,
+    "category": "ネットワーク",
+    "question": "個々のクライアントPCからAzure VNetへVPN接続させたい。どの接続方式を使用しますか？",
+    "choices": [
+      "ExpressRoute Directのみ",
+      "VNet peering",
+      "サイト対サイト（Site-to-Site）",
+      "ポイント対サイト（Point-to-Site）"
+    ],
+    "answer": 3,
+    "explanation": "Point-to-Site VPNは個々のクライアント端末からVNetへ安全に接続する方式です。",
+    "why_not": [
+      "ExpressRoute Directは個別PCのVPN方式ではありません。",
+      "PeeringはVNet間接続です。",
+      "Site-to-Siteは拠点ネットワーク間接続です。",
+      ""
+    ]
+  },
+  {
+    "id": 133,
+    "category": "ネットワーク",
+    "question": "2つのオンプレミス拠点とAzure VNetをVPNで接続したい。各拠点の情報をAzureで表すリソースはどれですか？",
+    "choices": [
+      "NAT Gateway",
+      "Application Gateway",
+      "Private Endpoint",
+      "ローカル ネットワーク ゲートウェイ（Local network gateway）"
+    ],
+    "answer": 3,
+    "explanation": "Local network gatewayにはオンプレミス側VPNデバイスのパブリックIPやアドレス範囲を定義します。",
+    "why_not": [
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "Application GatewayはWeb負荷分散です。",
+      "Private EndpointはPaaS接続用です。",
+      ""
+    ]
+  },
+  {
+    "id": 134,
+    "category": "ネットワーク",
+    "question": "VPN GatewayとオンプレミスVPN装置の間で動的ルート交換を行いたい。どのプロトコルを使用しますか？",
+    "choices": [
+      "BGP",
+      "RDP",
+      "HTTP",
+      "SMB"
+    ],
+    "answer": 0,
+    "explanation": "Azure VPN GatewayはBGPを使用した動的経路交換をサポートします。",
+    "why_not": [
+      "",
+      "RDPはリモートデスクトップです。",
+      "HTTPはWeb通信です。",
+      "SMBはファイル共有です。"
+    ]
+  },
+  {
+    "id": 135,
+    "category": "ネットワーク",
+    "question": "Azure Load Balancerが正常なバックエンドだけへ通信を送るために使用するものはどれですか？",
+    "choices": [
+      "NSG service tag",
+      "Azure Policy",
+      "正常性プローブ（Health probe）",
+      "Blob change feed"
+    ],
+    "answer": 2,
+    "explanation": "Health probeがバックエンド インスタンスの正常性を確認し、異常なインスタンスを負荷分散対象から外します。",
+    "why_not": [
+      "Service tagはIP範囲の抽象化です。",
+      "Policyはガバナンスです。",
+      "",
+      "Change feedはBlob変更記録です。"
+    ]
+  },
+  {
+    "id": 136,
+    "category": "ネットワーク",
+    "question": "Azure Load Balancerで受信フロントエンド ポートをバックエンドの別ポートへ転送したい。何を構成しますか？",
+    "choices": [
+      "負荷分散規則（Load-balancing rule）",
+      "PIM policy",
+      "Blob lifecycle rule",
+      "Resource lock"
+    ],
+    "answer": 0,
+    "explanation": "Load-balancing ruleでフロントエンドIP、ポート、バックエンド ポート、プロトコルなどを定義します。",
+    "why_not": [
+      "",
+      "PIMは特権管理です。",
+      "Blob lifecycle ruleはStorage用です。",
+      "Resource lockは削除防止です。"
+    ]
+  },
+  {
+    "id": 137,
+    "category": "ネットワーク",
+    "question": "特定のVMへ管理用ポートを一意のフロントエンド ポートから転送したい。何を構成しますか？",
+    "choices": [
+      "Application rule collection",
+      "Service endpoint",
+      "Outbound rule",
+      "受信NAT規則（Inbound NAT rule）"
+    ],
+    "answer": 3,
+    "explanation": "Inbound NAT ruleはフロントエンドの特定ポートを個別バックエンドVMのポートへマッピングします。",
+    "why_not": [
+      "Application rule collectionはAzure Firewallです。",
+      "Service endpointはPaaS接続用です。",
+      "Outbound ruleは送信接続用です。",
+      ""
+    ]
+  },
+  {
+    "id": 138,
+    "category": "ネットワーク",
+    "question": "Application GatewayでバックエンドWebサーバーの可用性を確認するものはどれですか？",
+    "choices": [
+      "正常性プローブ（Health probe）",
+      "Azure Policy",
+      "Route table",
+      "SAS"
+    ],
+    "answer": 0,
+    "explanation": "Application Gatewayもhealth probeを使って正常なバックエンドだけへ要求を送信します。",
+    "why_not": [
+      "",
+      "Policyはガバナンスです。",
+      "Route tableは経路制御です。",
+      "SASはStorageアクセスです。"
+    ]
+  },
+  {
+    "id": 139,
+    "category": "ネットワーク",
+    "question": "Application Gatewayで複数ドメイン名を1つのゲートウェイで処理し、ホスト名ごとに別バックエンドへ送信したい。何を使用しますか？",
+    "choices": [
+      "VNet peering",
+      "マルチサイト リスナー（Multi-site listener）",
+      "Inbound NAT rule",
+      "Azure File Sync"
+    ],
+    "answer": 1,
+    "explanation": "Multi-site listenerはホスト名に基づいて異なるサイトやバックエンドを処理できます。",
+    "why_not": [
+      "PeeringはVNet接続です。",
+      "",
+      "Inbound NAT ruleはLoad Balancerの個別ポート転送です。",
+      "File Syncはファイル同期です。"
+    ]
+  },
+  {
+    "id": 140,
+    "category": "ネットワーク",
+    "question": "Network WatcherでNICに適用されるNSGルールの最終結果を確認したい。何を使用しますか？",
+    "choices": [
+      "Connection monitorのみ",
+      "Resource Graphのみ",
+      "Packet captureのみ",
+      "有効なセキュリティ規則（Effective security rules）"
+    ],
+    "answer": 3,
+    "explanation": "Effective security rulesでは、サブネットとNICから継承・適用されるNSGルールを確認できます。",
+    "why_not": [
+      "Connection monitorは継続的接続監視です。",
+      "Resource Graphだけでは最終NSG評価画面になりません。",
+      "Packet captureはパケット取得です。",
+      ""
+    ]
+  },
+  {
+    "id": 141,
+    "category": "監視と保守",
+    "question": "Azure Monitorのメトリックについて正しい説明はどれですか？",
+    "choices": [
+      "KQLでしか生成できない",
+      "必ずテキスト形式のイベントだけである",
+      "Azure Storageでしか保存できない",
+      "数値の時系列データで、通常はログより軽量かつ高頻度に収集される"
+    ],
+    "answer": 3,
+    "explanation": "MetricsはCPU使用率などの数値時系列データで、アラートやグラフに利用されます。",
+    "why_not": [
+      "プラットフォーム メトリックはKQLで生成する必要はありません。",
+      "テキストイベントは主にログです。",
+      "Azure Monitor内で保持・利用できます。",
+      ""
+    ]
+  },
+  {
+    "id": 142,
+    "category": "監視と保守",
+    "question": "Azure Monitorのログ アラートで、KQLクエリ結果に基づき通知したい。使用するアラート種類はどれですか？",
+    "choices": [
+      "ログ検索アラート（Log search alert）",
+      "Service Healthだけ",
+      "アクティビティ ログ アラートだけ",
+      "Resource lock"
+    ],
+    "answer": 0,
+    "explanation": "Log search alertはLog Analyticsのクエリ結果を条件として評価します。",
+    "why_not": [
+      "",
+      "Service HealthはAzure側の正常性情報です。",
+      "Activity Log alertはコントロール プレーン イベント向けです。",
+      "Resource lockはアラートではありません。"
+    ]
+  },
+  {
+    "id": 143,
+    "category": "監視と保守",
+    "question": "リソースの作成や削除など特定のActivity Logイベントが発生したら通知したい。何を作成しますか？",
+    "choices": [
+      "File share snapshot",
+      "Metric alertのみ",
+      "Route table",
+      "アクティビティ ログ アラート（Activity log alert）"
+    ],
+    "answer": 3,
+    "explanation": "Activity log alertはAzure Resource Manager操作などのイベントを条件に通知できます。",
+    "why_not": [
+      "File snapshotはバックアップ機能です。",
+      "Metric alertは数値メトリック向けです。",
+      "Route tableは経路制御です。",
+      ""
+    ]
+  },
+  {
+    "id": 144,
+    "category": "監視と保守",
+    "question": "複数のリソースを継続的に監視し、接続性や遅延の変化を確認したい。Network Watcherのどの機能を使用しますか？",
+    "choices": [
+      "Topologyだけ",
+      "Effective routesだけ",
+      "接続モニター（Connection Monitor）",
+      "IP flow verifyだけ"
+    ],
+    "answer": 2,
+    "explanation": "Connection Monitorはエンドポイント間の到達性や遅延を継続監視できます。",
+    "why_not": [
+      "Topologyは構成表示です。",
+      "Effective routesは経路確認です。",
+      "",
+      "IP flow verifyは特定フローのNSG許可/拒否確認です。"
+    ]
+  },
+  {
+    "id": 145,
+    "category": "監視と保守",
+    "question": "特定の送信元IP、宛先IP、ポートの通信がNSGで許可されるか確認したい。何を使用しますか？",
+    "choices": [
+      "Boot diagnostics",
+      "Connection Monitorのみ",
+      "IPフロー検証（IP flow verify）",
+      "Azure Policy compliance"
+    ],
+    "answer": 2,
+    "explanation": "IP flow verifyは指定した5タプルに対して、許可・拒否と該当NSGルールを示します。",
+    "why_not": [
+      "Boot diagnosticsはVM起動診断です。",
+      "Connection Monitorは継続監視向けです。",
+      "",
+      "Policy complianceはガバナンスです。"
+    ]
+  },
+  {
+    "id": 146,
+    "category": "監視と保守",
+    "question": "VMのNICに実際に適用されるルートを確認したい。どこを確認しますか？",
+    "choices": [
+      "App Service deployment slot",
+      "PIM audit history",
+      "Blob inventory",
+      "有効なルート（Effective routes）"
+    ],
+    "answer": 3,
+    "explanation": "Effective routesにはシステム ルート、BGPルート、ユーザー定義ルートなどの最終結果が表示されます。",
+    "why_not": [
+      "Deployment slotはApp Serviceです。",
+      "PIM履歴は特権ロールです。",
+      "Blob inventoryはStorageです。",
+      ""
+    ]
+  },
+  {
+    "id": 147,
+    "category": "監視と保守",
+    "question": "ネットワーク障害調査のため、VMのNICを通過するパケットを一定時間取得したい。何を使用しますか？",
+    "choices": [
+      "Cost analysis",
+      "Network Watcherのパケット キャプチャ（Packet capture）",
+      "Azure Policy",
+      "Blob soft delete"
+    ],
+    "answer": 1,
+    "explanation": "Packet captureはVM拡張機能と連携してNICの通信を取得し、保存・分析できます。",
+    "why_not": [
+      "Cost analysisは費用分析です。",
+      "",
+      "Policyは準拠性管理です。",
+      "Soft deleteはBlob復元です。"
+    ]
+  },
+  {
+    "id": 148,
+    "category": "監視と保守",
+    "question": "Azure BackupでVMのバックアップを開始する前に、保護対象VMを何へ関連付けますか？",
+    "choices": [
+      "Private DNS zone",
+      "Recovery Servicesコンテナーとバックアップ ポリシー",
+      "Application Gatewayとlistener",
+      "Azure Firewall policy"
+    ],
+    "answer": 1,
+    "explanation": "VM BackupではRecovery Services vault内のバックアップ ポリシーをVMへ適用します。",
+    "why_not": [
+      "Private DNSは名前解決です。",
+      "",
+      "Application GatewayはWeb負荷分散です。",
+      "Firewall policyは通信制御です。"
+    ]
+  },
+  {
+    "id": 149,
+    "category": "監視と保守",
+    "question": "Azure Backupで元のVMを上書きせず、別のVMとして復元したい。選択する復元方式はどれですか？",
+    "choices": [
+      "既存を置換するだけ",
+      "新しい仮想マシンを作成する（Create new virtual machine）",
+      "ログ復元",
+      "ファイル回復だけ"
+    ],
+    "answer": 1,
+    "explanation": "Create new virtual machineを選ぶと、復旧ポイントから別VMを作成できます。",
+    "why_not": [
+      "既存置換は元VMのディスクを置き換える方式です。",
+      "",
+      "ログ復元というVM Backup方式ではありません。",
+      "File recoveryは個別ファイル抽出です。"
+    ]
+  },
+  {
+    "id": 150,
+    "category": "監視と保守",
+    "question": "Azure Site Recoveryのテスト フェールオーバーを実施する主な目的はどれですか？",
+    "choices": [
+      "NSGを自動作成する",
+      "本番VMを完全削除する",
+      "本番レプリケーションへ影響を与えず復旧手順を検証する",
+      "バックアップ保持期間を延長する"
+    ],
+    "answer": 2,
+    "explanation": "Test failoverは本番ワークロードや継続レプリケーションへ影響を与えず、DR計画を検証します。",
+    "why_not": [
+      "NSG作成が主目的ではありません。",
+      "本番VMを削除しません。",
+      "",
+      "Backup保持期間の設定ではありません。"
+    ]
+  },
+  {
     "id": 151,
     "category": "ネットワーク",
     "question": "あなたはAzure Storage Accountを利用しています。\n\nAzure VMからStorage Accountへ接続する際、インターネットを経由せず、VNet内のプライベートIPアドレスだけを使用したいと考えています。\n\n最も適切な構成はどれですか？",
@@ -137,10 +2987,10 @@
     "category": "監視と保守",
     "question": "Azure VMの定期バックアップを取得したいです。\n\nバックアップポリシーを設定する前に、まず作成する代表的なAzureリソースはどれですか？",
     "choices": [
-      "マネージド ディスクのスナップショットのみ（Managed disk snapshot only）",
-      "Log Analytics ワークスペース（Log Analytics workspace）",
+      "Backup コンテナー（Backup vault）",
+      "Azure Site Recovery（Azure Site Recovery）",
       "Recovery Services コンテナー（Recovery Services vault）",
-      "Automation アカウント（Automation account）"
+      "Log Analytics ワークスペース（Log Analytics workspace）"
     ],
     "answer": 2,
     "explanation": "該当するのは「Recovery Services コンテナー（Recovery Services vault）」です。Azure VM Backup では一般に Recovery Services vault を作成し、バックアップ ポリシーを設定します。",
@@ -187,6 +3037,2856 @@
       "NSG はネットワーク通信を制御します。",
       "",
       "audit は非準拠を記録しますが、削除を直接防止しません。"
+    ]
+  },
+  {
+    "id": 161,
+    "category": "ストレージ",
+    "question": "監査ログを保存するBlobコンテナーについて、法令により5年間はデータの変更と削除を禁止する必要があります。\n\nこの要件を満たすために構成する機能はどれですか？",
+    "choices": [
+      "不変ストレージ（Immutable storage）",
+      "geo 冗長ストレージ（Geo-redundant storage）",
+      "ライフサイクル管理（Lifecycle management）",
+      "論理的な削除（Soft delete）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「不変ストレージ（Immutable storage）」です。Immutable storage の時間ベース保持ポリシーなどを使うと、指定期間の変更・削除を防げます。",
+    "why_not": [
+      "",
+      "Geo-redundant storage は別リージョンへ複製します。",
+      "Lifecycle management は階層移動や削除を自動化します。",
+      "Soft delete は削除後の復元を可能にしますが、削除自体を禁止しません。"
+    ]
+  },
+  {
+    "id": 162,
+    "category": "コンピューティング",
+    "question": "2台のAzure VMで業務システムを実行します。\n\n計画メンテナンスと物理ホスト障害によって、2台が同時に停止する可能性を減らしたいです。VMを障害ドメインと更新ドメインへ分散するには何を使用しますか？",
+    "choices": [
+      "仮想マシン スケール セットの自動スケールのみ（Virtual Machine Scale Set autoscale only）",
+      "近接配置グループ（Proximity Placement Group）",
+      "専用ホスト（Dedicated Host）",
+      "可用性セット（Availability Set）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「可用性セット（Availability Set）」です。Availability Set は VM を障害ドメインと更新ドメインに分散します。",
+    "why_not": [
+      "自動スケールは台数調整の機能であり、設問の中心ではありません。",
+      "Proximity Placement Group は物理的に近接配置して遅延を抑える目的です。",
+      "Dedicated Host は専用物理ホストを提供します。",
+      ""
+    ]
+  },
+  {
+    "id": 163,
+    "category": "ID とガバナンス",
+    "question": "開発部には30人のユーザーが所属しており、全員に同じAzure RBACロールを付与します。\n\n今後の人員追加や異動のたびに個別のロール割り当てを変更せずに済む、最も管理しやすい方法はどれですか？",
+    "choices": [
+      "Microsoft Entra グループへ割り当てる（Assign to a Microsoft Entra group）",
+      "リソース ロックを設定する（Configure a resource lock）",
+      "管理グループを削除する（Delete the management group）",
+      "各ユーザーへ個別に割り当てる（Individual assignment）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Microsoft Entra グループへ割り当てる（Assign to a Microsoft Entra group）」です。ユーザーをMicrosoft Entraグループにまとめ、そのグループへRBACロールを割り当てると管理を簡素化できます。",
+    "why_not": [
+      "",
+      "リソース ロックは削除や変更を防ぐ機能です。",
+      "管理グループはサブスクリプションを階層管理するためのものです。",
+      "個別割り当ては人数が増えるほど管理負荷が高くなります。"
+    ]
+  },
+  {
+    "id": 164,
+    "category": "ID とガバナンス",
+    "question": "会社には複数のAzureサブスクリプションがあります。\n\nすべてのサブスクリプションへ共通のAzure Policyを一括で適用し、配下へ継承させたいです。ポリシーを割り当てる最も適切なスコープはどれですか？",
+    "choices": [
+      "リソース グループ（Resource group）",
+      "管理グループ（Management group）",
+      "ネットワーク インターフェイス（Network interface）",
+      "リソース（Resource）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「管理グループ（Management group）」です。管理グループへポリシーを割り当てると、配下の複数サブスクリプションへ継承できます。",
+    "why_not": [
+      "単一リソース グループ配下だけが対象です。",
+      "",
+      "NICはネットワーク接続用リソースです。",
+      "単一リソースだけが対象になります。"
+    ]
+  },
+  {
+    "id": 165,
+    "category": "ID とガバナンス",
+    "question": "新しく作成されるAzureリソースには、必ずCostCenterタグを付ける必要があります。\n\nタグが付いていないリソースの作成を拒否するために使用するサービスはどれですか？",
+    "choices": [
+      "Azure Policy（Azure Policy）",
+      "ネットワーク セキュリティ グループ（NSG）",
+      "可用性セット（Availability Set）",
+      "Azure Monitor（Azure Monitor）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Azure Policy（Azure Policy）」です。Azure Policyを使用すると、必須タグの追加や未設定リソースの拒否を行えます。",
+    "why_not": [
+      "",
+      "NSGはネットワーク通信を制御します。",
+      "可用性セットはVMの可用性を高めます。",
+      "Azure Monitorは監視とアラートに使用します。"
+    ]
+  },
+  {
+    "id": 166,
+    "category": "ID とガバナンス",
+    "question": "DeployIfNotExists効果のAzure Policyを割り当てましたが、割り当て前から存在するリソースは非準拠のままです。\n\n既存リソースへポリシーの構成を適用して準拠状態へ修正するには、何を作成しますか？",
+    "choices": [
+      "サービス正常性アラート（Service Health alert）",
+      "アクション グループ（Action group）",
+      "修復タスク（Remediation task）",
+      "バックアップ ポリシー（Backup policy）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「修復タスク（Remediation task）」です。修復タスクは、deployIfNotExistsやmodify効果を既存リソースへ適用するために使用します。",
+    "why_not": [
+      "Service HealthアラートはAzureサービス障害などを通知します。",
+      "アクション グループは通知や自動処理の送信先です。",
+      "",
+      "バックアップ ポリシーはバックアップ頻度と保持期間を定義します。"
+    ]
+  },
+  {
+    "id": 167,
+    "category": "ID とガバナンス",
+    "question": "運用担当者にAzure VMの作成、起動、停止、再起動を許可します。\n\nただし、Azure RBACのロール割り当ては変更させたくありません。最も適切な組み込みロールはどれですか？",
+    "choices": [
+      "ユーザー アクセス管理者（User Access Administrator）",
+      "所有者（Owner）",
+      "閲覧者（Reader）",
+      "仮想マシン共同作成者（Virtual Machine Contributor）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「仮想マシン共同作成者（Virtual Machine Contributor）」です。Virtual Machine ContributorはVMを管理できますが、Azure RBACの割り当て管理権限は持ちません。",
+    "why_not": [
+      "User Access Administratorはアクセス権管理用です。",
+      "Ownerはアクセス権管理も可能です。",
+      "Readerは表示のみでVMを起動・停止できません。",
+      ""
+    ]
+  },
+  {
+    "id": 168,
+    "category": "ID とガバナンス",
+    "question": "長期休暇に入るユーザーについて、Microsoft Entra IDのユーザー オブジェクトやグループ所属は残したまま、一時的にサインインだけを禁止したいです。\n\nどの操作を行いますか？",
+    "choices": [
+      "サブスクリプションを移動する（Move subscription）",
+      "アカウントを無効化する（Disable account）",
+      "ユーザーをゲストへ変換する（Convert to guest）",
+      "リソース ロックを設定する（Configure resource lock）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「アカウントを無効化する（Disable account）」です。ユーザーのアカウントを無効化すると、オブジェクトを保持したままサインインをブロックできます。",
+    "why_not": [
+      "サブスクリプション移動とは無関係です。",
+      "",
+      "ゲスト化は外部ユーザーとのコラボレーション用途です。",
+      "リソース ロックはAzureリソースの保護です。"
+    ]
+  },
+  {
+    "id": 169,
+    "category": "ID とガバナンス",
+    "question": "取引先企業の担当者に、自社のMicrosoft Entraテナントに登録されたアプリを利用させたいです。\n\nMicrosoft Entra B2Bを使用して招待する場合、通常どの種類のユーザーとして追加しますか？",
+    "choices": [
+      "メンバー ユーザー（Member user）",
+      "マネージド ID（Managed identity）",
+      "ゲスト ユーザー（Guest user）",
+      "サービス プリンシパルのみ（Service principal only）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「ゲスト ユーザー（Guest user）」です。Microsoft Entra B2Bでは外部ユーザーを通常ゲスト ユーザーとして招待します。",
+    "why_not": [
+      "メンバーは主に自組織の内部ユーザーです。",
+      "マネージド IDはAzureリソース用のIDです。",
+      "",
+      "サービス プリンシパルはアプリケーションIDとして使用します。"
+    ]
+  },
+  {
+    "id": 170,
+    "category": "ID とガバナンス",
+    "question": "Azure VM上のアプリケーションからAzure Key Vaultへアクセスします。\n\nパスワードやクライアント シークレットをコードや構成ファイルへ保存せずに認証したいです。何を使用しますか？",
+    "choices": [
+      "パブリック IP（Public IP）",
+      "マネージド ID（Managed identity）",
+      "ストレージ アカウント キー（Storage account key）",
+      "共有アクセス署名（SAS）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「マネージド ID（Managed identity）」です。マネージド IDを使用すると、Azureが資格情報の管理を行い、コードに秘密情報を保存せず認証できます。",
+    "why_not": [
+      "パブリックIPはネットワークアドレスです。",
+      "",
+      "アカウント キーは強力な共有秘密情報です。",
+      "SASはストレージへの委任アクセスに使用します。"
+    ]
+  },
+  {
+    "id": 171,
+    "category": "ID とガバナンス",
+    "question": "あなたはAzure管理者です。\n\n開発チームへAzure RBACロールを割り当てることになりました。必要最小限の権限だけを付与したい場合、最も適切な割り当てスコープはどれですか？",
+    "choices": [
+      "すべてのサブスクリプション（All subscriptions）",
+      "テナント全体（Tenant）",
+      "管理グループ（Management group）",
+      "対象のリソース グループ（Target resource group）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「対象のリソース グループ（Target resource group）」です。最小権限の原則に従い、必要な対象リソース グループへロールを割り当てます。",
+    "why_not": [
+      "必要以上に広い権限になります。",
+      "広すぎるスコープです。",
+      "配下のサブスクリプションへ影響する広いスコープです。",
+      ""
+    ]
+  },
+  {
+    "id": 172,
+    "category": "ID とガバナンス",
+    "question": "リソース グループに設定したタグについて、Azureの標準動作として正しい説明はどれですか？",
+    "choices": [
+      "配下のリソースへ自動継承されない（Not automatically inherited）",
+      "タグはサブスクリプションにしか付けられない（Subscriptions only）",
+      "配下のリソースへ自動継承される（Automatically inherited）",
+      "タグはNSGルールになる（Becomes an NSG rule）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「配下のリソースへ自動継承されない（Not automatically inherited）」です。リソース グループのタグは、標準動作では配下リソースへ自動継承されません。必要ならAzure Policyなどで付与します。",
+    "why_not": [
+      "",
+      "タグは多くのAzureリソースへ設定できます。",
+      "標準では自動継承されません。",
+      "タグはメタデータでありNSGルールではありません。"
+    ]
+  },
+  {
+    "id": 173,
+    "category": "ID とガバナンス",
+    "question": "あなたはAzure管理者です。\n\nAzure利用料金が予算を超えそうになった場合に、管理者へ通知を送りたいと考えています。実績コストだけでなく、予測コストに基づいて通知できる機能はどれですか？",
+    "choices": [
+      "Cost Managementの予算（Budget）",
+      "Azure Bastion（Azure Bastion）",
+      "ルート テーブル（Route Table）",
+      "可用性ゾーン（Availability Zone）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Cost Managementの予算（Budget）」です。Cost ManagementのBudgetでは、実績または予測コストに基づくしきい値通知を設定できます。",
+    "why_not": [
+      "",
+      "Bastionは安全なRDP/SSH接続用です。",
+      "ルート テーブルは通信経路を制御します。",
+      "可用性ゾーンは物理的に分離されたデータセンターです。"
+    ]
+  },
+  {
+    "id": 174,
+    "category": "ID とガバナンス",
+    "question": "あなたはAzure管理者です。\n\nAzureリソースについて「誰が」「いつ」「どのような管理操作を実行したか」を確認したいと考えています。\n\nAzure Resource Managerの管理操作を確認できるログはどれですか？",
+    "choices": [
+      "ゲストOSのイベント ログのみ（Guest OS event log only）",
+      "アクティビティ ログ（Activity log）",
+      "NSGフロー ログのみ（NSG flow logs only）",
+      "ブート診断ログ（Boot diagnostics log）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「アクティビティ ログ（Activity log）」です。Azure Activity Logには、Azure Resource Managerのコントロール プレーン操作が記録されます。",
+    "why_not": [
+      "ゲストOSログはOS内部のイベントです。",
+      "",
+      "NSGフロー ログはネットワークフローを記録します。",
+      "ブート診断はVMの起動トラブル調査用です。"
+    ]
+  },
+  {
+    "id": 175,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\nBlob Storageへ保存するデータはアクセス頻度が低いものの、必要なときはすぐに読み出せる必要があります。\n\n保存コストを抑えながらオンラインアクセスを維持できるアクセス層はどれですか？",
+    "choices": [
+      "ホット層（Hot tier）",
+      "アーカイブ層（Archive tier）",
+      "クール層（Cool tier）",
+      "Premiumファイル共有（Premium file share）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「クール層（Cool tier）」です。クール層はアクセス頻度が低いものの、オンラインで即時アクセスが必要なデータに適しています。",
+    "why_not": [
+      "ホット層は頻繁にアクセスするデータ向けです。",
+      "アーカイブ層はオフラインで、読み取り前にリハイドレートが必要です。",
+      "",
+      "Premiumファイル共有はAzure Filesの高性能層です。"
+    ]
+  },
+  {
+    "id": 176,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\n数年間ほとんど参照しないデータをできるだけ低コストで保管したいと考えています。\n\n利用前にリハイドレートが必要でも問題ない場合、最も適切なアクセス層はどれですか？",
+    "choices": [
+      "クール層（Cool tier）",
+      "トランザクション最適化（Transaction optimized）",
+      "ホット層（Hot tier）",
+      "アーカイブ層（Archive tier）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「アーカイブ層（Archive tier）」です。アーカイブ層は保存コストが最も低く、長期保管データ向けですが、利用前にリハイドレートが必要です。",
+    "why_not": [
+      "オンラインの低頻度アクセス向けです。",
+      "Transaction optimizedはAzure Filesの層です。",
+      "頻繁なアクセス向けです。",
+      ""
+    ]
+  },
+  {
+    "id": 177,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\n誤って削除したBlobデータを一定期間であれば復元できるようにしたいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "不変ストレージのみ（Immutable storage only）",
+      "NAT Gateway（NAT Gateway）",
+      "Blobの論理的な削除（Soft delete for blobs）",
+      "読み取り専用ロックのみ（ReadOnly lock only）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Blobの論理的な削除（Soft delete for blobs）」です。Blobの論理的な削除を有効にすると、保持期間中に削除済みBlobを復元できます。",
+    "why_not": [
+      "不変ストレージは変更や削除自体を防ぐ用途です。",
+      "NAT Gatewayはアウトバウンド通信を制御します。",
+      "",
+      "ReadOnlyロックはリソース管理操作を制限しますが、データ保護機能とは異なります。"
+    ]
+  },
+  {
+    "id": 178,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\nBlobデータを更新した際に、以前のバージョンを保持して必要に応じて復元できるようにしたいと考えています。\n\n最も適切な機能はどれですか？",
+    "choices": [
+      "共有アクセス署名のみ（SAS only）",
+      "Blobのバージョン管理（Blob versioning）",
+      "オブジェクト レプリケーションのみ（Object replication only）",
+      "静的Webサイト（Static website）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Blobのバージョン管理（Blob versioning）」です。Blob versioningを有効にすると、変更時に以前のバージョンを保持できます。",
+    "why_not": [
+      "SASはアクセス権を委任する仕組みです。",
+      "",
+      "オブジェクト レプリケーションはストレージ アカウント間の非同期複製です。",
+      "静的WebサイトはHTMLなどの配信機能です。"
+    ]
+  },
+  {
+    "id": 179,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\nリージョン障害に備えてデータを別リージョンへ非同期複製したいと考えています。\n\nさらに通常時でもセカンダリリージョンから読み取りを行えるストレージ冗長化オプションはどれですか？",
+    "choices": [
+      "ゾーン冗長ストレージ（ZRS）",
+      "読み取りアクセスgeo冗長ストレージ（RA-GRS）",
+      "ローカル冗長ストレージ（LRS）",
+      "Premium SSD（Premium SSD）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「読み取りアクセスgeo冗長ストレージ（RA-GRS）」です。RA-GRSはプライマリ リージョンのデータをセカンダリへ非同期複製し、セカンダリからの読み取りも提供します。",
+    "why_not": [
+      "ZRSは同一リージョン内の複数可用性ゾーンへ複製します。",
+      "",
+      "LRSは単一リージョン内で複製します。",
+      "Premium SSDはマネージド ディスクの種類です。"
+    ]
+  },
+  {
+    "id": 180,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\n同一リージョン内の可用性ゾーン障害に備えてデータを保護したいと考えています。\n\n複数の可用性ゾーンへ同期複製を行うストレージ冗長化オプションはどれですか？",
+    "choices": [
+      "geo冗長ストレージ（GRS）",
+      "ゾーン冗長ストレージ（ZRS）",
+      "ローカル冗長ストレージ（LRS）",
+      "アーカイブ層（Archive tier）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「ゾーン冗長ストレージ（ZRS）」です。ZRSは同一リージョン内の複数可用性ゾーンへデータを同期複製します。",
+    "why_not": [
+      "GRSは別リージョンにも複製します。",
+      "",
+      "LRSは単一データセンター内の冗長化です。",
+      "アーカイブはアクセス層です。"
+    ]
+  },
+  {
+    "id": 181,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\n外部ベンダーに対して、一時的にAzure Storageへのアクセスを許可したいと考えています。アクセスできるリソースや権限、有効期限を限定したい場合に使用する機能はどれですか？",
+    "choices": [
+      "NSGルール（NSG rule）",
+      "リソース ロック（Resource lock）",
+      "共有アクセス署名（SAS）",
+      "可用性セット（Availability Set）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「共有アクセス署名（SAS）」です。SASは対象、権限、有効期限などを制限したストレージアクセスを委任できます。",
+    "why_not": [
+      "NSGはネットワーク通信を制御します。",
+      "リソース ロックは管理プレーンの変更や削除を制限します。",
+      "",
+      "可用性セットはVM向けです。"
+    ]
+  },
+  {
+    "id": 182,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\nAzure Blob StorageへMicrosoft Entra IDを使用してアクセスさせたいと考えています。ユーザーがBlobデータを操作できるようにするため、最も適切な認可方法はどれですか？",
+    "choices": [
+      "Azure RBACによる認可（Authorization with Azure RBAC）",
+      "パブリックIPのみ（Public IP only）",
+      "匿名アクセスのみ（Anonymous access only）",
+      "リソース ロックのみ（Resource lock only）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Azure RBACによる認可（Authorization with Azure RBAC）」です。BlobデータへのMicrosoft Entra認証では、適切なストレージ データ ロールをAzure RBACで割り当てます。",
+    "why_not": [
+      "",
+      "IPアドレスだけではデータ操作の認可になりません。",
+      "匿名アクセスは公開データ向けで安全なユーザー認証ではありません。",
+      "リソース ロックはデータアクセス権を付与しません。"
+    ]
+  },
+  {
+    "id": 183,
+    "category": "ストレージ",
+    "question": "あなたはAzure管理者です。\n\nストレージ アカウントへのアクセスを特定の仮想ネットワークからだけ許可したいと考えています。この要件を満たすために使用する機能はどれですか？",
+    "choices": [
+      "RDP（Remote Desktop Protocol）",
+      "BGP（Border Gateway Protocol）",
+      "SMB（Server Message Block）",
+      "ICMP（Internet Control Message Protocol）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「SMB（Server Message Block）」です。Azure FilesはSMB共有を提供し、Windowsからネットワーク ドライブとしてマウントできます。",
+    "why_not": [
+      "RDPはリモート デスクトップ接続用です。",
+      "BGPは動的ルーティング用です。",
+      "",
+      "ICMPは疎通確認などに使われます。"
+    ]
+  },
+  {
+    "id": 184,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\nAzure Storageへインターネットを経由せず、仮想ネットワーク内のプライベートIPアドレスを使用して接続したいと考えています。最も適切な機能はどれですか？",
+    "choices": [
+      "可用性セット（Availability Set）",
+      "プライベート DNS ゾーン（Private DNS zone）",
+      "仮想マシン スケール セット（Virtual Machine Scale Sets）",
+      "Recovery Services コンテナー（Recovery Services vault）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「仮想マシン スケール セット（Virtual Machine Scale Sets）」です。Virtual Machine Scale Setsは同一構成のVM群を作成し、自動スケールできます。",
+    "why_not": [
+      "Availability Setは障害ドメインと更新ドメインへ分散しますが、自動スケール機能そのものではありません。",
+      "Private DNS zoneは名前解決用です。",
+      "",
+      "Recovery Services vaultはバックアップなどに使用します。"
+    ]
+  },
+  {
+    "id": 185,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\n複数のWindows Serverで同じAzureファイル共有を利用しながら、ローカル側にもキャッシュを保持したいと考えています。最も適切なサービスはどれですか？",
+    "choices": [
+      "可用性セットのみ（Availability Set only）",
+      "可用性ゾーン（Availability Zones）",
+      "近接配置グループ（Proximity Placement Group）",
+      "リソース タグ（Resource tag）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「可用性ゾーン（Availability Zones）」です。可用性ゾーンはリージョン内で物理的に分離されたデータセンター群です。",
+    "why_not": [
+      "Availability Setは同一データセンター内の障害分散が中心です。",
+      "",
+      "近接配置グループは低遅延のため近くへ配置します。",
+      "タグはメタデータです。"
+    ]
+  },
+  {
+    "id": 186,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\nAzure VMへRDPおよびSSH接続を行いたいと考えています。VMへパブリックIPアドレスを割り当てず、安全に接続できるAzureのマネージドサービスはどれですか？",
+    "choices": [
+      "NAT Gateway（NAT Gateway）",
+      "Azure Bastion（Azure Bastion）",
+      "Azure Firewall（Azure Firewall）",
+      "Application Gateway（Application Gateway）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Azure Bastion（Azure Bastion）」です。Azure BastionはVMへパブリックIPを付けず、Azure portal経由でRDP/SSH接続できます。",
+    "why_not": [
+      "NAT Gatewayはアウトバウンド接続用です。",
+      "",
+      "Azure DNSはDNSゾーンをホストします。",
+      "Traffic ManagerはDNSベースのグローバル負荷分散です。"
+    ]
+  },
+  {
+    "id": 187,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\nLinux仮想マシンを作成するたびに、初回起動時の設定やソフトウェアのインストールを自動化したいと考えています。最も適切な機能はどれですか？",
+    "choices": [
+      "リソース ロック（Resource lock）",
+      "Azure Policyの監査のみ（Azure Policy audit only）",
+      "NSGフロー ログ（NSG flow logs）",
+      "cloud-init（cloud-init）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「cloud-init（cloud-init）」です。Linux VMではcloud-initを使用して初回起動時の構成を自動化できます。",
+    "why_not": [
+      "リソース ロックは変更や削除を防ぎます。",
+      "監査ポリシーは構成の自動実行手段ではありません。",
+      "NSGフロー ログは通信記録です。",
+      ""
+    ]
+  },
+  {
+    "id": 188,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\nAzure VMの作成後に、保存してあるスクリプトをダウンロードして実行し、アプリケーションを自動でセットアップしたいと考えています。この要件を満たす機能はどれですか？",
+    "choices": [
+      "Azure DNSエイリアス（Azure DNS alias）",
+      "読み取り専用ロック（ReadOnly lock）",
+      "カスタム スクリプト拡張機能（Custom Script Extension）",
+      "サービス エンドポイント（Service Endpoint）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「カスタム スクリプト拡張機能（Custom Script Extension）」です。Custom Script ExtensionはVM上でスクリプトをダウンロードして実行するために使用できます。",
+    "why_not": [
+      "DNSエイリアスは名前解決に関する機能です。",
+      "ReadOnlyロックは管理操作を制限します。",
+      "",
+      "Service EndpointはPaaSへのネットワーク接続機能です。"
+    ]
+  },
+  {
+    "id": 189,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\nDockerコンテナー イメージをAzure上で一元管理し、プライベートなコンテナー レジストリとして利用したいと考えています。最も適切なサービスはどれですか？",
+    "choices": [
+      "Docker Hub",
+      "Azure Container Registry（Azure Container Registry）",
+      "Azure Container Apps",
+      "Azure Kubernetes Service（AKS）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Azure Container Registry（Azure Container Registry）」です。Azure Container RegistryはDocker/OCIコンテナー イメージを保存・管理するプライベート レジストリです。",
+    "why_not": [
+      "BastionはRDP/SSH接続用です。",
+      "",
+      "Azure Policyはガバナンス機能です。",
+      "Azure Filesはファイル共有サービスです。"
+    ]
+  },
+  {
+    "id": 190,
+    "category": "コンピューティング",
+    "question": "あなたはAzure管理者です。\n\nコンテナーを実行したいと考えています。ただし、仮想マシンやKubernetesクラスターの管理は行いたくありません。最も適切なサービスはどれですか？",
+    "choices": [
+      "Azure Kubernetes Serviceのみ（AKS only）",
+      "Azure Container Instances（Azure Container Instances）",
+      "可用性セット（Availability Set）",
+      "Azure DNS Private Resolver（Azure DNS Private Resolver）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Azure Container Instances（Azure Container Instances）」です。Azure Container InstancesはVMやオーケストレーターを管理せずにコンテナーを実行できます。",
+    "why_not": [
+      "AKSはKubernetesクラスターが必要な構成向けです。",
+      "",
+      "可用性セットはVM向けです。",
+      "DNS Private ResolverはDNS問い合わせの転送に使用します。"
+    ]
+  },
+  {
+    "id": 191,
+    "category": "コンピューティング",
+    "question": "WebアプリとREST APIをAzureへデプロイしたいと考えています。\n\n仮想マシンやゲストOSを管理せず、マネージドPaaSとして実行するには、どのサービスを使用しますか？",
+    "choices": [
+      "Azure Route Server（Azure Route Server）",
+      "Azure App Service（Azure App Service）",
+      "Azure Virtual Networkのみ（Azure Virtual Network only）",
+      "Recovery Services コンテナー（Recovery Services vault）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Azure App Service（Azure App Service）」です。Azure App ServiceはWebアプリやAPIをホストするマネージドPaaSです。",
+    "why_not": [
+      "Route ServerはNVAとのBGP経路交換に使用します。",
+      "",
+      "VNetはネットワーク境界を提供します。",
+      "Recovery Services vaultはバックアップなどに使用します。"
+    ]
+  },
+  {
+    "id": 192,
+    "category": "コンピューティング",
+    "question": "Azure App Serviceの新しいバージョンを、本番とは別の環境で検証したいと考えています。\n\n検証後、短時間で本番環境と入れ替えるために使用する機能はどれですか？",
+    "choices": [
+      "障害ドメイン（Fault domain）",
+      "NSG（Network Security Group）",
+      "デプロイ スロット（Deployment slots）",
+      "アーカイブ層（Archive tier）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「デプロイ スロット（Deployment slots）」です。Deployment slotsを使うと、ステージング環境で検証後に本番スロットとスワップできます。",
+    "why_not": [
+      "障害ドメインは物理障害の分離単位です。",
+      "NSGは通信制御です。",
+      "",
+      "アーカイブ層はBlobのアクセス層です。"
+    ]
+  },
+  {
+    "id": 193,
+    "category": "コンピューティング",
+    "question": "Azure VMのOSディスクを作成します。\n\n基盤となるストレージ アカウントを自分で作成・管理せず、Azureに管理させたい場合、どのディスクを使用しますか？",
+    "choices": [
+      "Blobコンテナー（Blob container）",
+      "ファイル共有（File share）",
+      "マネージド ディスク（Managed disk）",
+      "共有アクセス署名（SAS）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「マネージド ディスク（Managed disk）」です。Managed Diskでは基盤となるストレージ アカウントをAzureが管理します。",
+    "why_not": [
+      "Blob containerはオブジェクト ストレージです。",
+      "File shareは共有ファイル ストレージです。",
+      "",
+      "SASはアクセス委任トークンです。"
+    ]
+  },
+  {
+    "id": 194,
+    "category": "コンピューティング",
+    "question": "Azure VMの一時ディスクについて、正しい説明はどれですか？",
+    "choices": [
+      "永続データの保存に最適（Best for persistent data）",
+      "OSディスクと同じく必ず保持される（Always retained like OS disk）",
+      "ホスト移動などで内容が失われる可能性がある（Data can be lost during host events）",
+      "自動的に別リージョンへ複製される（Automatically geo-replicated）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「ホスト移動などで内容が失われる可能性がある（Data can be lost during host events）」です。一時ディスクは物理ホスト上にあり、再デプロイやホスト移動などでデータが失われる可能性があります。",
+    "why_not": [
+      "永続化が必要なデータには使用しません。",
+      "OSディスクとは異なり永続性が保証されません。",
+      "",
+      "自動geo複製されません。"
+    ]
+  },
+  {
+    "id": 195,
+    "category": "コンピューティング",
+    "question": "ARMテンプレートまたはBicepを使用してAzureリソースをデプロイする主な利点はどれですか？",
+    "choices": [
+      "インフラストラクチャを宣言的に繰り返しデプロイできる（Declarative repeatable deployment）",
+      "VMのCPU性能を自動で倍増する（Automatically doubles CPU）",
+      "ネットワーク遅延をゼロにする（Eliminates latency）",
+      "すべての課金をなくす（Eliminates all charges）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「インフラストラクチャを宣言的に繰り返しデプロイできる（Declarative repeatable deployment）」です。ARMテンプレートやBicepは、Azureリソースをコードとして宣言的かつ再現可能にデプロイできます。",
+    "why_not": [
+      "",
+      "性能向上を自動保証するものではありません。",
+      "ネットワーク遅延をゼロにはできません。",
+      "課金はデプロイしたリソースに応じて発生します。"
+    ]
+  },
+  {
+    "id": 196,
+    "category": "ネットワーク",
+    "question": "2つのAzure仮想ネットワークを、パブリック インターネットを経由させず、Azureバックボーン上で低遅延に接続したいと考えています。\n\nどの機能を使用しますか？",
+    "choices": [
+      "Blobのバージョン管理（Blob versioning）",
+      "NAT Gateway（NAT Gateway）",
+      "Azure Bastion（Azure Bastion）",
+      "仮想ネットワーク ピアリング（Virtual network peering）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「仮想ネットワーク ピアリング（Virtual network peering）」です。VNet peeringはAzureバックボーンを使用してVNet同士を低遅延で接続します。",
+    "why_not": [
+      "Blob versioningはストレージ機能です。",
+      "NAT Gatewayはアウトバウンド接続用です。",
+      "BastionはRDP/SSH接続用です。",
+      ""
+    ]
+  },
+  {
+    "id": 197,
+    "category": "ネットワーク",
+    "question": "VNet-AとVNet-B、VNet-BとVNet-Cをそれぞれピアリングしています。\n\nVNet-AとVNet-Cの接続について、Azureの標準動作として正しい説明はどれですか？",
+    "choices": [
+      "既定では推移的ではない（Not transitive by default）",
+      "必ずインターネットを経由する（Always uses the internet）",
+      "既定で推移的である（Transitive by default）",
+      "同じVNet内でしか使えない（Only within one VNet）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「既定では推移的ではない（Not transitive by default）」です。VNet peeringは既定では推移的ではありません。A-BとB-CをピアリングしてもA-Cが自動接続されるわけではありません。",
+    "why_not": [
+      "",
+      "Azureバックボーンを使用します。",
+      "既定では推移的ではありません。",
+      "異なるVNet間を接続する機能です。"
+    ]
+  },
+  {
+    "id": 198,
+    "category": "ネットワーク",
+    "question": "オンプレミス ネットワークとAzure仮想ネットワークを、インターネット経由の暗号化されたIPsec/IKEトンネルで接続したいと考えています。\n\nどのサービスを使用しますか？",
+    "choices": [
+      "Azure Front Doorのみ（Azure Front Door only）",
+      "VPN Gateway（VPN Gateway）",
+      "Application Gateway（Application Gateway）",
+      "NAT Gateway（NAT Gateway）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「VPN Gateway（VPN Gateway）」です。VPN Gatewayのサイト間VPNを使用すると、オンプレミスとAzureをIPsec/IKEトンネルで接続できます。",
+    "why_not": [
+      "Front DoorはグローバルなWeb配信・負荷分散サービスです。",
+      "",
+      "Application GatewayはWebトラフィックのL7負荷分散です。",
+      "NAT Gatewayはアウトバウンド通信用です。"
+    ]
+  },
+  {
+    "id": 199,
+    "category": "ネットワーク",
+    "question": "オンプレミス ネットワークからAzureへ、パブリック インターネットを経由しない専用のプライベート接続を構成したいと考えています。\n\nどのサービスを使用しますか？",
+    "choices": [
+      "Point-to-Site VPNのみ（Point-to-Site VPN only）",
+      "Azure Bastion（Azure Bastion）",
+      "ExpressRoute（ExpressRoute）",
+      "Service Endpointのみ（Service Endpoint only）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「ExpressRoute（ExpressRoute）」です。ExpressRouteは接続プロバイダーを通じてAzureへのプライベート接続を提供します。",
+    "why_not": [
+      "P2S VPNは個々のクライアント端末からのVPN接続です。",
+      "BastionはVM管理接続用です。",
+      "",
+      "Service EndpointはVNetからPaaSへの接続機能です。"
+    ]
+  },
+  {
+    "id": 200,
+    "category": "ネットワーク",
+    "question": "ネットワーク セキュリティ グループのルールについて、評価される順序を決定する設定はどれですか？",
+    "choices": [
+      "優先度（Priority）",
+      "タグ数（Number of tags）",
+      "VMサイズ（VM size）",
+      "リソース名の長さ（Resource name length）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「優先度（Priority）」です。NSGルールは小さい優先度番号から評価され、最初に一致したルールが適用されます。",
+    "why_not": [
+      "",
+      "タグ数は無関係です。",
+      "VMサイズは無関係です。",
+      "名前の長さは無関係です。"
+    ]
+  },
+  {
+    "id": 201,
+    "category": "ネットワーク",
+    "question": "ネットワーク セキュリティ グループ（NSG）について、サブネットへ関連付けた場合のAzureの標準動作として正しい説明はどれですか？",
+    "choices": [
+      "Recovery Services コンテナーのみ（Recovery Services vault only）",
+      "サブネット（Subnet）",
+      "請求書（Invoice）",
+      "管理グループのみ（Management group only）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「サブネット（Subnet）」です。NSGはサブネットまたはNICへ関連付けられます。サブネットへ関連付けると配下NICの通信へ適用されます。",
+    "why_not": [
+      "Recovery Services vaultへNSGは関連付けません。",
+      "",
+      "請求書は通信制御対象ではありません。",
+      "管理グループへNSGは関連付けません。"
+    ]
+  },
+  {
+    "id": 202,
+    "category": "ネットワーク",
+    "question": "ユーザー定義ルート（UDR）を使用して、通信をネットワーク仮想アプライアンス（NVA）へ転送したいと考えています。\n\n次ホップの種類として選択する設定はどれですか？",
+    "choices": [
+      "なし（None）",
+      "インターネットのみ（Internet only）",
+      "VNetローカルのみ（Virtual network only）",
+      "仮想アプライアンス（Virtual appliance）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「仮想アプライアンス（Virtual appliance）」です。ネットワーク仮想アプライアンスへ転送するUDRでは、Virtual applianceを選び、そのプライベートIPを指定します。",
+    "why_not": [
+      "Noneはトラフィックを破棄します。",
+      "Internetはインターネットへ送る経路です。",
+      "Virtual networkはVNet内のシステム ルートを表します。",
+      ""
+    ]
+  },
+  {
+    "id": 203,
+    "category": "ネットワーク",
+    "question": "WebアプリケーションへのHTTP/HTTPS通信を負荷分散したいと考えています。\n\nさらに、URLパスに応じて転送先を振り分けたい場合、最も適切なサービスはどれですか？",
+    "choices": [
+      "VPN Gateway（VPN Gateway）",
+      "NAT Gateway（NAT Gateway）",
+      "Azure Load Balancer（Azure Load Balancer）",
+      "Application Gateway（Application Gateway）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Application Gateway（Application Gateway）」です。Application Gatewayはレイヤー7で動作し、URLパスベース ルーティングを提供します。",
+    "why_not": [
+      "VPN GatewayはVPN接続用です。",
+      "NAT Gatewayはアウトバウンド接続用です。",
+      "Azure Load Balancerはレイヤー4の負荷分散です。",
+      ""
+    ]
+  },
+  {
+    "id": 204,
+    "category": "ネットワーク",
+    "question": "TCPおよびUDP通信をレイヤー4で負荷分散したいと考えています。\n\n最も適切なAzureサービスはどれですか？",
+    "choices": [
+      "Azure Load Balancer（Azure Load Balancer）",
+      "Azure Policy（Azure Policy）",
+      "Microsoft Entra ID（Microsoft Entra ID）",
+      "Application Gatewayのみ（Application Gateway only）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Azure Load Balancer（Azure Load Balancer）」です。Azure Load BalancerはTCP/UDPのレイヤー4負荷分散を提供します。",
+    "why_not": [
+      "",
+      "Azure Policyはガバナンス用です。",
+      "Microsoft Entra IDはID管理サービスです。",
+      "Application Gatewayは主にHTTP/HTTPSのレイヤー7です。"
+    ]
+  },
+  {
+    "id": 205,
+    "category": "ネットワーク",
+    "question": "仮想ネットワーク内のリソースから、プライベートIPアドレスを使用して名前解決を行いたいと考えています。\n\nこの要件を満たすために使用するサービスはどれですか？",
+    "choices": [
+      "Azure Policy（Azure Policy）",
+      "プライベート DNS ゾーン（Private DNS zone）",
+      "NAT Gateway（NAT Gateway）",
+      "パブリック DNS ゾーンのみ（Public DNS zone only）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「プライベート DNS ゾーン（Private DNS zone）」です。Azure Private DNS zoneをVNetへリンクすると、プライベート名前解決を提供できます。",
+    "why_not": [
+      "Azure Policyはガバナンス用です。",
+      "",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "Public DNSはインターネット向け名前解決です。"
+    ]
+  },
+  {
+    "id": 206,
+    "category": "ネットワーク",
+    "question": "ハブ&スポーク構成を利用しています。\n\nスポーク仮想ネットワークから、ハブ仮想ネットワークに配置されたVPN Gatewayを共有して利用したい場合に構成する機能はどれですか？",
+    "choices": [
+      "サービス エンドポイントのみ（Service Endpoint only）",
+      "VMのブート診断（VM boot diagnostics）",
+      "Blobの論理的な削除（Blob soft delete）",
+      "ゲートウェイ転送（Gateway transit）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「ゲートウェイ転送（Gateway transit）」です。ハブ側でAllow gateway transit、スポーク側でUse remote gatewaysを構成するとゲートウェイ転送を利用できます。",
+    "why_not": [
+      "Service EndpointはPaaSへの接続です。",
+      "Boot diagnosticsはVM起動診断です。",
+      "Blob soft deleteはデータ保護です。",
+      ""
+    ]
+  },
+  {
+    "id": 207,
+    "category": "ネットワーク",
+    "question": "仮想ネットワーク全体の通信を保護するため、Azureが提供するステートフルなマネージド ファイアウォールを導入したいと考えています。\n\n最も適切なサービスはどれですか？",
+    "choices": [
+      "Azure Container Instances（Azure Container Instances）",
+      "Azure Files（Azure Files）",
+      "Azure Firewall（Azure Firewall）",
+      "Azure Backup（Azure Backup）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Azure Firewall（Azure Firewall）」です。Azure Firewallはステートフルなマネージド ネットワーク セキュリティ サービスです。",
+    "why_not": [
+      "ACIはコンテナー実行サービスです。",
+      "Azure Filesはファイル共有です。",
+      "",
+      "Azure Backupはバックアップです。"
+    ]
+  },
+  {
+    "id": 208,
+    "category": "監視と保守",
+    "question": "Azure VMのゲストOSからパフォーマンス カウンターやイベント ログを収集したいと考えています。\n\nデータ収集ルール（DCR）と組み合わせて使用するエージェントはどれですか？",
+    "choices": [
+      "Log Analytics エージェント（Log Analytics agent）",
+      "Azure Connected Machine エージェント（Azure Connected Machine agent）",
+      "診断設定（Diagnostic settings）",
+      "Azure Monitor Agent（Azure Monitor Agent）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Azure Monitor Agent（Azure Monitor Agent）」です。Azure Monitor Agentはデータ収集ルールと組み合わせて、ゲストOSの監視データを収集します。",
+    "why_not": [
+      "BastionはRDP/SSH接続用です。",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "Application GatewayはWeb負荷分散用です。",
+      ""
+    ]
+  },
+  {
+    "id": 209,
+    "category": "監視と保守",
+    "question": "Azure Monitor LogsおよびLog Analyticsに保存されたログを検索・分析したいと考えています。\n\n使用するクエリ言語はどれですか？",
+    "choices": [
+      "Bicepのみ（Bicep only）",
+      "Kusto Query Language（KQL）",
+      "HTML（HTML）",
+      "Transact-SQLのみ（T-SQL only）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Kusto Query Language（KQL）」です。Azure Monitor LogsとLog AnalyticsではKusto Query Languageを使用します。",
+    "why_not": [
+      "BicepはAzureリソースの宣言言語です。",
+      "",
+      "HTMLはマークアップ言語です。",
+      "T-SQLは主にSQL Server系で使用します。"
+    ]
+  },
+  {
+    "id": 210,
+    "category": "監視と保守",
+    "question": "Azure Monitor Logsで収集したログを保存し、Kusto Query Language（KQL）を使用して分析したいと考えています。\n\nデータの保存先として使用するリソースはどれですか？",
+    "choices": [
+      "Azure Container Registry（Azure Container Registry）",
+      "NAT Gateway（NAT Gateway）",
+      "Log Analytics ワークスペース（Log Analytics workspace）",
+      "可用性セット（Availability Set）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Log Analytics ワークスペース（Log Analytics workspace）」です。Log Analytics workspaceはAzure Monitor Logsのデータを格納し、KQLで分析する場所です。",
+    "why_not": [
+      "ACRはコンテナー イメージのレジストリです。",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "",
+      "可用性セットはVMの可用性向上用です。"
+    ]
+  },
+  {
+    "id": 211,
+    "category": "監視と保守",
+    "question": "Azureリソースのログやメトリックを収集し、Log AnalyticsワークスペースやStorageアカウント、Event Hubsへ送信したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "共有アクセス署名（SAS）",
+      "診断設定（Diagnostic settings）",
+      "可用性ゾーン（Availability Zone）",
+      "リソース ロック（Resource lock）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「診断設定（Diagnostic settings）」です。Diagnostic settingsを使用して、リソース ログやメトリックをLog Analytics、Storage、Event Hubsなどへ送信します。",
+    "why_not": [
+      "SASはストレージアクセス委任です。",
+      "",
+      "可用性ゾーンは物理分離されたデータセンターです。",
+      "リソース ロックは削除や変更を制限します。"
+    ]
+  },
+  {
+    "id": 212,
+    "category": "監視と保守",
+    "question": "利用しているAzureサービスで障害や計画メンテナンスが発生した際に、自社環境へ影響があるか確認したいと考えています。\n\nこの情報を確認できるサービスはどれですか？",
+    "choices": [
+      "Network Watcherの接続トラブルシューティングのみ（Connection troubleshoot only）",
+      "Azure Policy（Azure Policy）",
+      "Cost Management（Cost Management）",
+      "Service Health（Service Health）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Service Health（Service Health）」です。Azure Service Healthは利用中サービスに影響する障害、計画メンテナンス、正常性勧告を提供します。",
+    "why_not": [
+      "Connection troubleshootはネットワーク接続診断です。",
+      "Azure Policyはガバナンス用です。",
+      "Cost Managementはコスト管理用です。",
+      ""
+    ]
+  },
+  {
+    "id": 213,
+    "category": "監視と保守",
+    "question": "あるAzure VMが利用できなくなりました。\n\nこのVM固有の正常性状態（利用可能、利用不可、低下など）を確認したい場合、どのサービスを使用しますか？",
+    "choices": [
+      "Service Healthだけ（Service Health only）",
+      "Azure Container Registry（Azure Container Registry）",
+      "Azure DNS（Azure DNS）",
+      "Resource Health（Resource Health）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Resource Health（Resource Health）」です。Resource Healthは特定リソースの利用可能、利用不可、低下などの状態を表示します。",
+    "why_not": [
+      "Service HealthはAzureサービスやリージョン側の問題を中心に表示します。",
+      "ACRはコンテナー レジストリです。",
+      "Azure DNSは名前解決です。",
+      ""
+    ]
+  },
+  {
+    "id": 214,
+    "category": "監視と保守",
+    "question": "Azure Backupを利用しています。\n\nバックアップの実行スケジュールや復旧ポイントの保持期間を設定するために使用する機能はどれですか？",
+    "choices": [
+      "NSGルール（NSG rule）",
+      "ルート テーブル（Route Table）",
+      "デプロイ スロット（Deployment slot）",
+      "バックアップ ポリシー（Backup policy）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「バックアップ ポリシー（Backup policy）」です。Backup policyでバックアップのスケジュールと復旧ポイントの保持期間を定義します。",
+    "why_not": [
+      "NSGは通信制御です。",
+      "Route Tableは経路制御です。",
+      "Deployment slotはApp Serviceのデプロイ機能です。",
+      ""
+    ]
+  },
+  {
+    "id": 215,
+    "category": "監視と保守",
+    "question": "災害対策として、Azure VMを別リージョンへレプリケートし、障害発生時にフェールオーバーできるようにしたいと考えています。\n\nこの要件を満たすサービスはどれですか？",
+    "choices": [
+      "Azure Site Recovery（Azure Site Recovery）",
+      "Azure DNSのみ（Azure DNS only）",
+      "可用性セットのみ（Availability Set only）",
+      "Blobのバージョン管理（Blob versioning）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Azure Site Recovery（Azure Site Recovery）」です。Azure Site RecoveryはVMなどのワークロードを別サイトや別リージョンへレプリケートし、フェールオーバーを支援します。",
+    "why_not": [
+      "",
+      "Azure DNSだけではVMをレプリケートできません。",
+      "Availability Setは同一リージョン内の可用性向上が中心です。",
+      "Blob versioningはBlobデータの過去版保持です。"
+    ]
+  },
+  {
+    "id": 216,
+    "category": "監視と保守",
+    "question": "Azure VMから別のサーバーへ通信できません。\n\n送信元から宛先までの接続性を確認し、通信が失敗している箇所を診断したい場合、どの機能を使用しますか？",
+    "choices": [
+      "Azure Policyの修復（Policy remediation）",
+      "接続のトラブルシューティング（Connection troubleshoot）",
+      "Blob inventory（Blob inventory）",
+      "Cost analysis（Cost analysis）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「接続のトラブルシューティング（Connection troubleshoot）」です。Network WatcherのConnection troubleshootは、送信元から宛先への接続性と問題箇所を診断します。",
+    "why_not": [
+      "Policy remediationは非準拠リソースの修復です。",
+      "",
+      "Blob inventoryはBlob一覧のレポート作成機能です。",
+      "Cost analysisはコスト分析です。"
+    ]
+  },
+  {
+    "id": 217,
+    "category": "監視と保守",
+    "question": "Azure VMが正常に起動しません。\n\n起動時のスクリーンショットやシリアルログを確認して原因を調査したい場合、どの機能を使用しますか？",
+    "choices": [
+      "ブート診断（Boot diagnostics）",
+      "Azure Policy（Azure Policy）",
+      "オブジェクト レプリケーション（Object replication）",
+      "Traffic Manager（Traffic Manager）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「ブート診断（Boot diagnostics）」です。Boot diagnosticsではVM起動時のシリアル ログとスクリーンショットを確認できます。",
+    "why_not": [
+      "",
+      "Azure Policyはガバナンス用です。",
+      "Object replicationはBlob複製機能です。",
+      "Traffic ManagerはDNSベースの負荷分散です。"
+    ]
+  },
+  {
+    "id": 218,
+    "category": "監視と保守",
+    "question": "Azure Monitorでアラートが発生した際に、メール通知やWebhookの呼び出し、自動処理を実行したいと考えています。\n\n通知や実行する処理をまとめて管理する機能はどれですか？",
+    "choices": [
+      "可用性セット（Availability Set）",
+      "プライベート エンドポイント（Private Endpoint）",
+      "管理グループ（Management group）",
+      "アクション グループ（Action group）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「アクション グループ（Action group）」です。Action groupはAzure Monitorアラートが通知または自動処理を実行するためのアクション集合です。",
+    "why_not": [
+      "Availability SetはVM配置機能です。",
+      "Private EndpointはPaaSへのプライベート接続です。",
+      "Management groupはサブスクリプション階層管理です。",
+      ""
+    ]
+  },
+  {
+    "id": 219,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDで、特定のユーザーやグループだけを管理できる管理者を作成したいと考えています。\n\n管理範囲を限定するために使用する機能はどれですか？",
+    "choices": [
+      "リソース グループ（Resource group）",
+      "管理グループ（Management group）",
+      "管理単位（Administrative unit）",
+      "可用性セット（Availability set）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「管理単位（Administrative unit）」です。管理単位を使うと、Microsoft Entra IDの管理範囲を特定のユーザーやグループへ限定できます。",
+    "why_not": [
+      "リソース グループはAzureリソースの管理単位です。",
+      "管理グループはAzureサブスクリプションの階層管理用です。",
+      "",
+      "可用性セットはVMの可用性向上用です。"
+    ]
+  },
+  {
+    "id": 220,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDのカスタムロールを作成しています。\n\n許可する管理プレーン操作を定義するために使用するプロパティはどれですか？",
+    "choices": [
+      "Description",
+      "NotDataActions",
+      "AssignableScopes",
+      "Actions"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Actions」です。Actionsには、カスタム ロールで許可する管理プレーン操作を指定します。",
+    "why_not": [
+      "Descriptionは説明文です。",
+      "NotDataActionsはDataActionsから除外するデータ操作です。",
+      "AssignableScopesはロールを割り当て可能な範囲です。",
+      ""
+    ]
+  },
+  {
+    "id": 221,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDのカスタムロールを作成しています。\n\nActionsで許可した管理プレーン操作のうち、一部の操作だけを除外したい場合に使用するプロパティはどれですか？",
+    "choices": [
+      "DataActions",
+      "NotActions",
+      "Actions",
+      "AssignableScopes"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「NotActions」です。NotActionsはActionsで許可された管理操作から除外する操作を指定します。",
+    "why_not": [
+      "DataActionsはデータ プレーン操作です。",
+      "",
+      "Actionsは許可する操作です。",
+      "AssignableScopesは割り当て可能範囲です。"
+    ]
+  },
+  {
+    "id": 222,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDのカスタムロールを作成しています。\n\nBlobデータの読み取りや書き込みなど、データプレーンに対するアクセス権限を定義するプロパティはどれですか？",
+    "choices": [
+      "ConditionVersion",
+      "NotActions",
+      "Actions",
+      "DataActions"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「DataActions」です。Blobデータの読み取りなど、データ プレーン権限はDataActionsで定義します。",
+    "why_not": [
+      "ConditionVersionは条件付きロール割り当てに関連します。",
+      "NotActionsは管理操作の除外です。",
+      "Actionsは主に管理プレーン操作です。",
+      ""
+    ]
+  },
+  {
+    "id": 223,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyを使用しています。\n\nポリシー条件に違反するリソースの作成や更新そのものを禁止したい場合、どの効果（Effect）を使用しますか？",
+    "choices": [
+      "Audit（監査）",
+      "Disabled（無効）",
+      "Append（追加）",
+      "Deny（拒否）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Deny（拒否）」です。Deny効果は、ポリシー条件に違反するリソースの作成や更新を拒否します。",
+    "why_not": [
+      "Auditは記録するだけで拒否しません。",
+      "Disabledはポリシー評価を無効化します。",
+      "Appendは指定値を追加します。",
+      ""
+    ]
+  },
+  {
+    "id": 224,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyを使用しています。\n\nポリシー違反を記録したいものの、リソースの作成や更新は許可したい場合、どの効果（Effect）を使用しますか？",
+    "choices": [
+      "Modify",
+      "DeployIfNotExists",
+      "Deny（拒否）",
+      "Audit（監査）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Audit（監査）」です。Auditは非準拠として記録しますが、作成や更新をブロックしません。",
+    "why_not": [
+      "Modifyはプロパティを追加・変更します。",
+      "DeployIfNotExistsは不足リソースを展開します。",
+      "Denyは操作を拒否します。",
+      ""
+    ]
+  },
+  {
+    "id": 225,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyを使用しています。\n\nリソース作成時に不足しているタグやプロパティを自動的に追加・更新したい場合、どの効果（Effect）を使用しますか？",
+    "choices": [
+      "Modify（変更）",
+      "Deny（拒否）",
+      "Audit（監査）",
+      "Disabled（無効）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Modify（変更）」です。Modify効果は、対応するプロパティやタグを追加・更新できます。",
+    "why_not": [
+      "",
+      "Denyは拒否します。",
+      "Auditは記録のみです。",
+      "Disabledは評価しません。"
+    ]
+  },
+  {
+    "id": 226,
+    "category": "ID とガバナンス",
+    "question": "Azure Policyを使用しています。\n\n必要な関連リソースが存在しない場合、自動的にデプロイを実行したいと考えています。\n\nどの効果（Effect）を使用しますか？",
+    "choices": [
+      "DeployIfNotExists",
+      "Deny",
+      "Manual",
+      "AuditIfNotExists"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「DeployIfNotExists」です。DeployIfNotExistsは条件を満たす関連リソースがない場合に展開を実行できます。",
+    "why_not": [
+      "",
+      "Denyは操作を拒否します。",
+      "ManualというPolicy効果はありません。",
+      "AuditIfNotExistsは不足を監査しますが展開しません。"
+    ]
+  },
+  {
+    "id": 227,
+    "category": "ID とガバナンス",
+    "question": "複数のAzure Policy定義をまとめて管理し、一括で割り当てたいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "管理単位（Administrative unit）",
+      "イニシアチブ定義（Initiative definition）",
+      "アクション グループ（Action group）",
+      "可用性セット（Availability set）"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「イニシアチブ定義（Initiative definition）」です。イニシアチブは複数のPolicy定義をまとめて割り当てる仕組みです。",
+    "why_not": [
+      "管理単位はEntraオブジェクトの管理範囲です。",
+      "",
+      "アクション グループは通知先です。",
+      "可用性セットはVM向けです。"
+    ]
+  },
+  {
+    "id": 228,
+    "category": "ID とガバナンス",
+    "question": "Azureリソースを別のサブスクリプションへ移動したいと考えています。\n\n移動を実行するための前提条件として正しいものはどれですか？",
+    "choices": [
+      "全ユーザーがOwnerであること",
+      "移動対象リソースが移動をサポートしていること",
+      "すべてのリソースにパブリックIPがあること",
+      "すべてのタグが同一であること"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「移動対象リソースが移動をサポートしていること」です。リソースの種類や構成によって、サブスクリプション間移動がサポートされない場合があります。",
+    "why_not": [
+      "全員へOwnerを付与する必要はありません。",
+      "",
+      "パブリックIPは必須ではありません。",
+      "タグの一致は移動条件ではありません。"
+    ]
+  },
+  {
+    "id": 229,
+    "category": "ID とガバナンス",
+    "question": "Azureリソースをサブスクリプション間で移動したいと考えています。\n\n通常、この操作を実行するために満たしている必要がある条件はどれですか？",
+    "choices": [
+      "同じリソース グループ名であること",
+      "同じ課金通貨であることだけ",
+      "同じリージョンのリソースしかないこと",
+      "同じMicrosoft Entraテナントに属していること"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「同じMicrosoft Entraテナントに属していること」です。通常、サブスクリプション間でリソースを移動するには、両方が同じMicrosoft Entraテナントに属している必要があります。",
+    "why_not": [
+      "リソース グループ名の一致は不要です。",
+      "課金通貨だけでは条件を満たしません。",
+      "異なるリージョンのリソースが存在しても一律に不可ではありません。",
+      ""
+    ]
+  },
+  {
+    "id": 230,
+    "category": "ID とガバナンス",
+    "question": "管理者権限は必要なときだけ有効化し、承認やMFA、利用期限を設定できるようにしたいと考えています。\n\nこの要件を満たすMicrosoft Entraのサービスはどれですか？",
+    "choices": [
+      "Azure Policy",
+      "Azure Files",
+      "Network Watcher",
+      "Microsoft Entra Privileged Identity Management（PIM）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Microsoft Entra Privileged Identity Management（PIM）」です。PIMを使うと、対象ロールの適格割り当て、期限、承認、MFAなどを管理できます。",
+    "why_not": [
+      "Azure Policyはリソース準拠性を管理します。",
+      "Azure Filesはファイル共有です。",
+      "Network Watcherはネットワーク診断用です。",
+      ""
+    ]
+  },
+  {
+    "id": 231,
+    "category": "ID とガバナンス",
+    "question": "Microsoft Entra IDを利用しています。\n\nユーザー自身が本人確認を行ったうえで、管理者へ依頼することなくパスワードをリセットできるようにしたい場合、どの機能を使用しますか？",
+    "choices": [
+      "リソース ロック",
+      "Azure Bastion",
+      "Service Health",
+      "セルフサービス パスワード リセット（SSPR）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「セルフサービス パスワード リセット（SSPR）」です。SSPRを有効化すると、ユーザーが本人確認後に自分のパスワードをリセットできます。",
+    "why_not": [
+      "リソース ロックはAzureリソース保護用です。",
+      "BastionはVM接続用です。",
+      "Service HealthはAzureサービス正常性情報です。",
+      ""
+    ]
+  },
+  {
+    "id": 232,
+    "category": "ID とガバナンス",
+    "question": "部署や役職などの属性に応じて、Microsoft Entra IDグループのメンバーを自動的に追加・削除したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "動的メンバーシップ（Dynamic membership）",
+      "可用性ゾーン",
+      "Azure PolicyのDeny",
+      "入れ子の管理グループ"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「動的メンバーシップ（Dynamic membership）」です。動的グループではルールに基づきユーザーやデバイスのメンバーシップを自動更新できます。",
+    "why_not": [
+      "",
+      "可用性ゾーンはデータセンター分離です。",
+      "PolicyのDenyはリソース操作を拒否します。",
+      "管理グループはサブスクリプション階層です。"
+    ]
+  },
+  {
+    "id": 233,
+    "category": "ID とガバナンス",
+    "question": "誤ってMicrosoft Entra IDのユーザーを削除してしまいました。\n\n保持期間内であればユーザーを復元したい場合、どこから復元できますか？",
+    "choices": [
+      "Azure Resource Graph",
+      "削除済みユーザー（Deleted users）",
+      "Network Watcher",
+      "Cost Management"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「削除済みユーザー（Deleted users）」です。削除されたEntraユーザーは、保持期間中であればDeleted usersから復元できます。",
+    "why_not": [
+      "Resource GraphはAzureリソース検索用です。",
+      "",
+      "Network Watcherはネットワーク診断です。",
+      "Cost Managementは費用管理です。"
+    ]
+  },
+  {
+    "id": 234,
+    "category": "ID とガバナンス",
+    "question": "Azure RBACについて、親スコープ（管理グループ、サブスクリプション、リソース グループ）で行ったロール割り当ての動作として正しい説明はどれですか？",
+    "choices": [
+      "子スコープの割り当ては必ず親へ継承される",
+      "ロール割り当てに継承はない",
+      "親スコープの割り当ては子スコープへ継承される",
+      "リソース単位の割り当てはテナント全体へ及ぶ"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「親スコープの割り当ては子スコープへ継承される」です。管理グループ、サブスクリプション、リソース グループなどの親スコープの割り当ては、その配下へ継承されます。",
+    "why_not": [
+      "子から親へは継承されません。",
+      "RBACにはスコープ継承があります。",
+      "",
+      "リソース単位はそのリソースに限定されます。"
+    ]
+  },
+  {
+    "id": 235,
+    "category": "ID とガバナンス",
+    "question": "1人のユーザーに複数のAzure RBACロールを割り当てています。\n\nこのユーザーが最終的に持つ権限について、正しい説明はどれですか？",
+    "choices": [
+      "最も権限の弱いロールだけになる",
+      "最後に割り当てたロールだけになる",
+      "ロールが複数あるとすべて無効になる",
+      "許可された権限の和集合になる"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「許可された権限の和集合になる」です。Azure RBACでは、複数のロール割り当てから得られる許可が通常は累積します。",
+    "why_not": [
+      "最弱ロールだけにはなりません。",
+      "最後のロールだけではありません。",
+      "複数割り当ては有効です。",
+      ""
+    ]
+  },
+  {
+    "id": 236,
+    "category": "ID とガバナンス",
+    "question": "リソース グループへ削除防止のリソース ロックを設定しました。\n\n配下のAzureリソースへの影響として正しい説明はどれですか？",
+    "choices": [
+      "配下リソースにも削除防止が継承される",
+      "配下リソースには影響しない",
+      "ネットワーク通信が遮断される",
+      "読み取りもできなくなる"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「配下リソースにも削除防止が継承される」です。リソース グループに設定したロックは配下のリソースへ継承されます。",
+    "why_not": [
+      "",
+      "配下にも影響します。",
+      "ロックはデータ通信を遮断しません。",
+      "読み取りは可能です。"
+    ]
+  },
+  {
+    "id": 237,
+    "category": "ID とガバナンス",
+    "question": "複数のAzureサブスクリプションに存在するリソースを、一括で高速に検索・照会したいと考えています。\n\nこの要件を満たすサービスはどれですか？",
+    "choices": [
+      "VMへRDP接続する",
+      "Blobを自動階層化する",
+      "複数サブスクリプションのリソースを高速に検索・照会する",
+      "VPNトンネルを作成する"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「複数サブスクリプションのリソースを高速に検索・照会する」です。Azure Resource Graphは、広い範囲のAzureリソース構成をクエリして調査するために使用します。",
+    "why_not": [
+      "RDP接続にはBastionなどを使います。",
+      "階層化にはLifecycle Managementを使います。",
+      "",
+      "VPN接続にはVPN Gatewayを使います。"
+    ]
+  },
+  {
+    "id": 238,
+    "category": "ID とガバナンス",
+    "question": "Azureリソースへ「CostCenter」や「Environment」などのタグを統一して設定しています。\n\nこの運用によって得られる主なメリットはどれですか？",
+    "choices": [
+      "NSGの優先度",
+      "Private DNSゾーン",
+      "一貫したタグ付け",
+      "VMのコンピューター名"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「一貫したタグ付け」です。CostCenterやEnvironmentなどのタグを統一して付けると、コストの集計や分類に利用できます。",
+    "why_not": [
+      "NSG優先度は通信制御用です。",
+      "Private DNSは名前解決用です。",
+      "",
+      "コンピューター名だけではAzure課金分類に向きません。"
+    ]
+  },
+  {
+    "id": 239,
+    "category": "ストレージ",
+    "question": "複数拠点に配置されたWindows ServerとAzure Filesを同期し、各拠点ではローカルキャッシュを利用しながらファイルを共有したいと考えています。\n\nこの要件を満たすサービスはどれですか？",
+    "choices": [
+      "AzCopy",
+      "Azure Data Box",
+      "Azure File Sync",
+      "Blob Inventory"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Azure File Sync」です。Azure File SyncはWindows ServerとAzureファイル共有を同期し、複数拠点のキャッシュとして利用できます。",
+    "why_not": [
+      "AzCopyはデータ転送ツールで継続同期の仕組みではありません。",
+      "Data Boxは大容量オフライン転送用です。",
+      "",
+      "Blob InventoryはBlob一覧レポートです。"
+    ]
+  },
+  {
+    "id": 240,
+    "category": "ストレージ",
+    "question": "Azure File Syncを利用しています。\n\nアクセス頻度の低いファイルはAzure Filesへ保存し、Windows Serverにはポインターだけを残してローカルディスク容量を節約したいと考えています。\n\nこの機能はどれですか？",
+    "choices": [
+      "Immutable storage",
+      "Blob versioning",
+      "クラウド階層化（Cloud tiering）",
+      "RA-GRS"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「クラウド階層化（Cloud tiering）」です。Cloud tieringは低頻度ファイルの内容をAzure Filesへ置き、ローカルにはポインターを残します。",
+    "why_not": [
+      "Immutable storageはWORM保護です。",
+      "Blob versioningはBlobの過去版管理です。",
+      "",
+      "RA-GRSは冗長性です。"
+    ]
+  },
+  {
+    "id": 241,
+    "category": "ストレージ",
+    "question": "ローカル環境とAzure Storage（Blob StorageやAzure Files）の間で、大量のデータを効率よくコピーしたいと考えています。\n\nこの用途に最適なコマンドラインツールはどれですか？",
+    "choices": [
+      "AzCopy",
+      "Bicepのみ",
+      "KQL",
+      "Azure Bastion"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「AzCopy」です。AzCopyはBlobやAzure Filesとのデータ転送に最適化されたコマンドライン ツールです。",
+    "why_not": [
+      "",
+      "Bicepはリソース展開用です。",
+      "KQLはログ照会用です。",
+      "BastionはVM接続用です。"
+    ]
+  },
+  {
+    "id": 242,
+    "category": "ストレージ",
+    "question": "数十TB規模のデータをAzure Storageへ移行したいと考えています。\n\nネットワーク経由では時間がかかりすぎるため、Microsoftから提供される物理デバイスを利用してデータを転送したい場合、どのサービスを使用しますか？",
+    "choices": [
+      "Azure File Sync",
+      "Azure Data Box",
+      "Private Endpoint",
+      "Storage Explorer"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Azure Data Box」です。Azure Data BoxはMicrosoftから提供される物理デバイスへデータをコピーし、Azureへ取り込めます。",
+    "why_not": [
+      "File Syncはオンライン同期です。",
+      "",
+      "Private Endpointは閉域接続です。",
+      "Storage Explorerは管理ツールです。"
+    ]
+  },
+  {
+    "id": 243,
+    "category": "ストレージ",
+    "question": "複数のAzure Storageアカウントに保存されているBlob、Files、Queues、TablesをGUIで管理したいと考えています。\n\nこの要件を満たすツールはどれですか？",
+    "choices": [
+      "複数のストレージ アカウントのデータをGUIで管理する",
+      "Azure Policyを評価する",
+      "VPNルートを交換する",
+      "VMの自動スケールを設定する"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「複数のストレージ アカウントのデータをGUIで管理する」です。Storage ExplorerはBlob、Files、Queues、TablesなどをGUIで操作するデスクトップ ツールです。",
+    "why_not": [
+      "",
+      "Policy評価ツールではありません。",
+      "VPNルート交換にはBGPなどを使います。",
+      "VMスケールはVMSSなどで設定します。"
+    ]
+  },
+  {
+    "id": 244,
+    "category": "ストレージ",
+    "question": "Azure StorageアカウントへのアクセスをHTTPSなどの暗号化された通信だけに制限したいと考えています。\n\nこの要件を満たす設定はどれですか？",
+    "choices": [
+      "共有キー アクセス",
+      "階層型名前空間",
+      "安全な転送が必須（Secure transfer required）",
+      "パブリックBlobアクセス"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「安全な転送が必須（Secure transfer required）」です。Secure transfer requiredを有効にすると、HTTPSなどの安全な接続が要求されます。",
+    "why_not": [
+      "共有キーは認証方式です。",
+      "階層型名前空間はData Lake Storage Gen2機能です。",
+      "",
+      "パブリックBlobアクセスは匿名公開設定です。"
+    ]
+  },
+  {
+    "id": 245,
+    "category": "ストレージ",
+    "question": "Azure Storageアカウント内のBlobコンテナーを匿名で公開できないようにしたいと考えています。\n\nこの要件を満たす設定はどれですか？",
+    "choices": [
+      "Infrastructure encryption",
+      "Blobのパブリック アクセスを許可する（Allow Blob anonymous access）",
+      "Secure transfer required",
+      "Minimum TLS version"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Blobのパブリック アクセスを許可する（Allow Blob anonymous access）」です。Allow Blob anonymous accessを無効にすると、コンテナー単位の匿名公開を禁止できます。",
+    "why_not": [
+      "Infrastructure encryptionは追加暗号化です。",
+      "",
+      "Secure transferはHTTPS強制です。",
+      "Minimum TLSはTLSバージョン制御です。"
+    ]
+  },
+  {
+    "id": 246,
+    "category": "ストレージ",
+    "question": "Azure Data Lake Storage Gen2として利用するため、ディレクトリ操作やACLをサポートする機能を有効化したいと考えています。\n\n有効にする設定はどれですか？",
+    "choices": [
+      "階層型名前空間（Hierarchical namespace）",
+      "NFS 3.0だけ",
+      "RA-GRSだけ",
+      "静的Webサイト"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「階層型名前空間（Hierarchical namespace）」です。Hierarchical namespaceを有効にすると、Data Lake Storage Gen2のディレクトリ操作とACLを利用できます。",
+    "why_not": [
+      "",
+      "NFSだけではADLS Gen2機能の条件を満たしません。",
+      "冗長性設定とは別です。",
+      "静的WebサイトはWebコンテンツ配信用です。"
+    ]
+  },
+  {
+    "id": 247,
+    "category": "ストレージ",
+    "question": "Azure Storageアカウントの暗号化に使用する顧客管理キー（Customer-managed key）を安全に保管したいと考えています。\n\n最も適切なサービスはどれですか？",
+    "choices": [
+      "Azure DNS",
+      "Traffic Manager",
+      "Azure Key Vault",
+      "Azure Bastion"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Azure Key Vault」です。顧客管理キーはAzure Key VaultまたはManaged HSMに保存してStorage暗号化へ利用できます。",
+    "why_not": [
+      "DNSは名前解決です。",
+      "Traffic ManagerはDNS負荷分散です。",
+      "",
+      "BastionはVM接続です。"
+    ]
+  },
+  {
+    "id": 248,
+    "category": "ストレージ",
+    "question": "Azure Filesで、低遅延かつ高IOPSが求められる業務システム向けのファイル共有を構成したいと考えています。\n\n最も適切なストレージ層はどれですか？",
+    "choices": [
+      "Archive",
+      "Premium",
+      "Blob Hot",
+      "Cool"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Premium」です。Premium Azure FilesはSSDベースで、低遅延・高IOPSが必要なファイル共有向けです。",
+    "why_not": [
+      "Azure FilesにArchive共有層はありません。",
+      "",
+      "Blob HotはBlobのアクセス層です。",
+      "Coolは低頻度アクセス向けの標準ファイル層です。"
+    ]
+  },
+  {
+    "id": 249,
+    "category": "ストレージ",
+    "question": "誤って削除したAzure Filesのファイル共有を、保持期間内であれば復元できるようにしたいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "ファイル共有の論理的な削除（Soft delete for file shares）",
+      "Object replication",
+      "Lifecycle management",
+      "Blob versioning"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「ファイル共有の論理的な削除（Soft delete for file shares）」です。Azure Filesのsoft deleteは、削除されたファイル共有を保持期間中に復元できます。",
+    "why_not": [
+      "",
+      "Object replicationもBlob用です。",
+      "Lifecycle managementは主にBlobの階層化や削除です。",
+      "Blob versioningはBlob用です。"
+    ]
+  },
+  {
+    "id": 250,
+    "category": "ストレージ",
+    "question": "誤って削除したBlobコンテナーを、保持期間内であれば内容ごと復元できるようにしたいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "コンテナーの論理的な削除（Container soft delete）",
+      "Change feedのみ",
+      "Blob index tags",
+      "Static website"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「コンテナーの論理的な削除（Container soft delete）」です。Container soft deleteは削除されたコンテナーと内容を保持期間中に復元できます。",
+    "why_not": [
+      "",
+      "Change feedは変更履歴ログです。",
+      "Blob index tagsは検索用メタデータです。",
+      "Static websiteはWeb配信用です。"
+    ]
+  },
+  {
+    "id": 251,
+    "category": "ストレージ",
+    "question": "Blob Storageで、Blobの作成・更新・削除などの変更履歴を時系列順に記録し、後から参照したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "Soft deleteのみ",
+      "Azure Files snapshots",
+      "Blob変更フィード（Blob change feed）",
+      "Archive tier"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Blob変更フィード（Blob change feed）」です。Blob change feedはBlobの作成、変更、削除などの変更記録を順序付きで提供します。",
+    "why_not": [
+      "Soft deleteは復元機能です。",
+      "File snapshotsはAzure Files用です。",
+      "",
+      "Archiveはアクセス層です。"
+    ]
+  },
+  {
+    "id": 252,
+    "category": "ストレージ",
+    "question": "2つのAzure Storageアカウント間で、ブロックBlobを自動的に非同期複製したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "SMB Multichannel",
+      "オブジェクト レプリケーション（Object replication）",
+      "Import/Export job",
+      "Azure File Sync"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「オブジェクト レプリケーション（Object replication）」です。Object replicationはソースと宛先のストレージ アカウント間でブロックBlobを非同期複製します。",
+    "why_not": [
+      "SMB MultichannelはAzure Filesの性能機能です。",
+      "",
+      "Import/Exportはディスクによる転送です。",
+      "File SyncはWindows ServerとAzure Filesの同期です。"
+    ]
+  },
+  {
+    "id": 253,
+    "category": "ストレージ",
+    "question": "Blobデータへキーと値の形式でメタデータを付与し、その値を条件に検索したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "Blobインデックス タグ（Blob index tags）",
+      "Azure Policy parameters",
+      "Resource tags",
+      "NSG service tags"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「Blobインデックス タグ（Blob index tags）」です。Blob index tagsはBlobデータへキーと値を付け、フィルター検索に利用できます。",
+    "why_not": [
+      "",
+      "Policy parameterはポリシー入力値です。",
+      "Resource tagsはAzureリソース管理用です。",
+      "NSG service tagsはIP範囲の抽象化です。"
+    ]
+  },
+  {
+    "id": 254,
+    "category": "ストレージ",
+    "question": "Azure Storageアカウントのアクセスキーを定期的にローテーションしたいと考えています。\n\nアプリケーションを停止させることなく安全にキーを更新する方法として、最も適切なものはどれですか？",
+    "choices": [
+      "両方のキーを同時に削除する",
+      "ストレージ アカウントを削除する",
+      "SASを無期限にする",
+      "未使用側のキーを再生成し、アプリを切り替えてからもう一方を再生成する"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「未使用側のキーを再生成し、アプリを切り替えてからもう一方を再生成する」です。2つのアクセス キーを交互にローテーションすることで、アプリの停止を抑えられます。",
+    "why_not": [
+      "同時変更は接続断の原因になります。",
+      "アカウント削除は不要です。",
+      "無期限SASはリスクを高めます。",
+      ""
+    ]
+  },
+  {
+    "id": 255,
+    "category": "コンピューティング",
+    "question": "Azure VMのサイズを変更したいと考えています。\n\nただし、現在のホストでは希望するサイズを利用できません。\n\nこの場合、サイズ変更を行う前に必要な操作はどれですか？",
+    "choices": [
+      "Entraユーザー削除",
+      "VNet削除",
+      "VMの割り当て解除（Deallocate）",
+      "ストレージ アカウント削除"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「VMの割り当て解除（Deallocate）」です。要求するサイズが現在のクラスターで利用できない場合、VMを割り当て解除してサイズ変更する必要があります。",
+    "why_not": [
+      "ユーザー削除は無関係です。",
+      "VNet削除は不要です。",
+      "",
+      "ストレージ削除は不要です。"
+    ]
+  },
+  {
+    "id": 256,
+    "category": "コンピューティング",
+    "question": "Azure VMを停止し、コンピューティング料金が発生しない状態にしたいと考えています。\n\nVMがどの状態になっていれば要件を満たしますか？",
+    "choices": [
+      "停止済み（割り当て解除）（Stopped deallocated）",
+      "停止済み（割り当て済み）（Stopped allocated）",
+      "実行中（Running）",
+      "再起動中（Restarting）"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「停止済み（割り当て解除）（Stopped deallocated）」です。VMをdeallocateするとホスト割り当てが解除され、コンピューティング料金が停止します。",
+    "why_not": [
+      "",
+      "割り当て済み停止ではコンピューティング料金が継続する場合があります。",
+      "実行中は課金されます。",
+      "再起動中も割り当ては維持されます。"
+    ]
+  },
+  {
+    "id": 257,
+    "category": "コンピューティング",
+    "question": "Azure VMでより高いIOPSとスループットが必要になりました。\n\n複数のデータディスクをまとめて利用することで性能を向上させたい場合、どの方法を使用しますか？",
+    "choices": [
+      "NSG優先度変更",
+      "ディスク ストライピング（Disk striping）",
+      "Blob soft delete",
+      "PIM有効化"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「ディスク ストライピング（Disk striping）」です。複数のデータ ディスクをストライピングすると、合計IOPSやスループットを高められます。",
+    "why_not": [
+      "NSGは通信制御です。",
+      "",
+      "Blob soft deleteはBlob保護です。",
+      "PIMは特権管理です。"
+    ]
+  },
+  {
+    "id": 258,
+    "category": "コンピューティング",
+    "question": "マネージドディスクの現在の状態を保存し、必要に応じて復元できるようにしたいと考えています。\n\n読み取り専用のポイントインタイムコピーを作成する機能はどれですか？",
+    "choices": [
+      "スナップショット（Snapshot）",
+      "管理単位",
+      "NSG",
+      "SASポリシー"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「スナップショット（Snapshot）」です。マネージド ディスクのスナップショットは読み取り専用のポイントインタイム コピーです。",
+    "why_not": [
+      "",
+      "管理単位はEntra管理範囲です。",
+      "NSGは通信制御です。",
+      "SASはアクセス委任です。"
+    ]
+  },
+  {
+    "id": 259,
+    "category": "コンピューティング",
+    "question": "Azure VMが起動しなくなりました。\n\nOSディスク内のファイルや設定を修正するために、最も適切な復旧方法はどれですか？",
+    "choices": [
+      "OSディスクをデタッチまたはコピーして修復VMへ接続する",
+      "Azure Policyを無効化する",
+      "VNetを削除する",
+      "サブスクリプションを移動する"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「OSディスクをデタッチまたはコピーして修復VMへ接続する」です。起動不能VMのOSディスクを修復用VMへ接続し、ファイルや構成を修正する方法があります。",
+    "why_not": [
+      "",
+      "Policy無効化はディスク修復手順ではありません。",
+      "VNet削除は不要です。",
+      "サブスクリプション移動は不要です。"
+    ]
+  },
+  {
+    "id": 260,
+    "category": "コンピューティング",
+    "question": "CPU使用率などのメトリックに応じて、Azureリソースを自動的にスケールアウト・スケールインさせたいと考えています。\n\nこの設定を行うために使用する機能はどれですか？",
+    "choices": [
+      "Resource lock",
+      "Blob lifecycle policy",
+      "自動スケール設定（Autoscale setting）",
+      "Private DNS"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「自動スケール設定（Autoscale setting）」です。Autoscale設定にメトリック条件と増減アクションを定義します。",
+    "why_not": [
+      "Resource lockは保護機能です。",
+      "Lifecycle policyはBlob管理です。",
+      "",
+      "Private DNSは名前解決です。"
+    ]
+  },
+  {
+    "id": 261,
+    "category": "コンピューティング",
+    "question": "Azure Virtual Machine Scale Sets（VMSS）を利用しています。\n\nイメージやVMサイズなど、各インスタンスへ適用する構成を定義するものはどれですか？",
+    "choices": [
+      "管理単位",
+      "SAS",
+      "スケール セット モデル（Scale set model）",
+      "Azure DNSゾーン"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「スケール セット モデル（Scale set model）」です。VMSSのモデルにイメージやサイズなどの構成を定義し、インスタンスへ適用します。",
+    "why_not": [
+      "管理単位はEntraオブジェクト管理です。",
+      "SASはStorageアクセスです。",
+      "",
+      "DNSゾーンは名前解決です。"
+    ]
+  },
+  {
+    "id": 262,
+    "category": "コンピューティング",
+    "question": "Azure VMのデプロイ後に、監視エージェントやセキュリティエージェントのインストール、初期設定を自動化したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "Availability Zoneのみ",
+      "VM拡張機能（VM extensions）",
+      "Storage lifecycle management",
+      "Azure PolicyのAuditのみ"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「VM拡張機能（VM extensions）」です。VM extensionsはデプロイ後の構成、監視、セキュリティ エージェント導入などに使用します。",
+    "why_not": [
+      "Availability Zoneは配置機能です。",
+      "",
+      "Lifecycle managementはBlob用です。",
+      "Auditは記録のみです。"
+    ]
+  },
+  {
+    "id": 263,
+    "category": "コンピューティング",
+    "question": "Azure App ServiceでWebアプリを作成します。\n\nリージョンやOS、インスタンスサイズ、価格レベルなどのコンピューティングリソースを決定するものはどれですか？",
+    "choices": [
+      "アプリのEntraユーザー一覧",
+      "アプリが使用するコンピューティング リソースと価格レベル",
+      "VNetのアドレス空間",
+      "Storageの冗長性"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「アプリが使用するコンピューティング リソースと価格レベル」です。App Service planはリージョン、OS、インスタンス サイズ、スケールなどのコンピューティング基盤を定義します。",
+    "why_not": [
+      "ユーザー一覧はEntra IDで管理します。",
+      "",
+      "VNetアドレスはVNet設定です。",
+      "Storage冗長性はStorage設定です。"
+    ]
+  },
+  {
+    "id": 264,
+    "category": "コンピューティング",
+    "question": "Azure App Serviceから、仮想ネットワーク内のデータベースへプライベートにアクセスしたいと考えています。\n\nアプリからVNetへのアウトバウンド接続を可能にする機能はどれですか？",
+    "choices": [
+      "Private Endpointだけをアプリの受信用に設定",
+      "Azure Front Door",
+      "Traffic Manager",
+      "VNet統合（VNet integration）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「VNet統合（VNet integration）」です。App ServiceのVNet integrationはアプリからVNet内へのアウトバウンド接続を可能にします。",
+    "why_not": [
+      "Private Endpointは主にアプリへのプライベート受信接続です。",
+      "Front DoorはグローバルWeb配信です。",
+      "Traffic ManagerはDNS負荷分散です。",
+      ""
+    ]
+  },
+  {
+    "id": 265,
+    "category": "コンピューティング",
+    "question": "Azure App Serviceをインターネットへ公開せず、仮想ネットワーク内からのみアクセスできるようにしたいと考えています。\n\nアプリへの受信接続にプライベートIPアドレスを使用するために構成する機能はどれですか？",
+    "choices": [
+      "プライベート エンドポイント（Private Endpoint）",
+      "VNet統合だけ",
+      "NAT Gatewayだけ",
+      "Azure File Sync"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「プライベート エンドポイント（Private Endpoint）」です。Private Endpointを作成すると、App Serviceへの受信接続にプライベートIPを使用できます。",
+    "why_not": [
+      "",
+      "VNet integrationは主に送信接続用です。",
+      "NAT Gatewayは送信元IP制御です。",
+      "File Syncはファイル同期です。"
+    ]
+  },
+  {
+    "id": 266,
+    "category": "コンピューティング",
+    "question": "Azure App Serviceでデータベースの接続文字列などのシークレットを利用しています。\n\nアプリ内へシークレットを保存せず、マネージドIDを使用してAzure Key Vaultから取得したい場合、どの機能を使用しますか？",
+    "choices": [
+      "Azure Policy initiative",
+      "Data Box",
+      "NSG flow logs",
+      "Key Vault参照（Key Vault references）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Key Vault参照（Key Vault references）」です。App ServiceのKey Vault referencesを使うと、マネージドIDでシークレットを取得できます。",
+    "why_not": [
+      "InitiativeはPolicy集合です。",
+      "Data Boxはデータ移行用です。",
+      "NSG flow logsは通信ログです。",
+      ""
+    ]
+  },
+  {
+    "id": 267,
+    "category": "コンピューティング",
+    "question": "Azure App Serviceへカスタムドメインを設定しました。\n\nHTTPS通信を有効にするため、SSL/TLS証明書を関連付ける機能はどれですか？",
+    "choices": [
+      "TLS/SSL証明書のバインド",
+      "Route tableのみ",
+      "NSGの作成だけ",
+      "Azure Files snapshot"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「TLS/SSL証明書のバインド」です。カスタム ドメインへ証明書をアップロードまたは管理証明書を利用し、TLSバインドを設定します。",
+    "why_not": [
+      "",
+      "Route tableだけでは暗号化されません。",
+      "NSGだけではHTTPS証明書を構成できません。",
+      "File snapshotは無関係です。"
+    ]
+  },
+  {
+    "id": 268,
+    "category": "コンピューティング",
+    "question": "Azure Container Registry（ACR）からコンテナーイメージを取得するだけの権限を付与したいと考えています。\n\n最も適切な組み込みロールはどれですか？",
+    "choices": [
+      "User Access Administrator",
+      "Owner",
+      "AcrPush",
+      "AcrPull"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「AcrPull」です。AcrPullはコンテナー イメージのプルに必要な権限を提供します。",
+    "why_not": [
+      "User Access AdministratorはRBAC管理用です。",
+      "Ownerは過剰です。",
+      "AcrPushはプッシュ権限も含みます。",
+      ""
+    ]
+  },
+  {
+    "id": 269,
+    "category": "コンピューティング",
+    "question": "Azure Container Registry（ACR）へコンテナーイメージを登録し、既存のイメージを取得する権限も付与したいと考えています。\n\n最も適切な組み込みロールはどれですか？",
+    "choices": [
+      "Reader",
+      "AcrPull",
+      "AcrPush",
+      "Network Contributor"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「AcrPush」です。AcrPushはイメージのプッシュとプルを許可します。",
+    "why_not": [
+      "Readerは管理情報の閲覧で、データ操作権限とは異なります。",
+      "AcrPullはプルのみです。",
+      "",
+      "Network Contributorはネットワーク管理用です。"
+    ]
+  },
+  {
+    "id": 270,
+    "category": "コンピューティング",
+    "question": "Azure Container Instances（ACI）を利用しています。\n\n複数のコンテナーでネットワークやストレージを共有し、同一ホスト上で実行したい場合に使用する単位はどれですか？",
+    "choices": [
+      "アクション グループ",
+      "可用性セット",
+      "コンテナー グループ（Container group）",
+      "管理グループ"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「コンテナー グループ（Container group）」です。ACIのcontainer group内のコンテナーは同一ホストで実行され、ネットワークやストレージを共有できます。",
+    "why_not": [
+      "アクション グループは通知用です。",
+      "可用性セットはVM用です。",
+      "",
+      "管理グループはサブスクリプション階層です。"
+    ]
+  },
+  {
+    "id": 271,
+    "category": "コンピューティング",
+    "question": "Azureリソースをコードで管理したいと考えています。\n\nARMテンプレートへコンパイルされる、Azure専用の宣言型IaC言語はどれですか？",
+    "choices": [
+      "Power Query",
+      "KQL",
+      "T-SQL",
+      "Bicep"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Bicep」です。BicepはARMテンプレートへ変換される、Azureリソース用の宣言型言語です。",
+    "why_not": [
+      "Power Queryはデータ変換用です。",
+      "KQLはログ分析用です。",
+      "T-SQLはSQL用です。",
+      ""
+    ]
+  },
+  {
+    "id": 272,
+    "category": "コンピューティング",
+    "question": "同じBicepファイルを開発環境や本番環境で共通利用したいと考えています。\n\nデプロイ時に環境ごとの値を渡すために使用する機能はどれですか？",
+    "choices": [
+      "NSG rule",
+      "Health probe",
+      "パラメーター（Parameter）",
+      "SAS token"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「パラメーター（Parameter）」です。Bicepのparameterを使うと、環境ごとに異なる値をデプロイ時に渡せます。",
+    "why_not": [
+      "NSG ruleは通信制御です。",
+      "Health probeは正常性確認です。",
+      "",
+      "SASはStorageアクセス用です。"
+    ]
+  },
+  {
+    "id": 273,
+    "category": "コンピューティング",
+    "question": "ARMテンプレートまたはBicepを使用してAzureリソースをデプロイします。\n\nテンプレートに記載されたリソースだけを追加・更新し、テンプレートに存在しない既存リソースはそのまま残したい場合、どのデプロイモードを使用しますか？",
+    "choices": [
+      "完全モード（Complete mode）",
+      "監査モード（Audit mode）",
+      "増分モード（Incremental mode）",
+      "削除モード（Delete mode）"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「増分モード（Incremental mode）」です。Incremental modeはテンプレートに記述したリソースを追加・更新し、未記載の既存リソースを保持します。",
+    "why_not": [
+      "Complete modeは未記載リソースを削除する可能性があります。",
+      "Audit modeもARMデプロイ モードではありません。",
+      "",
+      "Delete modeという標準モードはありません。"
+    ]
+  },
+  {
+    "id": 274,
+    "category": "コンピューティング",
+    "question": "ARMテンプレートまたはBicepをデプロイする前に、実際にはデプロイを実行せず、追加・変更・削除されるリソースを事前に確認したいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "VMのCPUを監視する",
+      "デプロイ前に作成・変更・削除予定を確認する",
+      "Blobを復元する",
+      "ユーザーのMFAを設定する"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「デプロイ前に作成・変更・削除予定を確認する」です。What-ifは実際のデプロイ前に、リソースへ加わる変更を予測表示します。",
+    "why_not": [
+      "CPU監視はAzure Monitorです。",
+      "",
+      "Blob復元はStorage機能です。",
+      "MFAはEntra IDです。"
+    ]
+  },
+  {
+    "id": 275,
+    "category": "コンピューティング",
+    "question": "社内で利用するVMイメージをバージョン管理し、複数リージョンへ複製して他のプロジェクトでも利用できるようにしたいと考えています。\n\nこの要件を満たすサービスはどれですか？",
+    "choices": [
+      "Private DNS zone",
+      "Azure Compute Gallery",
+      "Azure File Sync",
+      "Recovery Services vault"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「Azure Compute Gallery」です。Azure Compute GalleryはVMイメージやアプリをバージョン管理し、リージョン複製や共有ができます。",
+    "why_not": [
+      "Private DNSは名前解決です。",
+      "",
+      "File Syncはファイル共有同期です。",
+      "Recovery Services vaultはバックアップ用です。"
+    ]
+  },
+  {
+    "id": 276,
+    "category": "ネットワーク",
+    "question": "Azure仮想ネットワーク（VNet）に複数のサブネットを作成したいと考えています。\n\nサブネットのアドレス範囲について、Azureの仕様として正しい説明はどれですか？",
+    "choices": [
+      "任意のパブリック範囲を重複して使える",
+      "必ず/32である",
+      "サブネットはアドレス範囲を持たない",
+      "VNetのアドレス空間に含まれ、他サブネットと重複しない必要がある"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「VNetのアドレス空間に含まれ、他サブネットと重複しない必要がある」です。各サブネットの範囲はVNetアドレス空間内で、同じVNet内の他サブネットと重複できません。",
+    "why_not": [
+      "重複はできません。",
+      "/32固定ではありません。",
+      "サブネットにはCIDR範囲があります。",
+      ""
+    ]
+  },
+  {
+    "id": 277,
+    "category": "ネットワーク",
+    "question": "Azure仮想ネットワークのサブネットを設計しています。\n\nAzureが各サブネットで予約するIPアドレスの数はいくつですか？",
+    "choices": [
+      "10個",
+      "1個",
+      "2個",
+      "5個"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「5個」です。Azureは各サブネットで最初の4個と最後の1個、合計5個のIPアドレスを予約します。",
+    "why_not": [
+      "10個ではありません。",
+      "1個ではありません。",
+      "2個ではありません。",
+      ""
+    ]
+  },
+  {
+    "id": 278,
+    "category": "ネットワーク",
+    "question": "Azure VMに割り当てたプライベートIPアドレスを変更されないよう固定したいと考えています。\n\nNICの設定で選択する割り当て方法はどれですか？",
+    "choices": [
+      "DNS alias",
+      "静的（Static）割り当て",
+      "パブリック（Public）割り当て",
+      "一時（Ephemeral）割り当て"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「静的（Static）割り当て」です。Private IP allocationをStaticにすると、指定したプライベートIPを維持できます。",
+    "why_not": [
+      "DNS aliasはIP割り当て方式ではありません。",
+      "",
+      "PublicはプライベートIPの割り当て方式ではありません。",
+      "Ephemeralは該当設定ではありません。"
+    ]
+  },
+  {
+    "id": 279,
+    "category": "ネットワーク",
+    "question": "Azure上でネットワーク仮想アプライアンス（NVA）を構成しています。\n\nNICが他の通信を転送できるようにするため、有効化する設定はどれですか？",
+    "choices": [
+      "Accelerated networkingだけ",
+      "DNS registration",
+      "IP転送（IP forwarding）",
+      "Public IP idle timeout"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「IP転送（IP forwarding）」です。NVAとしてパケットを転送するNICではIP forwardingを有効にします。",
+    "why_not": [
+      "Accelerated networkingだけでは転送許可になりません。",
+      "DNS登録は名前解決です。",
+      "",
+      "Idle timeoutは接続タイムアウトです。"
+    ]
+  },
+  {
+    "id": 280,
+    "category": "ネットワーク",
+    "question": "ユーザー定義ルート（UDR）を作成しています。\n\nNext hop typeに「None」を指定した場合、そのルートに一致したトラフィックはどのようになりますか？",
+    "choices": [
+      "インターネットへ送られる",
+      "破棄される",
+      "VPN Gatewayへ送られる",
+      "送信元へ戻される"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「破棄される」です。Next hop type Noneは、該当ルートのトラフィックをドロップします。",
+    "why_not": [
+      "Internetを指定した場合とは異なります。",
+      "",
+      "VPN Gatewayへは送りません。",
+      "送信元へ戻す動作ではありません。"
+    ]
+  },
+  {
+    "id": 281,
+    "category": "ネットワーク",
+    "question": "ハブ&スポーク構成で、ネットワーク仮想アプライアンス（NVA）を経由した通信をVNetピアリングで転送したいと考えています。\n\nピアリング設定で有効にする必要がある項目はどれですか？",
+    "choices": [
+      "DDoS IP Protection",
+      "Service endpoint policy",
+      "転送されたトラフィックを許可する（Allow forwarded traffic）",
+      "Gateway transitのみ"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「転送されたトラフィックを許可する（Allow forwarded traffic）」です。Allow forwarded trafficは、NVAなどが転送したトラフィックをピアリング経由で受け入れる設定です。",
+    "why_not": [
+      "DDoS IP ProtectionはDDoS保護です。",
+      "Service endpoint policyはPaaSアクセス制限です。",
+      "",
+      "Gateway transitはゲートウェイ共有用です。"
+    ]
+  },
+  {
+    "id": 282,
+    "category": "ネットワーク",
+    "question": "外出先の社員が、自宅やノートPCからAzure仮想ネットワークへ安全に接続できるようにしたいと考えています。\n\n個々のクライアント端末向けに利用するVPN接続方式はどれですか？",
+    "choices": [
+      "サイト対サイト（Site-to-Site）",
+      "ポイント対サイト（Point-to-Site）",
+      "ExpressRoute Directのみ",
+      "VNet peering"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「ポイント対サイト（Point-to-Site）」です。Point-to-Site VPNは個々のクライアント端末からVNetへ安全に接続する方式です。",
+    "why_not": [
+      "Site-to-Siteは拠点ネットワーク間接続です。",
+      "",
+      "ExpressRoute Directは個別PCのVPN方式ではありません。",
+      "PeeringはVNet間接続です。"
+    ]
+  },
+  {
+    "id": 283,
+    "category": "ネットワーク",
+    "question": "Azure VPN Gatewayを使用してオンプレミス環境とのSite-to-Site VPNを構成します。\n\nオンプレミス側VPNデバイスのパブリックIPアドレスやアドレス空間を登録するリソースはどれですか？",
+    "choices": [
+      "Private Endpoint",
+      "NAT Gateway",
+      "ローカル ネットワーク ゲートウェイ（Local network gateway）",
+      "Application Gateway"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「ローカル ネットワーク ゲートウェイ（Local network gateway）」です。Local network gatewayにはオンプレミス側VPNデバイスのパブリックIPやアドレス範囲を定義します。",
+    "why_not": [
+      "Private EndpointはPaaS接続用です。",
+      "NAT Gatewayはアウトバウンド通信用です。",
+      "",
+      "Application GatewayはWeb負荷分散です。"
+    ]
+  },
+  {
+    "id": 284,
+    "category": "ネットワーク",
+    "question": "Azure VPN Gatewayで、オンプレミスルーターとの間で経路情報を自動的に交換したいと考えています。\n\n使用するルーティングプロトコルはどれですか？",
+    "choices": [
+      "BGP",
+      "HTTP",
+      "SMB",
+      "RDP"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「BGP」です。Azure VPN GatewayはBGPを使用した動的経路交換をサポートします。",
+    "why_not": [
+      "",
+      "HTTPはWeb通信です。",
+      "SMBはファイル共有です。",
+      "RDPはリモートデスクトップです。"
+    ]
+  },
+  {
+    "id": 285,
+    "category": "ネットワーク",
+    "question": "Azure Load Balancerを構成しています。\n\n正常に応答しているバックエンドVMだけへトラフィックを振り分けるために使用する機能はどれですか？",
+    "choices": [
+      "正常性プローブ（Health probe）",
+      "NSG service tag",
+      "Azure Policy",
+      "Blob change feed"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「正常性プローブ（Health probe）」です。Health probeがバックエンド インスタンスの正常性を確認し、異常なインスタンスを負荷分散対象から外します。",
+    "why_not": [
+      "",
+      "Service tagはIP範囲の抽象化です。",
+      "Policyはガバナンスです。",
+      "Change feedはBlob変更記録です。"
+    ]
+  },
+  {
+    "id": 286,
+    "category": "ネットワーク",
+    "question": "Azure Load Balancerを構成しています。\n\nフロントエンドIPアドレスやポート、バックエンドポート、プロトコルなどの転送設定を定義する項目はどれですか？",
+    "choices": [
+      "負荷分散規則（Load-balancing rule）",
+      "Resource lock",
+      "Blob lifecycle rule",
+      "PIM policy"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「負荷分散規則（Load-balancing rule）」です。Load-balancing ruleでフロントエンドIP、ポート、バックエンド ポート、プロトコルなどを定義します。",
+    "why_not": [
+      "",
+      "Resource lockは削除防止です。",
+      "Blob lifecycle ruleはStorage用です。",
+      "PIMは特権管理です。"
+    ]
+  },
+  {
+    "id": 287,
+    "category": "ネットワーク",
+    "question": "Azure Load Balancer経由で、特定のVMへRDPやSSH接続を行いたいと考えています。\n\nフロントエンドポートを個別のバックエンドVMへマッピングするために使用する機能はどれですか？",
+    "choices": [
+      "Application rule collection",
+      "Outbound rule",
+      "受信NAT規則（Inbound NAT rule）",
+      "Service endpoint"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「受信NAT規則（Inbound NAT rule）」です。Inbound NAT ruleはフロントエンドの特定ポートを個別バックエンドVMのポートへマッピングします。",
+    "why_not": [
+      "Application rule collectionはAzure Firewallです。",
+      "Outbound ruleは送信接続用です。",
+      "",
+      "Service endpointはPaaS接続用です。"
+    ]
+  },
+  {
+    "id": 288,
+    "category": "ネットワーク",
+    "question": "Azure Application Gatewayを構成しています。\n\n正常に稼働しているバックエンドサーバーだけへHTTP/HTTPS要求を転送するために使用する機能はどれですか？",
+    "choices": [
+      "Azure Policy",
+      "SAS",
+      "Route table",
+      "正常性プローブ（Health probe）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「正常性プローブ（Health probe）」です。Application Gatewayもhealth probeを使って正常なバックエンドだけへ要求を送信します。",
+    "why_not": [
+      "Policyはガバナンスです。",
+      "SASはStorageアクセスです。",
+      "Route tableは経路制御です。",
+      ""
+    ]
+  },
+  {
+    "id": 289,
+    "category": "ネットワーク",
+    "question": "1つのApplication Gatewayで、アクセスされたホスト名に応じて異なるWebサイトへ振り分けたいと考えています。\n\nこの要件を満たす機能はどれですか？",
+    "choices": [
+      "Azure File Sync",
+      "VNet peering",
+      "Inbound NAT rule",
+      "マルチサイト リスナー（Multi-site listener）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「マルチサイト リスナー（Multi-site listener）」です。Multi-site listenerはホスト名に基づいて異なるサイトやバックエンドを処理できます。",
+    "why_not": [
+      "File Syncはファイル同期です。",
+      "PeeringはVNet接続です。",
+      "Inbound NAT ruleはLoad Balancerの個別ポート転送です。",
+      ""
+    ]
+  },
+  {
+    "id": 290,
+    "category": "ネットワーク",
+    "question": "Azure VMに適用されているネットワーク セキュリティ グループ（NSG）のルールを確認したいと考えています。\n\nサブネットとNICの両方から適用された最終的なルールを確認できる機能はどれですか？",
+    "choices": [
+      "有効なセキュリティ規則（Effective security rules）",
+      "Resource Graphのみ",
+      "Connection monitorのみ",
+      "Packet captureのみ"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「有効なセキュリティ規則（Effective security rules）」です。Effective security rulesでは、サブネットとNICから継承・適用されるNSGルールを確認できます。",
+    "why_not": [
+      "",
+      "Resource Graphだけでは最終NSG評価画面になりません。",
+      "Connection monitorは継続的接続監視です。",
+      "Packet captureはパケット取得です。"
+    ]
+  },
+  {
+    "id": 291,
+    "category": "監視と保守",
+    "question": "Azure Monitorを利用しています。\n\nCPU使用率やメモリ使用率などの数値データを時系列で収集し、グラフ表示やアラートの条件として利用するデータはどれですか？",
+    "choices": [
+      "必ずテキスト形式のイベントだけである",
+      "Azure Storageでしか保存できない",
+      "KQLでしか生成できない",
+      "数値の時系列データで、通常はログより軽量かつ高頻度に収集される"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「数値の時系列データで、通常はログより軽量かつ高頻度に収集される」です。MetricsはCPU使用率などの数値時系列データで、アラートやグラフに利用されます。",
+    "why_not": [
+      "テキストイベントは主にログです。",
+      "Azure Monitor内で保持・利用できます。",
+      "プラットフォーム メトリックはKQLで生成する必要はありません。",
+      ""
+    ]
+  },
+  {
+    "id": 292,
+    "category": "監視と保守",
+    "question": "Log Analyticsワークスペースへ収集したログを対象に、KQLクエリの実行結果を条件としてアラートを発報したいと考えています。\n\nこの要件を満たすアラートの種類はどれですか？",
+    "choices": [
+      "Service Healthだけ",
+      "ログ検索アラート（Log search alert）",
+      "アクティビティ ログ アラートだけ",
+      "Resource lock"
+    ],
+    "answer": 1,
+    "explanation": "該当するのは「ログ検索アラート（Log search alert）」です。Log search alertはLog Analyticsのクエリ結果を条件として評価します。",
+    "why_not": [
+      "Service HealthはAzure側の正常性情報です。",
+      "",
+      "Activity Log alertはコントロール プレーン イベント向けです。",
+      "Resource lockはアラートではありません。"
+    ]
+  },
+  {
+    "id": 293,
+    "category": "監視と保守",
+    "question": "Azureリソースの作成や削除、設定変更など、Azure Resource Managerで実行された管理操作を条件として通知を行いたいと考えています。\n\nこの要件を満たすアラートの種類はどれですか？",
+    "choices": [
+      "アクティビティ ログ アラート（Activity log alert）",
+      "File share snapshot",
+      "Route table",
+      "Metric alertのみ"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「アクティビティ ログ アラート（Activity log alert）」です。Activity log alertはAzure Resource Manager操作などのイベントを条件に通知できます。",
+    "why_not": [
+      "",
+      "File snapshotはバックアップ機能です。",
+      "Route tableは経路制御です。",
+      "Metric alertは数値メトリック向けです。"
+    ]
+  },
+  {
+    "id": 294,
+    "category": "監視と保守",
+    "question": "Azure VM同士の通信について、到達性や応答時間を継続的に監視したいと考えています。\n\nこの要件を満たすNetwork Watcherの機能はどれですか？",
+    "choices": [
+      "IP flow verifyだけ",
+      "Effective routesだけ",
+      "Topologyだけ",
+      "接続モニター（Connection Monitor）"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「接続モニター（Connection Monitor）」です。Connection Monitorはエンドポイント間の到達性や遅延を継続監視できます。",
+    "why_not": [
+      "IP flow verifyは特定フローのNSG許可/拒否確認です。",
+      "Effective routesは経路確認です。",
+      "Topologyは構成表示です。",
+      ""
+    ]
+  },
+  {
+    "id": 295,
+    "category": "監視と保守",
+    "question": "Azure VMから送信される特定の通信について、NSGによって許可されるか拒否されるかを確認したいと考えています。\n\nさらに、適用されたNSGルールも確認したい場合、どの機能を使用しますか？",
+    "choices": [
+      "IPフロー検証（IP flow verify）",
+      "Boot diagnostics",
+      "Connection Monitorのみ",
+      "Azure Policy compliance"
+    ],
+    "answer": 0,
+    "explanation": "該当するのは「IPフロー検証（IP flow verify）」です。IP flow verifyは指定した5タプルに対して、許可・拒否と該当NSGルールを示します。",
+    "why_not": [
+      "",
+      "Boot diagnosticsはVM起動診断です。",
+      "Connection Monitorは継続監視向けです。",
+      "Policy complianceはガバナンスです。"
+    ]
+  },
+  {
+    "id": 296,
+    "category": "監視と保守",
+    "question": "Azure VMのNICに適用されているルーティング結果を確認したいと考えています。\n\nシステムルート、BGPルート、ユーザー定義ルートを含めた最終的なルートを確認できる機能はどれですか？",
+    "choices": [
+      "Blob inventory",
+      "PIM audit history",
+      "有効なルート（Effective routes）",
+      "App Service deployment slot"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「有効なルート（Effective routes）」です。Effective routesにはシステム ルート、BGPルート、ユーザー定義ルートなどの最終結果が表示されます。",
+    "why_not": [
+      "Blob inventoryはStorageです。",
+      "PIM履歴は特権ロールです。",
+      "",
+      "Deployment slotはApp Serviceです。"
+    ]
+  },
+  {
+    "id": 297,
+    "category": "監視と保守",
+    "question": "Azure VMのネットワーク通信を詳細に調査するため、NICを流れるパケットを取得して保存・分析したいと考えています。\n\nNetwork Watcherのどの機能を使用しますか？",
+    "choices": [
+      "Blob soft delete",
+      "Cost analysis",
+      "Network Watcherのパケット キャプチャ（Packet capture）",
+      "Azure Policy"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「Network Watcherのパケット キャプチャ（Packet capture）」です。Packet captureはVM拡張機能と連携してNICの通信を取得し、保存・分析できます。",
+    "why_not": [
+      "Soft deleteはBlob復元です。",
+      "Cost analysisは費用分析です。",
+      "",
+      "Policyは準拠性管理です。"
+    ]
+  },
+  {
+    "id": 298,
+    "category": "監視と保守",
+    "question": "Azure VMのバックアップを構成したいと考えています。\n\nバックアップポリシーを適用し、復旧ポイントを管理するために使用するリソースはどれですか？",
+    "choices": [
+      "Private DNS zone",
+      "Application Gatewayとlistener",
+      "Azure Firewall policy",
+      "Recovery Servicesコンテナーとバックアップ ポリシー"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「Recovery Servicesコンテナーとバックアップ ポリシー」です。VM BackupではRecovery Services vault内のバックアップ ポリシーをVMへ適用します。",
+    "why_not": [
+      "Private DNSは名前解決です。",
+      "Application GatewayはWeb負荷分散です。",
+      "Firewall policyは通信制御です。",
+      ""
+    ]
+  },
+  {
+    "id": 299,
+    "category": "監視と保守",
+    "question": "Recovery Servicesコンテナーに保存されている復旧ポイントから、既存VMには影響を与えず、新しい仮想マシンとして復元したいと考えています。\n\n使用する復元方法はどれですか？",
+    "choices": [
+      "ファイル回復だけ",
+      "ログ復元",
+      "新しい仮想マシンを作成する（Create new virtual machine）",
+      "既存を置換するだけ"
+    ],
+    "answer": 2,
+    "explanation": "該当するのは「新しい仮想マシンを作成する（Create new virtual machine）」です。Create new virtual machineを選ぶと、復旧ポイントから別VMを作成できます。",
+    "why_not": [
+      "File recoveryは個別ファイル抽出です。",
+      "ログ復元というVM Backup方式ではありません。",
+      "",
+      "既存置換は元VMのディスクを置き換える方式です。"
+    ]
+  },
+  {
+    "id": 300,
+    "category": "監視と保守",
+    "question": "Azure Site Recoveryを利用した災害復旧計画を定期的に検証したいと考えています。\n\n本番環境や継続中のレプリケーションへ影響を与えずにフェールオーバー手順を確認できる機能はどれですか？",
+    "choices": [
+      "バックアップ保持期間を延長する",
+      "本番VMを完全削除する",
+      "NSGを自動作成する",
+      "本番レプリケーションへ影響を与えず復旧手順を検証する"
+    ],
+    "answer": 3,
+    "explanation": "該当するのは「本番レプリケーションへ影響を与えず復旧手順を検証する」です。Test failoverは本番ワークロードや継続レプリケーションへ影響を与えず、DR計画を検証します。",
+    "why_not": [
+      "Backup保持期間の設定ではありません。",
+      "本番VMを削除しません。",
+      "NSG作成が主目的ではありません。",
+      ""
+    ]
+  },
+  {
+    "id": 301,
+    "category": "ネットワーク",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nAzure VM から Storage Account へ、プライベート IP アドレスを使用して接続したい。何を構成しますか？",
+    "choices": [
+      "4つの選択肢はすべて同じ目的で使用される。",
+      "「プライベート エンドポイント（Private Endpoint）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「サービス エンドポイント（Service Endpoint）」だけが設問の要件を満たす。",
+      "「NAT ゲートウェイ（NAT Gateway）」と「VPN ゲートウェイ（VPN Gateway）」の両方を必ず組み合わせる必要がある。"
+    ],
+    "answer": 1,
+    "explanation": "正解は「プライベート エンドポイント（Private Endpoint）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "各選択肢は異なる目的や役割を持ちます。",
+      "",
+      "「サービス エンドポイント（Service Endpoint）」は元問題の正解ではありません。",
+      "複数機能の組み合わせが必須とは限りません。"
+    ]
+  },
+  {
+    "id": 302,
+    "category": "ネットワーク",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\n同じクライアント IP アドレスかつ同じプロトコルの要求を、同じバックエンド VM に送り続けたい。どのセッション永続化を選びますか？",
+    "choices": [
+      "「クライアント IP とプロトコル（Client IP and protocol）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「なし（None）」と「クライアント IP（Client IP）」の両方を必ず組み合わせる必要がある。",
+      "4つの選択肢はすべて同じ目的で使用される。",
+      "「フローティング IP（Floating IP）」だけが設問の要件を満たす。"
+    ],
+    "answer": 0,
+    "explanation": "正解は「クライアント IP とプロトコル（Client IP and protocol）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "",
+      "複数機能の組み合わせが必須とは限りません。",
+      "各選択肢は異なる目的や役割を持ちます。",
+      "「フローティング IP（Floating IP）」は元問題の正解ではありません。"
+    ]
+  },
+  {
+    "id": 303,
+    "category": "ネットワーク",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\n同じ役割を持つ複数の VM の NIC をまとめ、NSG ルールの宛先として指定したい。何を使用しますか？",
+    "choices": [
+      "「アプリケーション セキュリティ グループ（Application Security Group）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "4つの選択肢はすべて同じ目的で使用される。",
+      "「可用性セット（Availability Set）」だけが設問の要件を満たす。",
+      "「Azure Firewall Manager（Azure Firewall Manager）」と「ルート テーブル（Route Table）」の両方を必ず組み合わせる必要がある。"
+    ],
+    "answer": 0,
+    "explanation": "正解は「アプリケーション セキュリティ グループ（Application Security Group）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "",
+      "各選択肢は異なる目的や役割を持ちます。",
+      "「可用性セット（Availability Set）」は元問題の正解ではありません。",
+      "複数機能の組み合わせが必須とは限りません。"
+    ]
+  },
+  {
+    "id": 304,
+    "category": "ストレージ",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nStorage Account へのアクセスを、特定のパブリック IP アドレスからのみに制限したい。どこで設定しますか？",
+    "choices": [
+      "「ネットワークのファイアウォール規則（Networking firewall rules）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「ライフサイクル管理（Lifecycle management）」だけが設問の要件を満たす。",
+      "4つの選択肢はすべて同じ目的で使用される。",
+      "「データ保護（Data protection）」と「アクセス キー（Access keys）」の両方を必ず組み合わせる必要がある。"
+    ],
+    "answer": 0,
+    "explanation": "正解は「ネットワークのファイアウォール規則（Networking firewall rules）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "",
+      "「ライフサイクル管理（Lifecycle management）」は元問題の正解ではありません。",
+      "各選択肢は異なる目的や役割を持ちます。",
+      "複数機能の組み合わせが必須とは限りません。"
+    ]
+  },
+  {
+    "id": 305,
+    "category": "ID とガバナンス",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nユーザーに Azure リソースの閲覧だけを許可したい。最も適切な組み込みロールはどれですか？",
+    "choices": [
+      "4つの選択肢はすべて同じ目的で使用される。",
+      "「所有者（Owner）」と「ユーザー アクセス管理者（User Access Administrator）」の両方を必ず組み合わせる必要がある。",
+      "「閲覧者（Reader）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「共同作成者（Contributor）」だけが設問の要件を満たす。"
+    ],
+    "answer": 2,
+    "explanation": "正解は「閲覧者（Reader）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "各選択肢は異なる目的や役割を持ちます。",
+      "複数機能の組み合わせが必須とは限りません。",
+      "",
+      "「共同作成者（Contributor）」は元問題の正解ではありません。"
+    ]
+  },
+  {
+    "id": 306,
+    "category": "コンピューティング",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nAzure VM の OS ディスクとデータ ディスクを暗号化し、キーを Key Vault で管理したい。何を使用しますか？",
+    "choices": [
+      "「Storage Service Encryption のみ（Storage Service Encryption only）」と「マネージド ID（Managed Identity）」の両方を必ず組み合わせる必要がある。",
+      "4つの選択肢はすべて同じ目的で使用される。",
+      "「Azure Backup（Azure Backup）」だけが設問の要件を満たす。",
+      "「Azure Disk Encryption（Azure Disk Encryption）」が設問の要件を直接満たし、他の選択肢は目的が異なる。"
+    ],
+    "answer": 3,
+    "explanation": "正解は「Azure Disk Encryption（Azure Disk Encryption）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "複数機能の組み合わせが必須とは限りません。",
+      "各選択肢は異なる目的や役割を持ちます。",
+      "「Azure Backup（Azure Backup）」は元問題の正解ではありません。",
+      ""
+    ]
+  },
+  {
+    "id": 307,
+    "category": "監視と保守",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nAzure リソースのメトリックがしきい値を超えたとき、メール通知したい。何を構成しますか？",
+    "choices": [
+      "「アクティビティ ログのみ（Activity Log only）」と「リソース ロック（Resource lock）」の両方を必ず組み合わせる必要がある。",
+      "「アラート ルールとアクション グループ（Alert rule and Action group）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「診断設定のみ（Diagnostic setting only）」だけが設問の要件を満たす。",
+      "4つの選択肢はすべて同じ目的で使用される。"
+    ],
+    "answer": 1,
+    "explanation": "正解は「アラート ルールとアクション グループ（Alert rule and Action group）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "複数機能の組み合わせが必須とは限りません。",
+      "",
+      "「診断設定のみ（Diagnostic setting only）」は元問題の正解ではありません。",
+      "各選択肢は異なる目的や役割を持ちます。"
+    ]
+  },
+  {
+    "id": 308,
+    "category": "監視と保守",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nAzure VM をバックアップするために、最初に作成する代表的なリソースはどれですか？",
+    "choices": [
+      "「Recovery Services コンテナー（Recovery Services vault）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「マネージド ディスクのスナップショットのみ（Managed disk snapshot only）」だけが設問の要件を満たす。",
+      "「Log Analytics ワークスペース（Log Analytics workspace）」と「Automation アカウント（Automation account）」の両方を必ず組み合わせる必要がある。",
+      "4つの選択肢はすべて同じ目的で使用される。"
+    ],
+    "answer": 0,
+    "explanation": "正解は「Recovery Services コンテナー（Recovery Services vault）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "",
+      "「マネージド ディスクのスナップショットのみ（Managed disk snapshot only）」は元問題の正解ではありません。",
+      "複数機能の組み合わせが必須とは限りません。",
+      "各選択肢は異なる目的や役割を持ちます。"
+    ]
+  },
+  {
+    "id": 309,
+    "category": "ネットワーク",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nサブネット内の VM からインターネットへの送信元 IP アドレスを固定したい。何を使用しますか？",
+    "choices": [
+      "「Azure Bastion（Azure Bastion）」と「Application Gateway（Application Gateway）」の両方を必ず組み合わせる必要がある。",
+      "「NAT ゲートウェイ（NAT Gateway）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「プライベート DNS ゾーン（Private DNS zone）」だけが設問の要件を満たす。",
+      "4つの選択肢はすべて同じ目的で使用される。"
+    ],
+    "answer": 1,
+    "explanation": "正解は「NAT ゲートウェイ（NAT Gateway）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "複数機能の組み合わせが必須とは限りません。",
+      "",
+      "「プライベート DNS ゾーン（Private DNS zone）」は元問題の正解ではありません。",
+      "各選択肢は異なる目的や役割を持ちます。"
+    ]
+  },
+  {
+    "id": 310,
+    "category": "ID とガバナンス",
+    "question": "次の元問題について、選択肢の関係を正しく説明しているものはどれですか？\n\nサブスクリプション内のリソースが誤って削除されるのを防ぎたい。何を設定しますか？",
+    "choices": [
+      "「削除不可ロック（CanNotDelete lock）」が設問の要件を直接満たし、他の選択肢は目的が異なる。",
+      "「ネットワーク セキュリティ グループ（NSG）」だけが設問の要件を満たす。",
+      "「読み取り専用ロック（ReadOnly lock）」と「Azure Policy の監査（Azure Policy audit）」の両方を必ず組み合わせる必要がある。",
+      "4つの選択肢はすべて同じ目的で使用される。"
+    ],
+    "answer": 0,
+    "explanation": "正解は「削除不可ロック（CanNotDelete lock）」であり、他の選択肢は異なる目的の機能です。",
+    "why_not": [
+      "",
+      "「ネットワーク セキュリティ グループ（NSG）」は元問題の正解ではありません。",
+      "複数機能の組み合わせが必須とは限りません。",
+      "各選択肢は異なる目的や役割を持ちます。"
     ]
   }
 ]
