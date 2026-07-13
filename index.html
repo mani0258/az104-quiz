@@ -119,7 +119,11 @@
   <main id="quizView" class="hidden">
     <section class="card">
       <div class="meta">
-        <span class="badge" id="categoryBadge"></span>
+        <span>
+          <span class="badge" id="categoryBadge"></span>
+          <span class="small" id="questionId" style="margin-left:8px;"></span>
+        </span>
+
         <span class="small" id="counter"></span>
       </div>
       <div class="progress"><div id="progressBar"></div></div>
@@ -340,6 +344,7 @@ function renderQuestion(){
 
   document.getElementById('categoryBadge').textContent=q.category;
   document.getElementById('counter').textContent=`${index+1} / ${quiz.length}`;
+  document.getElementById('questionId').textContent = `Q${q.id}`;
   document.getElementById('progressBar').style.width=`${(index/quiz.length)*100}%`;
   document.getElementById('questionText').textContent=q.question;
   document.getElementById('answerArea').classList.add('hidden');
