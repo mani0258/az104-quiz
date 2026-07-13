@@ -2,7 +2,7 @@
   {
     "id": 151,
     "category": "ネットワーク",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nPrivate Endpoint は、対象の Azure PaaS リソースを VNet 内のプライベート IP アドレスで公開します。",
+    "question": "あなたはAzure Storage Accountを利用しています。\n\nAzure VMからStorage Accountへ接続する際、インターネットを経由せず、VNet内のプライベートIPアドレスだけを使用したいと考えています。\n\n最も適切な構成はどれですか？",
     "choices": [
       "VPN ゲートウェイ（VPN Gateway）",
       "NAT ゲートウェイ（NAT Gateway）",
@@ -21,7 +21,7 @@
   {
     "id": 152,
     "category": "ネットワーク",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nClient IP and protocol は、送信元 IP アドレスとプロトコルの組み合わせに基づいて同じバックエンドへ振り分けます。",
+    "question": "Azure Load Balancerを使用しています。\n\n同じクライアントから同じプロトコルで送信される要求は、常に同じバックエンドVMで処理したいです。\n\nどのセッション永続化を構成しますか？",
     "choices": [
       "クライアント IP とプロトコル（Client IP and protocol）",
       "クライアント IP（Client IP）",
@@ -40,7 +40,7 @@
   {
     "id": 153,
     "category": "ネットワーク",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nApplication Security Group を使うと、NIC を論理グループ化して NSG ルールに指定できます。",
+    "question": "同じ役割を持つ複数のAzure VMがあります。\n\nNICをまとめて管理し、NSGルールの適用先としてグループ単位で指定したいです。\n\n何を使用しますか？",
     "choices": [
       "ルート テーブル（Route Table）",
       "アプリケーション セキュリティ グループ（Application Security Group）",
@@ -59,7 +59,7 @@
   {
     "id": 154,
     "category": "ストレージ",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nStorage Account の Networking で IP ネットワーク ルールを構成します。",
+    "question": "Storage Accountへのアクセスを特定のパブリックIPアドレスだけに制限したいです。\n\nどこで設定しますか？",
     "choices": [
       "ネットワークのファイアウォール規則（Networking firewall rules）",
       "アクセス キー（Access keys）",
@@ -78,7 +78,7 @@
   {
     "id": 155,
     "category": "ID とガバナンス",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nReader はリソースの表示を許可しますが、変更は許可しません。",
+    "question": "運用担当者にはAzureリソースの内容を確認する権限だけを与えたいです。\n\nリソースの作成・変更・削除は許可したくありません。\n\n最も適切な組み込みロールはどれですか？",
     "choices": [
       "閲覧者（Reader）",
       "共同作成者（Contributor）",
@@ -97,7 +97,7 @@
   {
     "id": 156,
     "category": "コンピューティング",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nAzure Disk Encryption は BitLocker または DM-Crypt を使用し、キーを Key Vault と連携して管理できます。",
+    "question": "Azure VMのOSディスクとデータディスクを暗号化したいです。\n\n暗号化キーはAzure Key Vaultで一元管理したいと考えています。\n\nどの機能を使用しますか？",
     "choices": [
       "Storage Service Encryption のみ（Storage Service Encryption only）",
       "Azure Backup（Azure Backup）",
@@ -116,7 +116,7 @@
   {
     "id": 157,
     "category": "監視と保守",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nAlert rule で条件を定義し、Action group でメールなどの通知先を設定します。",
+    "question": "Azure MonitorでCPU使用率が80%を超えたら管理者へメール通知したいです。\n\n最も適切な構成はどれですか？",
     "choices": [
       "診断設定のみ（Diagnostic setting only）",
       "アラート ルールとアクション グループ（Alert rule and Action group）",
@@ -135,7 +135,7 @@
   {
     "id": 158,
     "category": "監視と保守",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nAzure VM Backup では一般に Recovery Services vault を作成し、バックアップ ポリシーを設定します。",
+    "question": "Azure VMの定期バックアップを取得したいです。\n\nバックアップポリシーを設定する前に、まず作成する代表的なAzureリソースはどれですか？",
     "choices": [
       "マネージド ディスクのスナップショットのみ（Managed disk snapshot only）",
       "Log Analytics ワークスペース（Log Analytics workspace）",
@@ -154,7 +154,7 @@
   {
     "id": 159,
     "category": "ネットワーク",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nNAT Gateway をサブネットに関連付けると、アウトバウンド通信の送信元パブリック IP を固定できます。",
+    "question": "サブネット内のVMがインターネットへアクセスする際、送信元のパブリックIPアドレスを固定したいです。\n\n何を使用しますか？",
     "choices": [
       "プライベート DNS ゾーン（Private DNS zone）",
       "Azure Bastion（Azure Bastion）",
@@ -173,7 +173,7 @@
   {
     "id": 160,
     "category": "ID とガバナンス",
-    "question": "次の説明に最も当てはまる機能または設定はどれですか？\n\nCanNotDelete ロックは変更を許可しつつ、削除を防止します。",
+    "question": "リソースの設定変更は許可したい一方で、誤って削除されることだけは防ぎたいです。\n\nどのロックを設定しますか？",
     "choices": [
       "読み取り専用ロック（ReadOnly lock）",
       "ネットワーク セキュリティ グループ（NSG）",
