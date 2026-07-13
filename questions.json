@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "Azure VM から Storage Account へ、プライベート IP アドレスを使用して接続したい。何を構成しますか？",
     "choices": [
       "サービス エンドポイント（Service Endpoint）",
@@ -20,7 +20,7 @@
   },
   {
     "id": 2,
-    "category": "ロード バランサー",
+    "category": "ネットワーク",
     "question": "同じクライアント IP アドレスかつ同じプロトコルの要求を、同じバックエンド VM に送り続けたい。どのセッション永続化を選びますか？",
     "choices": [
       "なし（None）",
@@ -39,7 +39,7 @@
   },
   {
     "id": 3,
-    "category": "ネットワーク セキュリティ",
+    "category": "ネットワーク",
     "question": "同じ役割を持つ複数の VM の NIC をまとめ、NSG ルールの宛先として指定したい。何を使用しますか？",
     "choices": [
       "アプリケーション セキュリティ グループ（Application Security Group）",
@@ -96,7 +96,7 @@
   },
   {
     "id": 6,
-    "category": "仮想マシン",
+    "category": "コンピューティング",
     "question": "Azure VM の OS ディスクとデータ ディスクを暗号化し、キーを Key Vault で管理したい。何を使用しますか？",
     "choices": [
       "Azure Disk Encryption（Azure Disk Encryption）",
@@ -115,7 +115,7 @@
   },
   {
     "id": 7,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "Azure リソースのメトリックがしきい値を超えたとき、メール通知したい。何を構成しますか？",
     "choices": [
       "アクティビティ ログのみ（Activity Log only）",
@@ -134,7 +134,7 @@
   },
   {
     "id": 8,
-    "category": "バックアップ",
+    "category": "監視と保守",
     "question": "Azure VM をバックアップするために、最初に作成する代表的なリソースはどれですか？",
     "choices": [
       "Recovery Services コンテナー（Recovery Services vault）",
@@ -153,7 +153,7 @@
   },
   {
     "id": 9,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "サブネット内の VM からインターネットへの送信元 IP アドレスを固定したい。何を使用しますか？",
     "choices": [
       "NAT ゲートウェイ（NAT Gateway）",
@@ -210,7 +210,7 @@
   },
   {
     "id": 12,
-    "category": "仮想マシン",
+    "category": "コンピューティング",
     "question": "複数の VM を障害ドメインと更新ドメインに分散配置したい。何を使用しますか？",
     "choices": [
       "可用性セット（Availability Set）",
@@ -856,7 +856,7 @@
   },
   {
     "id": 46,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "2つのAzure VNetをAzureバックボーン経由で接続したい。最も直接的な方法はどれですか？",
     "choices": [
       "仮想ネットワーク ピアリング（Virtual network peering）",
@@ -875,7 +875,7 @@
   },
   {
     "id": 47,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "VNetピアリングについて正しい説明はどれですか？",
     "choices": [
       "既定で推移的である（Transitive by default）",
@@ -894,7 +894,7 @@
   },
   {
     "id": 48,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "オンプレミスとAzure VNetをインターネット経由の暗号化トンネルで接続したい。何を構成しますか？",
     "choices": [
       "VPN Gateway（VPN Gateway）",
@@ -913,7 +913,7 @@
   },
   {
     "id": 49,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "オンプレミスとAzure間でインターネットを経由しない専用接続を使用したい。何を選びますか？",
     "choices": [
       "ExpressRoute（ExpressRoute）",
@@ -932,7 +932,7 @@
   },
   {
     "id": 50,
-    "category": "ネットワーク セキュリティ",
+    "category": "ネットワーク",
     "question": "NSGルールの処理順序を決める値はどれですか？",
     "choices": [
       "優先度（Priority）",
@@ -951,7 +951,7 @@
   },
   {
     "id": 51,
-    "category": "ネットワーク セキュリティ",
+    "category": "ネットワーク",
     "question": "同じサブネット内の複数NICへ同じ通信制御を適用したい。NSGをどこへ関連付けられますか？",
     "choices": [
       "サブネット（Subnet）",
@@ -970,7 +970,7 @@
   },
   {
     "id": 52,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "独自のルーティングで通信を仮想アプライアンスへ送信したい。ユーザー定義ルートのネクスト ホップ種類はどれですか？",
     "choices": [
       "仮想アプライアンス（Virtual appliance）",
@@ -989,7 +989,7 @@
   },
   {
     "id": 53,
-    "category": "ロード バランサー",
+    "category": "ネットワーク",
     "question": "HTTP/HTTPSのURLパスに基づいてバックエンドを振り分けたい。何を使用しますか？",
     "choices": [
       "Application Gateway（Application Gateway）",
@@ -1008,7 +1008,7 @@
   },
   {
     "id": 54,
-    "category": "ロード バランサー",
+    "category": "ネットワーク",
     "question": "TCP/UDPトラフィックを複数VMへレイヤー4で分散したい。何を使用しますか？",
     "choices": [
       "Azure Load Balancer（Azure Load Balancer）",
@@ -1027,7 +1027,7 @@
   },
   {
     "id": 55,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "プライベートIPアドレスに対応する名前をVNet内で独自管理したい。何を使用しますか？",
     "choices": [
       "プライベート DNS ゾーン（Private DNS zone）",
@@ -1046,7 +1046,7 @@
   },
   {
     "id": 56,
-    "category": "仮想ネットワーク",
+    "category": "ネットワーク",
     "question": "あるVNetのVPN Gatewayを、ピアリングされた別VNetから利用したい。ピアリングで何を構成しますか？",
     "choices": [
       "ゲートウェイ転送（Gateway transit）",
@@ -1065,7 +1065,7 @@
   },
   {
     "id": 57,
-    "category": "ネットワーク セキュリティ",
+    "category": "ネットワーク",
     "question": "複数のVNetやオンプレミスからの通信を中央で検査・制御したい。Azureのマネージド ファイアウォールはどれですか？",
     "choices": [
       "Azure Firewall（Azure Firewall）",
@@ -1084,7 +1084,7 @@
   },
   {
     "id": 58,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "VMのゲストOSからパフォーマンス データやログを収集したい。推奨されるエージェントはどれですか？",
     "choices": [
       "Azure Monitor Agent（Azure Monitor Agent）",
@@ -1103,7 +1103,7 @@
   },
   {
     "id": 59,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "Azure Monitor Logsでログを検索・分析するときに使用するクエリ言語はどれですか？",
     "choices": [
       "Kusto Query Language（KQL）",
@@ -1122,7 +1122,7 @@
   },
   {
     "id": 60,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "複数のAzureリソースのログを一元的に保存し、KQLで分析したい。何を使用しますか？",
     "choices": [
       "Log Analytics ワークスペース（Log Analytics workspace）",
@@ -1141,7 +1141,7 @@
   },
   {
     "id": 61,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "リソース ログをLog Analyticsワークスペースへ送信したい。各リソースで何を構成しますか？",
     "choices": [
       "診断設定（Diagnostic settings）",
@@ -1160,7 +1160,7 @@
   },
   {
     "id": 62,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "Azure側のサービス障害、計画メンテナンス、正常性勧告を確認したい。どのサービスを使用しますか？",
     "choices": [
       "Service Health（Service Health）",
@@ -1179,7 +1179,7 @@
   },
   {
     "id": 63,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "個々のAzureリソースの現在および過去の正常性状態を確認したい。何を使用しますか？",
     "choices": [
       "Resource Health（Resource Health）",
@@ -1198,7 +1198,7 @@
   },
   {
     "id": 64,
-    "category": "バックアップ",
+    "category": "監視と保守",
     "question": "Azure VM Backupの復旧ポイント保持期間や取得頻度を定義するものはどれですか？",
     "choices": [
       "バックアップ ポリシー（Backup policy）",
@@ -1217,7 +1217,7 @@
   },
   {
     "id": 65,
-    "category": "バックアップ",
+    "category": "監視と保守",
     "question": "Azure VM全体を別リージョンへレプリケートし、災害時にフェールオーバーしたい。何を使用しますか？",
     "choices": [
       "Azure Site Recovery（Azure Site Recovery）",
@@ -1236,7 +1236,7 @@
   },
   {
     "id": 66,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "VM同士のTCP接続が成功するかをNetwork Watcherで診断したい。何を使用しますか？",
     "choices": [
       "接続のトラブルシューティング（Connection troubleshoot）",
@@ -1255,7 +1255,7 @@
   },
   {
     "id": 67,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "VMが起動しないとき、シリアル出力や画面のスクリーンショットを確認したい。何を有効にしますか？",
     "choices": [
       "ブート診断（Boot diagnostics）",
@@ -1274,7 +1274,7 @@
   },
   {
     "id": 68,
-    "category": "監視",
+    "category": "監視と保守",
     "question": "アラート発生時にメール、SMS、Webhook、Azure Functionなどを呼び出す送信先をまとめるものはどれですか？",
     "choices": [
       "アクション グループ（Action group）",

@@ -48,6 +48,14 @@
     .memo-card{border-left:5px solid var(--primary)}
     .memo-text{white-space:pre-wrap;line-height:1.65;margin-top:8px}
     .empty-note{padding:18px;text-align:center;color:var(--muted)}
+    .resume-box{margin-top:12px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary2)}
+    .resume-box b{display:block;margin-bottom:6px}
+    .data-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .file-input{display:none}
+    .mini-history{display:flex;gap:5px;align-items:center;margin-top:7px}
+    .history-dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800}
+    .history-dot.ok{background:var(--okbg);color:var(--ok)}
+    .history-dot.ng{background:var(--ngbg);color:var(--ng)}
     .confidence button,.mainbtn,.subbtn{border:0;border-radius:14px;padding:14px 16px;font-weight:800}
     .confidence button{background:#eef2f7}
     .mainbtn{background:var(--primary);color:#fff;width:100%;margin-top:14px}
@@ -84,6 +92,7 @@
         <div class="stat"><b id="accuracyStat">-</b><span class="small">正答率</span></div>
         <div class="stat"><b id="weakStat">0</b><span class="small">復習候補</span></div>
       </div>
+      <div id="resumeArea"></div>
       <div class="home-grid">
         <div class="row" style="margin-top:0">
           <b>出題数を選ぶ</b>
@@ -96,8 +105,13 @@
         <button class="mainbtn" onclick="startQuiz('smart',selectedCount)">おすすめ復習</button>
         <button class="subbtn" onclick="startQuiz('all',selectedCount)">ランダム出題</button>
         <div class="small" style="line-height:1.6">
-          おすすめ復習は「不正解・勘だった・迷った」を優先し、直近に出た問題は出にくくします。
+          おすすめ復習は「勘だった・迷った」と、直近5回で誤答が多い問題を優先します。
         </div>
+        <div class="data-actions">
+          <button class="subbtn" style="margin:0" onclick="exportStudyData()">学習データを書き出す</button>
+          <button class="subbtn" style="margin:0" onclick="document.getElementById('importFile').click()">学習データを読み込む</button>
+        </div>
+        <input id="importFile" class="file-input" type="file" accept="application/json,.json" onchange="importStudyData(event)">
       </div>
     </section>
   </main>
@@ -150,11 +164,15 @@
 let questions=[], quiz=[], index=0, selected=null;
 let selectedCount=5;
 let pendingConfidence=null;
-const STORE='az104-study-v1';
-let records=JSON.parse(localStorage.getItem(STORE)||'{}');
+const STORE='az104-study-v2';
+const OLD_STORE='az104-study-v1';
+const SESSION_STORE='az104-session-v1';
+let records=JSON.parse(localStorage.getItem(STORE)||localStorage.getItem(OLD_STORE)||'{}');
+migrateRecords();
+localStorage.setItem(STORE,JSON.stringify(records));
 
 fetch('questions.json').then(r=>r.json()).then(data=>{
-  questions=data; updateHome();
+  questions=data; updateHome(); renderResume();
 }).catch(()=>{
   document.getElementById('homeView').innerHTML='<section class="card">問題データを読み込めませんでした。ZIPを展開して、簡易Webサーバー上で開いてください。</section>';
 });
@@ -183,22 +201,23 @@ function selectCount(count, el){
 
 function smartScore(q){
   const r=records[q.id];
-  if(!r) return 70;
+  if(!r) return 90;
 
-  let score=20;
-  if(!r.correct) score+=80;
-  if(r.confidence==='low') score+=70;
-  else if(r.confidence==='medium') score+=45;
+  const recent=Array.isArray(r.recentResults)?r.recentResults:[];
+  const wrongCount=recent.filter(v=>v===false).length;
+  let score=15 + wrongCount*35;
+
+  if(r.confidence==='low') score+=80;
+  else if(r.confidence==='medium') score+=50;
   else if(r.confidence==='high') score-=10;
 
-  score += Math.max(0, 30-(r.attempts||0)*5);
+  if(recent.length<5) score+=(5-recent.length)*8;
 
+  // Same question should not repeat immediately unless it is very weak.
   if(r.last){
     const hours=(Date.now()-new Date(r.last).getTime())/3600000;
-    if(hours<1) score-=80;
-    else if(hours<6) score-=50;
-    else if(hours<24) score-=25;
-    else if(hours<72) score-=10;
+    if(hours<1) score-=50;
+    else if(hours<6) score-=25;
   }
   return Math.max(1,score);
 }
@@ -228,8 +247,55 @@ function startQuiz(mode,count){
     : shuffle(questions).slice(0,actualCount);
   index=0;
   selected=null;
+  saveSession();
   showView('quiz');
   renderQuestion();
+}
+
+function saveSession(){
+  if(!quiz.length)return;
+  localStorage.setItem(SESSION_STORE,JSON.stringify({
+    questionIds:quiz.map(q=>q.id),
+    index,
+    savedAt:new Date().toISOString()
+  }));
+  renderResume();
+}
+
+function clearSession(){
+  localStorage.removeItem(SESSION_STORE);
+  renderResume();
+}
+
+function resumeQuiz(){
+  const session=JSON.parse(localStorage.getItem(SESSION_STORE)||'null');
+  if(!session)return;
+  const restored=(session.questionIds||[])
+    .map(id=>questions.find(q=>q.id===id))
+    .filter(Boolean);
+  if(!restored.length){clearSession();return;}
+  quiz=restored;
+  index=Math.min(session.index||0,quiz.length-1);
+  selected=null;
+  showView('quiz');
+  renderQuestion();
+}
+
+function renderResume(){
+  const area=document.getElementById('resumeArea');
+  if(!area)return;
+  const session=JSON.parse(localStorage.getItem(SESSION_STORE)||'null');
+  if(!session || !Array.isArray(session.questionIds) || session.index>=session.questionIds.length){
+    area.innerHTML='';
+    return;
+  }
+  const remaining=session.questionIds.length-session.index;
+  area.innerHTML=`<div class="resume-box">
+    <b>途中の問題があります</b>
+    <div class="small">${session.index+1}問目から再開・残り${remaining}問</div>
+    <button class="mainbtn" onclick="resumeQuiz()">続きから再開</button>
+    <button class="subbtn" onclick="clearSession()">途中データを破棄</button>
+  </div>`;
 }
 
 function renderQuestion(){
@@ -283,14 +349,20 @@ function saveAnswer(){
   if(!pendingConfidence)return;
   const q=quiz[index];
   const correct=selected===q.answer;
-  const memo=(document.getElementById('memoInput')?.value||'').trim();
+  const memoInput=document.getElementById('memoInput');
+  const memo=(memoInput?.value||'').trim();
+  if(memoInput) memoInput.value='';
   const prev=records[q.id]||{attempts:0,correctCount:0};
+
+  const previousRecent=Array.isArray(prev.recentResults)?prev.recentResults:[];
+  const recentResults=[...previousRecent,correct].slice(-5);
 
   records[q.id]={
     ...prev,
     attempts:prev.attempts+1,
     correctCount:prev.correctCount+(correct?1:0),
     correct,
+    recentResults,
     confidence:pendingConfidence,
     memo,
     category:q.category,
@@ -299,8 +371,10 @@ function saveAnswer(){
 
   localStorage.setItem(STORE,JSON.stringify(records));
   index++;
+  if(index<quiz.length) saveSession();
 
   if(index>=quiz.length){
+    clearSession();
     document.getElementById('quizView').innerHTML=`
       <section class="card">
         <h2>おつかれさま！</h2>
@@ -340,9 +414,14 @@ function renderHistory(){
         const r=records[q.id];
         const confidence=r.confidence==='high'?'自信あり':r.confidence==='medium'?'迷った':'勘だった';
         const result=r.correct?'正解':'不正解';
+        const recent=Array.isArray(r.recentResults)?r.recentResults:[];
+        const recentHtml=recent.length
+          ? `<div class="mini-history"><span class="small">直近：</span>${recent.map(v=>`<span class="history-dot ${v?'ok':'ng'}">${v?'○':'×'}</span>`).join('')}</div>`
+          : '';
         return `<div class="row memo-card">
           <div class="rowtop"><b>${q.category}</b><span class="small">${result}・${confidence}</span></div>
           <div style="margin-top:8px;font-weight:700">${escapeHtml(q.question)}</div>
+          ${recentHtml}
           <div class="memo-text">📝 ${escapeHtml(r.memo)}</div>
         </div>`;
       }).join('')
@@ -360,7 +439,73 @@ function escapeHtml(text){
 function resetData(){
   if(confirm('学習記録をすべて消去しますか？')){localStorage.removeItem(STORE);records={};updateHome();renderHistory();}
 }
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+function migrateRecords(){
+  Object.values(records).forEach(r=>{
+    if(!Array.isArray(r.recentResults)){
+      r.recentResults=typeof r.correct==='boolean'?[r.correct]:[];
+    }
+    r.recentResults=r.recentResults.slice(-5);
+    r.category=normalizeCategory(r.category);
+  });
+}
+
+function normalizeCategory(category){
+  const map={
+    '仮想マシン':'コンピューティング',
+    '仮想ネットワーク':'ネットワーク',
+    'ネットワーク セキュリティ':'ネットワーク',
+    'ロード バランサー':'ネットワーク',
+    '監視':'監視と保守',
+    'バックアップ':'監視と保守'
+  };
+  return map[category]||category;
+}
+
+function exportStudyData(){
+  const payload={
+    version:2,
+    exportedAt:new Date().toISOString(),
+    records,
+    session:JSON.parse(localStorage.getItem(SESSION_STORE)||'null')
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`az104-study-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importStudyData(event){
+  const file=event.target.files?.[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const payload=JSON.parse(reader.result);
+      if(!payload || typeof payload.records!=='object')throw new Error('invalid');
+      records=payload.records;
+      migrateRecords();
+      localStorage.setItem(STORE,JSON.stringify(records));
+      if(payload.session)localStorage.setItem(SESSION_STORE,JSON.stringify(payload.session));
+      else localStorage.removeItem(SESSION_STORE);
+      alert('学習データを読み込みました。');
+      location.reload();
+    }catch{
+      alert('このファイルは読み込めませんでした。');
+    }finally{
+      event.target.value='';
+    }
+  };
+  reader.readAsText(file);
+}
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    reg.update().catch(()=>{});
+  }).catch(()=>{});
+}
 </script>
 </body>
 </html>
