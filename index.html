@@ -236,6 +236,14 @@ function renderQuestion(){
   const q=quiz[index];
   selected=null;
   pendingConfidence=null;
+
+  const memoInput=document.getElementById('memoInput');
+  if(memoInput) memoInput.value='';
+
+  document.querySelectorAll('.confidence button').forEach(b=>b.classList.remove('active'));
+  const saveNextBtn=document.getElementById('saveNextBtn');
+  if(saveNextBtn) saveNextBtn.disabled=true;
+
   document.getElementById('categoryBadge').textContent=q.category;
   document.getElementById('counter').textContent=`${index+1} / ${quiz.length}`;
   document.getElementById('progressBar').style.width=`${(index/quiz.length)*100}%`;
