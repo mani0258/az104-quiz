@@ -1,4 +1,4 @@
-const CACHE='az104-v8';
+const CACHE='az104-v9';
 const ASSETS=['./','./index.html','./questions.json','./manifest.webmanifest'];
 
 self.addEventListener('install',event=>{

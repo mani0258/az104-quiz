@@ -105,7 +105,7 @@
         <button class="mainbtn" onclick="startQuiz('smart',selectedCount)">おすすめ復習</button>
         <button class="subbtn" onclick="startQuiz('all',selectedCount)">ランダム出題</button>
         <div class="small" style="line-height:1.6">
-          おすすめ復習は「勘だった・迷った」と、直近5回で誤答が多い問題を優先します。
+          おすすめ復習は、自信度と正誤の組み合わせを細かく評価し、直近5回で誤答が多い問題を優先します。
         </div>
         <div class="data-actions">
           <button class="subbtn" style="margin:0" onclick="exportStudyData()">学習データを書き出す</button>
@@ -201,25 +201,53 @@ function selectCount(count, el){
 
 function smartScore(q){
   const r=records[q.id];
-  if(!r) return 90;
 
-  const recent=Array.isArray(r.recentResults)?r.recentResults:[];
+  // 未回答問題も十分に出題するが、明確な弱点よりは少し低くする
+  if(!r) return 125;
+
+  const recent=Array.isArray(r.recentResults)?r.recentResults.slice(-5):[];
   const wrongCount=recent.filter(v=>v===false).length;
-  let score=15 + wrongCount*35;
+  const latestCorrect=r.correct===true;
+  const confidence=r.confidence||'medium';
 
-  if(r.confidence==='low') score+=80;
-  else if(r.confidence==='medium') score+=50;
-  else if(r.confidence==='high') score-=10;
+  // 最新回答と自信度の組み合わせを細かく評価
+  // 優先順位:
+  // 勘だった＋不正解 > 勘だった＋正解
+  // > 迷った＋不正解 > 迷った＋正解
+  // > 自信あり＋不正解 > 自信あり＋正解
+  const combinationScores={
+    low_wrong:260,
+    low_correct:225,
+    medium_wrong:190,
+    medium_correct:155,
+    high_wrong:120,
+    high_correct:45
+  };
 
-  if(recent.length<5) score+=(5-recent.length)*8;
+  const outcome=latestCorrect?'correct':'wrong';
+  let score=combinationScores[`${confidence}_${outcome}`] ?? 125;
 
-  // Same question should not repeat immediately unless it is very weak.
+  // 直近5回で間違っている数が多いほど優先
+  score += wrongCount*38;
+
+  // 5回分の履歴がまだない問題も、十分に確認できるまで少し優先
+  score += Math.max(0,5-recent.length)*12;
+
+  // 直近5回すべて正解かつ最新も自信ありなら大きく抑える
+  if(recent.length===5 && wrongCount===0 && confidence==='high' && latestCorrect){
+    score-=35;
+  }
+
+  // 同じ問題が直後に繰り返されるのを抑える
+  // ただし弱点問題は最低限の優先度を維持する
   if(r.last){
     const hours=(Date.now()-new Date(r.last).getTime())/3600000;
-    if(hours<1) score-=50;
-    else if(hours<6) score-=25;
+    if(hours<1) score-=70;
+    else if(hours<6) score-=40;
+    else if(hours<24) score-=15;
   }
-  return Math.max(1,score);
+
+  return Math.max(5,score);
 }
 
 function weightedSample(pool,count){
