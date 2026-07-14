@@ -75,12 +75,13 @@
     .row{padding:13px;border:1px solid var(--border);border-radius:14px;background:#fff}
     .rowtop{display:flex;justify-content:space-between;gap:8px}
     @media (min-width:520px){.confidence{grid-template-columns:repeat(3,1fr)}}
+    #appVersion{font-weight:700;color:#0f6cbd;}
   </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <div><h1>AZ-104 暗記ツール</h1><div class="small">4択＋自信度で弱点を復習</div></div>
+    <div><h1>AZ-104 暗記ツール</h1><div class="small">Ver <span id="appVersion">1.3.0</span>　|　4択＋自信度で弱点を復習</div></div>
     <span class="badge" id="modeBadge">ホーム</span>
   </header>
 
